@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Statistik – Cozynauts Sammelkarten</title>
+  <style>
+    /* Linke Seitenleiste */
+    .sidebar {
+      width: 220px;
+      background: rgba(12, 12, 20, 0.95);
+      box-shadow: 2px 0 10px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar .logo {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: #bfaeff;
+      text-align: center;
+    }
+
+    .sidebar nav {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: #ddd;
+      padding: 10px;
+      text-align: left;
+      width: 100%;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+      text-decoration: none;
+      font: inherit;
+      display: block;
+    }
+
+    .nav-btn:hover:not(.disabled) {
+      background: rgba(95,95,217,0.2);
+      color: #fff;
+    }
+
+    .nav-btn.active {
+      background: rgba(95,95,217,0.4);
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .nav-btn.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    body {
+      display: flex;
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(circle at center, #0a0a12 0%, #030308 100%);
+      color: #eee;
+      font-family: 'Audiowide', system-ui, sans-serif;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .album {
+      animation: fadeIn 1s ease forwards;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .album h1 {
+      color: #c9bfff;
+      text-shadow: 0 0 8px rgba(160,120,255,0.4);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .album p {
+      text-align: center;
+    }
+
+    /* Filter-Zeile */
+    .filter-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .filter-row label {
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+
+    #scope-select {
+      background: #151522;
+      border-radius: 999px;
+      border: 1px solid #444;
+      color: #eee;
+      padding: 4px 10px;
+      font-size: 0.85rem;
+    }
+
+    /* Tabelle */
+    #stats-table {
+      border-collapse: collapse;
+      margin: 20px auto 0 auto;
+      width: 90%;
+      max-width: 800px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(255,255,255,0.05);
+    }
+
+    #stats-table th,
+    #stats-table td {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    #stats-table th {
+      background: rgba(95,95,217,0.25);
+      color: #fff;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    #stats-table tr:nth-child(even) {
+      background: rgba(255,255,255,0.03);
+    }
+
+    #stats-table tr:hover {
+      background: rgba(95,95,217,0.15);
+    }
+
+    td:first-child {
+      text-align: center;
+      font-weight: bold;
+      color: #c8b8ff;
+    }
+
+    tr:first-child td:first-child {
+      color: gold;
+      text-shadow: 0 0 10px gold;
+    }
+
+    tr:nth-child(2) td:first-child {
+      color: silver;
+    }
+
+    tr:nth-child(3) td:first-child {
+      color: #cd7f32;
+    }
+
+    .summary {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #b3aaff;
+      text-align: center;
+    }
+
+    .sortable {
+      cursor: pointer;
+    }
+
+    .sortable::after {
+      content: " ⇅";
+      font-size: 0.7rem;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar-container"></div>
+
+  <div class="content">
+    <div class="album">
+      <h1>📊 Sammler-Ranking</h1>
+      <p>Wähle ein Set, um die Rangliste zu filtern.</p>
+
+      <div class="filter-row">
+        <label for="scope-select">Ranking für:</label>
+        <select id="scope-select">
+          <option value="all">Gesamte Sammlung</option>
+          <option value="set1">BoosterSet 1 – SoS Werkzeuge</option>
+          <option value="set2">BoosterSet 2 – DDV Begleiter</option>
+        </select>
+      </div>
+
+      <table id="stats-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Benutzer</th>
+            <th id="th-unique"  class="sortable">Einzigartige Karten</th>
+            <th id="th-total"   class="sortable">Gesamt Karten</th>
+            <th id="th-percent" class="sortable">Fortschritt</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <p class="summary" id="global-summary"></p>
+    </div>
+  </div>
+
+  <script>
+    // --- Sidebar laden & "Statistik" aktiv markieren ---
+    async function loadSidebar() {
+      try {
+        const resp = await fetch("sidebar.html");
+        const html = await resp.text();
+        document.getElementById("sidebar-container").innerHTML = html;
+
+        document.querySelectorAll(".nav-btn").forEach(btn => {
+          const onclick = (btn.getAttribute("onclick") || "").toLowerCase();
+          if (onclick.includes("stats.html")) {
+            btn.classList.add("active");
+          }
+        });
+      } catch (e) {
+        console.error("Sidebar konnte nicht geladen werden:", e);
+      }
+    }
+
+    // --- Globale Daten für Ranking ---
+    let header = [];
+    let rows = [];
+    let users = [];
+    let totalCards = 0;
+    let currentSortField = "percent"; // "percent" | "unique" | "total"
+    let currentSortDir   = "desc";    // "desc" | "asc"
+    let currentScope     = "all";     // "all" | "set1" | "set2"
+
+    // Definiere, welche CSV-Spalten zu welchem Set gehören
+    const set1Headers = [
+      "#1_Melkmaschine",
+      "#2_Schere",
+      "#3_Buerste",
+      "#4_Kupferhacke",
+      "#5_Silberangel",
+      "#6_Goldsichel",
+      "#7_Giesskanne",
+      "#8_Beil"
+    ];
+
+    const set2Headers = [
+      "#1_Schnuffi",
+      "#2_Langohr",
+      "#3_Shelly",
+      "#4_Federwisch",
+      "#5_Knacki",
+      "#6_Goldodil",
+      "#7_Ennui",
+      "#8_Feuerjunges"
+    ];
+
+    function filterExisting(headersArray) {
+      return headersArray.filter(h => header.includes(h));
+    }
+
+    async function loadStats() {
+      const resp = await fetch("cards_user_summary.csv");
+      const text = await resp.text();
+      const lines = text.trim().split(/\r?\n/);
+      if (lines.length < 2) {
+        console.warn("CSV hat keine Daten.");
+        return;
+      }
+
+      const headerLine = lines[0];
+      const sep = headerLine.includes(";") ? ";" : ",";
+      header = headerLine.split(sep).map(h => h.trim());
+      rows   = lines.slice(1).map(l => l.split(sep));
+
+      updateScope("all");
+    }
+
+    function updateScope(scope) {
+      currentScope = scope;
+
+      let usedHeaders = [];
+      let scopeLabel  = "";
+
+      const set1Existing = filterExisting(set1Headers);
+      const set2Existing = filterExisting(set2Headers);
+
+      if (scope === "set1") {
+        usedHeaders = set1Existing;
+        scopeLabel  = "BoosterSet 1 – SoS Werkzeuge";
+      } else if (scope === "set2") {
+        usedHeaders = set2Existing;
+        scopeLabel  = "BoosterSet 2 – DDV Begleiter";
+      } else {
+        // Gesamte Sammlung = alle bekannten Karten-Header aus Set 1 & 2
+        const all = [...set1Existing, ...set2Existing];
+        usedHeaders = [...new Set(all)];
+        scopeLabel  = "Gesamte Sammlung";
+      }
+
+      totalCards = usedHeaders.length;
+      users = [];
+
+      let globalUnique = 0;
+      let globalTotal  = 0;
+
+      rows.forEach(cols => {
+        const username = (cols[0] || "").trim();
+        if (!username) return;
+
+        let unique = 0;
+        let total  = 0;
+
+        usedHeaders.forEach(h => {
+          const idx = header.indexOf(h);
+          if (idx === -1) return;
+          const val = parseInt(cols[idx] || "0", 10) || 0;
+          if (val > 0) unique++;
+          total += val;
+        });
+
+        const percent = totalCards > 0 ? (unique / totalCards) * 100 : 0;
+        users.push({ username, unique, total, percent });
+
+        globalUnique += unique;
+        globalTotal  += total;
+      });
+
+      const summaryEl = document.getElementById("global-summary");
+
+      if (users.length === 0 || totalCards === 0) {
+        summaryEl.textContent =
+          `Keine Daten für diesen Filter (${scopeLabel}). Prüfe, ob die Spaltennamen in der CSV zu den Set-Headern im Script passen.`;
+        document.querySelector("#stats-table tbody").innerHTML = "";
+        return;
+      }
+
+      const avgUnique = (globalUnique / users.length).toFixed(1);
+      const avgTotal  = (globalTotal  / users.length).toFixed(1);
+
+      summaryEl.innerHTML =
+        `📦 <b>${scopeLabel}</b><br>` +
+        `Durchschnitt pro Nutzer: ${avgUnique} einzigartige Karten (${avgTotal} insgesamt) – ${users.length} Nutzer im System.`;
+
+      // Standard: nach Fortschritt sortieren
+      currentSortField = "percent";
+      currentSortDir   = "desc";
+      renderTable();
+    }
+
+    function renderTable() {
+      const tbody = document.querySelector("#stats-table tbody");
+      tbody.innerHTML = "";
+
+      const sorted = [...users].sort((a, b) => {
+        let va, vb;
+        if (currentSortField === "percent") {
+          va = a.percent; vb = b.percent;
+        } else if (currentSortField === "unique") {
+          va = a.unique; vb = b.unique;
+        } else {
+          va = a.total;  vb = b.total;
+        }
+
+        if (va === vb) return 0;
+        return currentSortDir === "desc" ? vb - va : va - vb;
+      });
+
+      let lastValue = null;
+      let lastRank  = 0;
+      let place     = 0;
+
+      sorted.forEach(u => {
+        place++;
+
+        let compVal;
+        if (currentSortField === "percent")      compVal = u.percent;
+        else if (currentSortField === "unique")  compVal = u.unique;
+        else                                     compVal = u.total;
+
+        if (compVal !== lastValue) {
+          lastRank  = place;
+          lastValue = compVal;
+        }
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${lastRank}</td>
+          <td>${u.username}</td>
+          <td>${u.unique}</td>
+          <td>${u.total}</td>
+          <td>${u.percent.toFixed(1)}%</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const thUnique   = document.getElementById("th-unique");
+      const thTotal    = document.getElementById("th-total");
+      const thPercent  = document.getElementById("th-percent");
+      const scopeSelect = document.getElementById("scope-select");
+
+      if (thUnique) {
+        thUnique.addEventListener("click", () => {
+          if (currentSortField === "unique") {
+            currentSortDir = currentSortDir === "desc" ? "asc" : "desc";
+          } else {
+            currentSortField = "unique";
+            currentSortDir   = "desc";
+          }
+          renderTable();
+        });
+      }
+
+      if (thTotal) {
+        thTotal.addEventListener("click", () => {
+          if (currentSortField === "total") {
+            currentSortDir = currentSortDir === "desc" ? "asc" : "desc";
+          } else {
+            currentSortField = "total";
+            currentSortDir   = "desc";
+          }
+          renderTable();
+        });
+      }
+
+      if (thPercent) {
+        thPercent.addEventListener("click", () => {
+          if (currentSortField === "percent") {
+            currentSortDir = currentSortDir === "desc" ? "asc" : "desc";
+          } else {
+            currentSortField = "percent";
+            currentSortDir   = "desc";
+          }
+          renderTable();
+        });
+      }
+
+      if (scopeSelect) {
+        scopeSelect.addEventListener("change", e => {
+          updateScope(e.target.value);
+        });
+      }
+
+      loadSidebar().catch(console.error);
+      loadStats().catch(console.error);
+    });
+  </script>
+</body>
+</html>
