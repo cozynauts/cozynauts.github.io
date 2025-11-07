@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Cozynauts – Sammelkarten-Statistik</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b0512;
+      color: #f9f5ff;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1, h2 { margin-top: 0; color: #f7e1ff; }
+
+    .card {
+      background: #1b1027;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      max-width: 1100px;
+      margin: 0 auto 2rem auto;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, #faccff, #a855f7);
+      color: #1b1027;
+      border-radius: 999px;
+      padding: 0.25rem 0.9rem;
+      font-weight: 600;
+    }
+
+    .summary-text {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #ddd3f7;
+    }
+
+    #status {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #a3a3ff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    thead { background: rgba(255,255,255,0.05); }
+
+    th, td {
+      padding: 0.5rem 0.6rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+    @media (max-width: 700px) {
+      body { padding: 1rem; }
+      table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <span class="badge">Cozynauts · Sammelkarten</span>
+    <h1>Übersicht der gezogenen Karten</h1>
+    <p class="summary-text" id="summary">
+      Die Daten werden aus der aktuellen CSV geladen, die du aus Streamer.bot / deinem System exportierst.
+    </p>
+    <div id="status">Lade CSV-Datei …</div>
+  </div>
+
+  <div class="card">
+    <h2>Rohdaten aus <code>cards_user_summary.csv</code></h2>
+    <div id="table-container">
+      <!-- Tabelle wird hier per JS eingefügt -->
+    </div>
+  </div>
+
+  <script>
+    // >>> Falls deine CSV anders heißt, HIER anpassen:
+    const CSV_FILE = 'cards_user_summary.csv';
+
+    async function loadCsv() {
+      const statusEl = document.getElementById('status');
+      const summaryEl = document.getElementById('summary');
+      const tableContainer = document.getElementById('table-container');
+
+      try {
+        statusEl.textContent = 'Lade CSV-Datei vom Server …';
+
+        const response = await fetch(CSV_FILE);
+        if (!response.ok) {
+          throw new Error('HTTP-Fehler: ' + response.status);
+        }
+
+        const text = await response.text();
+        const lines = text.trim().split(/\r?\n/);
+        if (lines.length === 0) throw new Error('CSV ist leer.');
+
+        const delimiter = lines[0].includes(';') ? ';' : ',';
+        const headers = lines[0].split(delimiter).map(h => h.trim());
+        const rows = lines.slice(1)
+          .filter(l => l.trim().length > 0)
+          .map(line => line.split(delimiter).map(c => c.trim()));
+
+        const userCount = rows.length;
+
+        let uniqueIndex = -1;
+        let totalIndex = -1;
+        headers.forEach((h, i) => {
+          const lower = h.toLowerCase();
+          if (lower.includes('unique') || lower.includes('einzig')) uniqueIndex = i;
+          if (lower.includes('total') || lower.includes('gesamt') || lower.includes('anzahl')) totalIndex = i;
+        });
+
+        let avgUnique = null;
+        let avgTotal = null;
+
+        if (uniqueIndex !== -1) {
+          const vals = rows
+            .map(r => parseInt(r[uniqueIndex].replace(/\D/g, ''), 10))
+            .filter(v => !Number.isNaN(v));
+          if (vals.length > 0) {
+            const sum = vals.reduce((a, b) => a + b, 0);
+            avgUnique = sum / vals.length;
+          }
+        }
+
+        if (totalIndex !== -1) {
+          const vals = rows
+            .map(r => parseInt(r[totalIndex].replace(/\D/g, ''), 10))
+            .filter(v => !Number.isNaN(v));
+          if (vals.length > 0) {
+            const sum = vals.reduce((a, b) => a + b, 0);
+            avgTotal = sum / vals.length;
+          }
+        }
+
+        let summaryText = `Aktuell sind ${userCount} Nutzer:innen in der CSV erfasst.`;
+        if (avgUnique !== null && avgTotal !== null) {
+          summaryText += ` Im Schnitt besitzt jede Person etwa ${avgUnique.toFixed(1)} einzigartige Karten und ${avgTotal.toFixed(1)} Karten insgesamt.`;
+        }
+
+        summaryEl.textContent = summaryText;
+        statusEl.textContent = 'CSV erfolgreich geladen.';
+
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const tbody = document.createElement('tbody');
+
+        const headRow = document.createElement('tr');
+        headers.forEach(h => {
+          const th = document.createElement('th');
+          th.textContent = h;
+          headRow.appendChild(th);
+        });
+        thead.appendChild(headRow);
+
+        rows.forEach(row => {
+          const tr = document.createElement('tr');
+          row.forEach(cell => {
+            const td = document.createElement('td');
+            td.textContent = cell;
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        tableContainer.innerHTML = '';
+        tableContainer.appendChild(table);
+
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'Fehler beim Laden der CSV: ' + err.message;
+      }
+    }
+
+    loadCsv();
+  </script>
+</body>
+</html>
