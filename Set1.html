@@ -400,32 +400,28 @@
     document.getElementById("load-btn").addEventListener("click", updateForCurrentSelection);
     document.getElementById("username-select").addEventListener("change", updateForCurrentSelection);
 
-    // CSV laden
-    initAlbum().catch(console.error);
+    async function loadSidebar() {
+      try {
+        const resp = await fetch("sidebar.html");
+        const html = await resp.text();
+        document.getElementById("sidebar-container").innerHTML = html;
 
-// Sidebar dynamisch laden & aktiven Button markieren
-fetch("sidebar.html")
-  .then(resp => resp.text())
-  .then(html => {
-    document.getElementById("sidebar-container").innerHTML = html;
-
-    // Jetzt ist die Sidebar im DOM → aktiven Button setzen
-    const path = window.location.pathname.split("/").pop() || "set1.html";
-    const buttons = document.querySelectorAll(".nav-btn");
-
-    buttons.forEach(btn => {
-      const onclick = btn.getAttribute("onclick") || "";
-      if (onclick.includes(path)) {
-        btn.classList.add("active");
-      } else {
-        btn.classList.remove("active");
+        // aktiven Button hervorheben
+        const path = window.location.pathname.split("/").pop() || "Set1.html";
+        document.querySelectorAll(".nav-btn").forEach(btn => {
+          const onclick = btn.getAttribute("onclick") || "";
+          if (onclick.includes(path)) {
+            btn.classList.add("active");
+          }
+        });
+      } catch (e) {
+        console.error("Sidebar konnte nicht geladen werden:", e);
       }
-    });
-  })
-  .catch(err => console.error("Sidebar konnte nicht geladen werden:", err));
+    }
 
-      })
-      .catch(err => console.error("Sidebar konnte nicht geladen werden:", err));
+    // Start: CSV & Sidebar laden
+    initAlbum().catch(console.error);
+    loadSidebar().catch(console.error);
   </script>
 </body>
 </html>
