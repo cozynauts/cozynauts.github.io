@@ -1,0 +1,32 @@
+<div class="sidebar">
+  <h1 class="logo">🌌 IndieTonne</h1>
+  <nav>
+    <!-- Set 1 -->
+    <button class="nav-btn" onclick="window.location.href='set1.html'">
+      ⚒️ Set 1 ⚒️ <br>
+      Story of Seasons <br>
+      <small>Werkzeuge</small>
+    </button>
+
+    <!-- Set 2 -->
+    <button class="nav-btn" onclick="window.location.href='set2.html'">
+      🐾 Set 2 🐾  <br>
+      Disney Dreamlight Valley<br>
+      <small>Begleiter</small>
+    </button>
+
+    <!-- Statistik (kannst du später bauen) -->
+    <button class="nav-btn" onclick="window.location.href='stats.html'">
+      📊 Statistik
+    </button>
+
+    <hr>
+    Teaser
+    <button class="nav-btn disabled">
+      🔒 👾 Set 3 👾 <br>
+      Community Kreativität <br>
+      ©TheAdventureShark <br>
+      <small>Gaming</small>
+    </button>
+  </nav>
+</div>
