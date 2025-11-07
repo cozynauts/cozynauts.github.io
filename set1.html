@@ -400,24 +400,26 @@
     document.getElementById("load-btn").addEventListener("click", updateForCurrentSelection);
     document.getElementById("username-select").addEventListener("change", updateForCurrentSelection);
 
-    async function loadSidebar() {
-      try {
-        const resp = await fetch("sidebar.html");
-        const html = await resp.text();
-        document.getElementById("sidebar-container").innerHTML = html;
+async function loadSidebar() {
+  try {
+    const resp = await fetch("sidebar.html");
+    const html = await resp.text();
+    document.getElementById("sidebar-container").innerHTML = html;
 
-        // aktiven Button hervorheben
-        const path = window.location.pathname.split("/").pop() || "Set1.html";
-        document.querySelectorAll(".nav-btn").forEach(btn => {
-          const onclick = btn.getAttribute("onclick") || "";
-          if (onclick.includes(path)) {
-            btn.classList.add("active");
-          }
-        });
-      } catch (e) {
-        console.error("Sidebar konnte nicht geladen werden:", e);
+    // Aktive Seite: set1.html
+    const current = "set1.html";
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      const onclick = (btn.getAttribute("onclick") || "").toLowerCase();
+      if (onclick.includes(current)) {
+        btn.classList.add("active");
       }
-    }
+    });
+  } catch (e) {
+    console.error("Sidebar konnte nicht geladen werden:", e);
+  }
+}
+
 
     // Start: CSV & Sidebar laden
     initAlbum().catch(console.error);
