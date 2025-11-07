@@ -2,81 +2,83 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <title>Werkzeug-Booster – Prototyp</title>
+  <title>Set 1 – Werkzeug-Booster</title>
   <style>
     /* Linke Seitenleiste */
-.sidebar {
-  width: 220px;
-  background: rgba(12, 12, 20, 0.95);
-  box-shadow: 2px 0 10px rgba(0,0,0,0.4);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 10px;
-  border-right: 1px solid rgba(255,255,255,0.1);
-}
+    .sidebar {
+      width: 220px;
+      background: rgba(12, 12, 20, 0.95);
+      box-shadow: 2px 0 10px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
 
-.sidebar .logo {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  color: #bfaeff;
-  text-align: center;
-}
+    .sidebar .logo {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: #bfaeff;
+      text-align: center;
+    }
 
-.sidebar nav {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+    .sidebar nav {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-.nav-btn {
-  background: none;
-  border: none;
-  color: #ddd;
-  padding: 10px;
-  text-align: left;
-  width: 100%;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
+    .nav-btn {
+      display: block;
+      background: none;
+      border: none;
+      color: #ddd;
+      padding: 10px;
+      text-align: left;
+      width: 100%;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+      text-decoration: none;
+      font: inherit;
+    }
 
-.nav-btn:hover:not(.disabled) {
-  background: rgba(95,95,217,0.2);
-  color: #fff;
-}
+    .nav-btn:hover:not(.disabled) {
+      background: rgba(95,95,217,0.2);
+      color: #fff;
+    }
 
-.nav-btn.active {
-  background: rgba(95,95,217,0.4);
-  color: #fff;
-  font-weight: bold;
-}
+    .nav-btn.active {
+      background: rgba(95,95,217,0.4);
+      color: #fff;
+      font-weight: bold;
+    }
 
-.nav-btn.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+    .nav-btn.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
-body {
-  display: flex;
-  margin: 0;
-  height: 100vh;
-  background: radial-gradient(circle at center, #0a0a12 0%, #030308 100%);
-  color: #eee;
-  font-family: 'Audiowide', system-ui, sans-serif;
-}
+    body {
+      display: flex;
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(circle at center, #0a0a12 0%, #030308 100%);
+      color: #eee;
+      font-family: 'Audiowide', system-ui, sans-serif;
+    }
 
-/* Der Hauptbereich rechts von der Sidebar */
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-y: auto;
-  padding: 20px;
-}
-
+    /* Der Hauptbereich rechts von der Sidebar */
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-y: auto;
+      padding: 20px;
+    }
 
     .userbar {
       display: flex;
@@ -124,7 +126,6 @@ body {
       text-align: center;
     }
 
-    /* Wrapper der Karte */
     .card {
       width: 170px;
       border-radius: 14px;
@@ -132,11 +133,10 @@ body {
       transition: transform 0.25s ease, box-shadow 0.25s ease;
       transform: translateY(0px);
       cursor: pointer;
-      position: relative; /* für Kreis */
+      position: relative;
       overflow: visible;
     }
 
-    /* Bild in der Karte */
     .card img {
       width: 100%;
       display: block;
@@ -146,44 +146,37 @@ body {
       transition: filter 0.25s ease, opacity 0.25s ease;
     }
 
-.card::after {
-  content: attr(data-count);
-  position: absolute;
-  right: 6px;
-  bottom: 6px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: rgba(15, 15, 25, 0.95);
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    .card::after {
+      content: attr(data-count);
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(15, 15, 25, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', 'Arial', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #f8f8ff;
+      text-shadow: 0 0 4px rgba(255,255,255,0.5);
+      box-shadow: 0 0 6px rgba(255,255,255,0.15);
+    }
 
-  /* 🔤 Schrift-Verbesserung */
-  font-family: 'Poppins', 'Arial', sans-serif;
-  font-weight: 600;
-  font-size: 0.8rem;
-  color: #f8f8ff;
-  text-shadow: 0 0 4px rgba(255,255,255,0.5);
-
-  box-shadow: 0 0 6px rgba(255,255,255,0.15);
-}
-
-
-    /* Wenn 0 oder nichts → Kreis ausblenden */
     .card[data-count="0"]::after,
     .card:not([data-count])::after {
       display: none;
     }
 
-    /* Gesammelte Karten → Bild farbig */
     .card.unlocked img {
       filter: none;
       opacity: 1;
     }
 
-    /* Hover-Effekt nur bei freigeschalteten Karten (Wrapper) */
     .card.unlocked:hover {
       transform: translateY(-6px) scale(1.05);
       box-shadow: 0 0 24px rgba(255,255,255,0.15);
@@ -199,12 +192,10 @@ body {
       box-shadow: 0 0 25px rgba(150,100,255,0.3), inset 0 0 20px rgba(80,60,150,0.3);
       text-shadow: 0 0 10px rgba(255,255,255,0.2);
       backdrop-filter: blur(4px);
-
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-
       padding: 10px;
       box-sizing: border-box;
     }
@@ -231,67 +222,66 @@ body {
 
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+      to   { opacity: 1; transform: scale(1); }
     }
   </style>
 </head>
 <body>
-    <div id="sidebar-container"></div>
+  <div id="sidebar-container"></div>
 
   <div class="content">
-  <div class="album">
+    <div class="album">
 
-    <div class="userbar">
-      <label for="username-select">Benutzer:</label>
-      <select id="username-select">
-        <!-- wird per JS aus der CSV gefüllt -->
-      </select>
-      <button id="load-btn">Laden</button>
-      <span id="status-text"></span>
-    </div>
-<p id="total-pulled" style="margin-top: 30px; font-size: 0.9rem; opacity: 0.85; color: #b3aaff;">
-  Insgesamt 0 Karten aus diesem Set gezogen.
-</p>
-
-    <div class="grid">
-      <!-- Reihe 1 -->
-      <div class="card" data-col="#1_Melkmaschine">
-        <img src="SpritesSet1SOS/1_Melkmaschine.png" alt="Melkmaschine">
+      <div class="userbar">
+        <label for="username-select">Benutzer:</label>
+        <select id="username-select">
+          <!-- wird per JS aus der CSV gefüllt -->
+        </select>
+        <button id="load-btn">Laden</button>
+        <span id="status-text"></span>
       </div>
 
-      <div class="card" data-col="#2_Schere">
-        <img src="SpritesSet1SOS/2_Schere.png" alt="Schere">
-      </div>
+      <p id="total-pulled" style="margin-top: 30px; font-size: 0.9rem; opacity: 0.85; color: #b3aaff;">
+        Insgesamt 0 Karten aus diesem Set gezogen.
+      </p>
 
-      <div class="card" data-col="#3_Buerste">
-        <img src="SpritesSet1SOS/3_Buerste.png" alt="Bürste">
-      </div>
+      <div class="grid">
+        <div class="card" data-col="#1_Melkmaschine">
+          <img src="SpritesSet1SOS/1_Melkmaschine.png" alt="Melkmaschine">
+        </div>
 
-      <!-- Reihe 2 -->
-      <div class="card" data-col="#4_Kupferhacke">
-        <img src="SpritesSet1SOS/4_Kupferhacke.png" alt="Kupferhacke">
-      </div>
+        <div class="card" data-col="#2_Schere">
+          <img src="SpritesSet1SOS/2_Schere.png" alt="Schere">
+        </div>
 
-      <div class="center-text">
-        <h2>Tzwehns erstes<br>Sammelkarten-BoosterPack</h2>
-        <p>Story of Seasons – Werkzeuge</p>
-      </div>
+        <div class="card" data-col="#3_Buerste">
+          <img src="SpritesSet1SOS/3_Buerste.png" alt="Bürste">
+        </div>
 
-      <div class="card" data-col="#5_Silberangel">
-        <img src="SpritesSet1SOS/5_Silberangel.png" alt="Silberne Angel">
-      </div>
+        <div class="card" data-col="#4_Kupferhacke">
+          <img src="SpritesSet1SOS/4_Kupferhacke.png" alt="Kupferhacke">
+        </div>
 
-      <!-- Reihe 3 -->
-      <div class="card" data-col="#6_Goldsichel">
-        <img src="SpritesSet1SOS/6_Goldsichel.png" alt="Goldene Sichel">
-      </div>
+        <div class="center-text">
+          <h2>Tzwehns erstes<br>Sammelkarten-BoosterPack</h2>
+          <p>Story of Seasons – Werkzeuge</p>
+        </div>
 
-      <div class="card" data-col="#7_Giesskanne">
-        <img src="SpritesSet1SOS/7_Giesskanne.png" alt="Oreichalkos-Gießkanne">
-      </div>
+        <div class="card" data-col="#5_Silberangel">
+          <img src="SpritesSet1SOS/5_Silberangel.png" alt="Silberne Angel">
+        </div>
 
-      <div class="card" data-col="#8_Beil">
-        <img src="SpritesSet1SOS/8_Beil.png" alt="Ultimatives Beil">
+        <div class="card" data-col="#6_Goldsichel">
+          <img src="SpritesSet1SOS/6_Goldsichel.png" alt="Goldene Sichel">
+        </div>
+
+        <div class="card" data-col="#7_Giesskanne">
+          <img src="SpritesSet1SOS/7_Giesskanne.png" alt="Oreichalkos-Gießkanne">
+        </div>
+
+        <div class="card" data-col="#8_Beil">
+          <img src="SpritesSet1SOS/8_Beil.png" alt="Ultimatives Beil">
+        </div>
       </div>
     </div>
   </div>
@@ -316,7 +306,6 @@ body {
       csvHeaders = headerLine.split(csvSep).map(h => h.trim());
       csvRows = lines.slice(1).map(line => line.split(csvSep));
 
-      // Usernamen aus erster Spalte holen
       const usernames = csvRows
         .map(cols => (cols[0] || "").trim())
         .filter(name => name.length > 0);
@@ -332,7 +321,6 @@ body {
         select.appendChild(opt);
       });
 
-      // Standard: Tzwehn, falls vorhanden
       const defaultUser = "Tzwehn";
       const def = unique.find(
         n => n.toLowerCase() === defaultUser.toLowerCase()
@@ -357,7 +345,7 @@ body {
           card.classList.remove("unlocked");
           card.dataset.count = "0";
         });
-        return { username, ownedCount: 0, total: allCards.length };
+        return { username, ownedCount: 0, total: allCards.length, totalPulled: 0 };
       }
 
       const valuesByHeader = {};
@@ -368,11 +356,11 @@ body {
       let ownedCount = 0;
 
       allCards.forEach(card => {
-        const col = card.dataset.col;       // z.B. "#1_Melkmaschine"
-        const value = valuesByHeader[col];  // z.B. "0", "1", "3"
+        const col = card.dataset.col;
+        const value = valuesByHeader[col];
         const num = parseInt(value, 10) || 0;
 
-        card.dataset.count = String(num);   // für den Kreis
+        card.dataset.count = String(num);
 
         if (num > 0) {
           card.classList.add("unlocked");
@@ -382,14 +370,12 @@ body {
         }
       });
 
- // Gesamtsumme aller Karten des Users
-const totalPulled = Array.from(allCards).reduce((sum, card) => {
-  const n = parseInt(card.dataset.count || "0", 10);
-  return sum + (isNaN(n) ? 0 : n);
-}, 0);
+      const totalPulled = Array.from(allCards).reduce((sum, card) => {
+        const n = parseInt(card.dataset.count || "0", 10);
+        return sum + (isNaN(n) ? 0 : n);
+      }, 0);
 
-return { username, ownedCount, total: allCards.length, totalPulled };
-
+      return { username, ownedCount, total: allCards.length, totalPulled };
     }
 
     function updateForCurrentSelection() {
@@ -405,54 +391,33 @@ return { username, ownedCount, total: allCards.length, totalPulled };
       const result = applyOwnedFromSummary(name);
       status.textContent = `Album für ${result.username}: ${result.ownedCount}/${result.total} Karten`;
 
-const totalText = document.getElementById("total-pulled");
-if (totalText) {
-  totalText.textContent = `Insgesamt ${result.totalPulled} Karten aus diesem Set gezogen.`;
-}
-
+      const totalText = document.getElementById("total-pulled");
+      if (totalText) {
+        totalText.textContent = `Insgesamt ${result.totalPulled} Karten aus diesem Set gezogen.`;
+      }
     }
 
     document.getElementById("load-btn").addEventListener("click", updateForCurrentSelection);
     document.getElementById("username-select").addEventListener("change", updateForCurrentSelection);
 
-    // Start: CSV laden & Dropdown füllen
+    // CSV laden
     initAlbum().catch(console.error);
-    // Sidebar dynamisch laden
-fetch("sidebar.html")
-  .then(resp => resp.text())
-  .then(html => {
-    document.getElementById("sidebar-container").innerHTML = html;
 
-    // Navigation aktivieren
-    document.querySelectorAll(".nav-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (btn.classList.contains("disabled")) return;
+    // Sidebar dynamisch laden & aktiven Link markieren
+    fetch("sidebar.html")
+      .then(resp => resp.text())
+      .then(html => {
+        document.getElementById("sidebar-container").innerHTML = html;
 
-        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        const target = btn.dataset.target;
-        console.log("Navigation gewechselt zu:", target);
-        // später: hier andere Sets / Statistik laden
-      });
-    });
-  })
-  .catch(err => console.error("Sidebar konnte nicht geladen werden:", err));
-// --- Aktiven Button automatisch hervorheben ---
-document.addEventListener("DOMContentLoaded", () => {
-  const path = window.location.pathname.split("/").pop();
-  const buttons = document.querySelectorAll(".nav-btn");
-
-  buttons.forEach(btn => {
-    const href = btn.getAttribute("onclick");
-    if (href && href.includes(path)) {
-      btn.classList.add("active");
-    } else {
-      btn.classList.remove("active");
-    }
-  });
-});
-
+        const current = window.location.pathname.split("/").pop() || "set1.html";
+        document.querySelectorAll(".nav-btn").forEach(btn => {
+          const target = btn.getAttribute("href") || "";
+          if (target === current) {
+            btn.classList.add("active");
+          }
+        });
+      })
+      .catch(err => console.error("Sidebar konnte nicht geladen werden:", err));
   </script>
 </body>
 </html>
