@@ -592,7 +592,7 @@ function handleCompanion(card) {
       }
     }
 
-    // --- Rundenlogik -------------------------------------------------
+// --- Rundenlogik -------------------------------------------------
 
 function endTurn() {
   if (state.gameOver) return;
@@ -604,7 +604,7 @@ function endTurn() {
 
     if (p.growth >= p.growthTime) {
       // Reife erreicht → wir nutzen den "reifen" Wert aus der Power-Kurve
-      const matureIndex = Math.min(p.powerCurve.length - 1, p.powerCurve.length - 1);
+      const matureIndex = p.powerCurve.length - 1;
       let baseGain = p.powerCurve[matureIndex];
 
       // Milo-Bonus auf Samen-Ertrag
@@ -630,7 +630,7 @@ function endTurn() {
     }
   });
 
-  // Einmalige Pflanzen entfernen
+  // Entferne abgeerntete Pflanzen
   state.activePlants = state.activePlants.filter(p => !p.toRemove);
 
   // 🌾 2. Gespielte Karten dieser Runde in Ablage
@@ -656,32 +656,6 @@ function endTurn() {
   render();
   log(`— Runde ${state.round} startet. —`);
 }
-
-
-      // Wachstum/Erntephase
-state.activePlants.forEach(p => {
-  p.growth++;
-  if (p.growth >= p.growthTime) {
-    // Ernte!
-    let gain = p.powerCurve[Math.min(p.growthTime, p.powerCurve.length - 1)];
-    state.score += gain;
-    log(`🌿 ${p.name} wurde geerntet (+${gain} Punkte)!`);
-
-    if (p.harvestType === "einmalig") {
-      log(`🥕 ${p.name} wurde entfernt.`);
-      p.toRemove = true;
-    } else if (p.harvestType === "wiederholbar") {
-      p.growth = 0; // Cooldown neu starten
-    } else if (p.harvestType === "dauerhaft") {
-      // bleibt, aber gibt jede Runde +1
-      state.score += 1;
-      log(`🍎 ${p.name} trägt weiter Früchte (+1 Bonus).`);
-    }
-  }
-});
-// Entferne abgeerntete Pflanzen
-state.activePlants = state.activePlants.filter(p => !p.toRemove);
-    }
 
     // --- Rendering ---------------------------------------------------
 
