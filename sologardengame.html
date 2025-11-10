@@ -370,9 +370,11 @@
   tag: "Frucht",
   growthTime: 1,
   harvestType: "einmalig",
-  powerCurve: [2, 4],
-  description: "Schnelle Punktequelle. Bei Sonne +2 zusätzliche Power.",
-  synergy: "Stark mit Sonnentag und Dünger."
+  // Basis-Erntewert: 2 Punkte
+  powerCurve: [2],
+  // Text erklärt genau, was passiert
+  description: "Erntet 2 Punkte. Bei Sonnenschein: +2 Punkte (plus Wetterbonus).",
+  synergy: "Explodiert mit Sonnenschein für einen schnellen Punktekick."
 },
 {
   id: "seed_tomato",
@@ -661,75 +663,88 @@ function handleCompanion(card) {
 
 // --- Rundenlogik -------------------------------------------------
 
+// --- Rundenlogik -------------------------------------------------
+
 function endTurn() {
   if (state.gameOver) return;
 
-// 🌿 1. Wachstum & Erntephase für alle aktiven Pflanzen
-state.activePlants.forEach(p => {
-  // jede Runde +1 Wachstum
-  p.growth++;
+  // 🌿 1. Wachstum & Erntephase für alle aktiven Pflanzen
+  state.activePlants.forEach(p => {
+    // jede Runde +1 Wachstum
+    p.growth++;
 
-  if (p.growth >= p.growthTime) {
-    // Reife erreicht → „Endwert“ der Pflanze
-    const matureIndex = p.powerCurve.length - 1;
-    const plantBase = p.powerCurve[matureIndex];
+    if (p.growth >= p.growthTime) {
+      // Reife erreicht → „Endwert“ der Pflanze
+      const matureIndex = p.powerCurve.length - 1;
+      let plantBase = p.powerCurve[matureIndex];
 
-    const miloBonus = state.companionSeedBonus;              // pro Ernte
-    const weatherBonus = state.weatherSeedBonusThisRound || 0; // pro Ernte, falls Wetter aktiv ist
+      const miloBonus = state.companionSeedBonus;               // pro Ernte
+      const weatherBonus = state.weatherSeedBonusThisRound || 0; // Wetterbonus (Sonne/Regen)
 
-    const totalGain = plantBase + miloBonus + weatherBonus;
+      // 🍓 Spezialfall: Erdbeere + Sonnenschein → extra +2
+      let strawberrySynergy = 0;
+      if (
+        p.id === "seed_strawberry" &&
+        state.activeWeather &&
+        state.activeWeather.id === "weather_sun"
+      ) {
+        strawberrySynergy = 2;
+      }
 
-    state.score += totalGain;
-    state.lastSeedPoints = totalGain;
+      const totalGain = plantBase + miloBonus + weatherBonus + strawberrySynergy;
 
-    // Text-Bausteine für die Erklärung
-    const parts = [`${plantBase} Erntepunkte`];
-    if (miloBonus > 0) {
-      parts.push(`${miloBonus} Begleiterbonus Milo`);
+      state.score += totalGain;
+      state.lastSeedPoints = totalGain;
+
+      // Text-Bausteine für die Erklärung
+      const parts = [`${plantBase} Erntepunkte`];
+      if (miloBonus > 0) {
+        parts.push(`${miloBonus} Begleiterbonus Milo`);
+      }
+      if (weatherBonus > 0) {
+        const weatherName = state.activeWeather ? state.activeWeather.name : "Wetterbonus";
+        parts.push(`${weatherBonus} Wetterbonus (${weatherName})`);
+      }
+      if (strawberrySynergy > 0) {
+        parts.push(`${strawberrySynergy} Erdbeer-Synergie mit Sonnenschein`);
+      }
+
+      const detail = parts.join(" + ");
+
+      log(`🌿 ${p.name} wurde geerntet (${detail} = +${totalGain} Punkte).`);
+
+      if (p.harvestType === "einmalig") {
+        p.toRemove = true;
+        log(`🥕 ${p.name} wurde entfernt (einmalige Ernte).`);
+      } else if (p.harvestType === "wiederholbar") {
+        // Pflanze bleibt, beginnt neuen Wachstumszyklus
+        p.growth = 0;
+        log(`🍅 ${p.name} wächst weiter und kann erneut geerntet werden.`);
+      } else if (p.harvestType === "dauerhaft") {
+        // bleibt dauerhaft, bringt zusätzlich jede Runde +1
+        state.score += 1;
+        log(`🍎 ${p.name} trägt weiter Früchte (+1 Dauerbonuspunkt).`);
+      }
     }
-    if (weatherBonus > 0) {
-      const weatherName = state.activeWeather ? state.activeWeather.name : "Wetterbonus";
-      parts.push(`${weatherBonus} Wetterbonus (${weatherName})`);
-    }
-
-    const detail = parts.join(" + ");
-
-    log(`🌿 ${p.name} wurde geerntet (${detail} = +${totalGain} Punkte).`);
-
-    if (p.harvestType === "einmalig") {
-      p.toRemove = true;
-      log(`🥕 ${p.name} wurde entfernt (einmalige Ernte).`);
-    } else if (p.harvestType === "wiederholbar") {
-      // Pflanze bleibt, beginnt neuen Wachstumszyklus
-      p.growth = 0;
-      log(`🍅 ${p.name} wächst weiter und kann erneut geerntet werden.`);
-    } else if (p.harvestType === "dauerhaft") {
-      // bleibt dauerhaft, bringt zusätzlich jede Runde +1
-      state.score += 1;
-      log(`🍎 ${p.name} trägt weiter Früchte (+1 Dauerbonuspunkt).`);
-    }
-  }
-});
-
-
+  });
 
   // Entferne abgeerntete Pflanzen
   state.activePlants = state.activePlants.filter(p => !p.toRemove);
 
-// 🌾 2. Gespielte Karten dieser Runde in Ablage
-state.discard.push(...state.playedThisRound);
-state.playedThisRound = [];
-state.lastFertilizerBonus = 0;
-state.playsLeftThisRound = state.maxPlaysPerRound;
+  // 🌾 2. Gespielte Karten dieser Runde in Ablage
+  state.discard.push(...state.playedThisRound);
+  state.playedThisRound = [];
+  state.lastFertilizerBonus = 0;
+  state.playsLeftThisRound = state.maxPlaysPerRound;
 
-// Wetter bleibt bestehen, wenn aktiv
-if (state.activeWeather) {
-  if (state.activeWeather.id === "weather_sun" || state.activeWeather.id === "weather_rain") {
-    state.weatherSeedBonusThisRound = 1;
+  // Wetter bleibt bestehen, wenn aktiv
+  if (state.activeWeather) {
+    if (state.activeWeather.id === "weather_sun" || state.activeWeather.id === "weather_rain") {
+      state.weatherSeedBonusThisRound = 1;
+    }
+  } else {
+    state.weatherSeedBonusThisRound = 0;
   }
-} else {
-  state.weatherSeedBonusThisRound = 0;
-}
 
   // 🌟 3. Prüfen, ob das Spiel vorbei ist (nach Ernte!)
   if (state.round >= state.maxRounds) {
@@ -743,7 +758,7 @@ if (state.activeWeather) {
 
   // 🌱 4. Neue Runde vorbereiten
   state.round += 1;
-  drawToHand(state.hand.length + 1);   // 👈 genau 1 Karte nachziehen
+  drawToHand(state.hand.length + 1);   // genau 1 Karte nachziehen
   render();
   log(`— Runde ${state.round} startet. —`);
 }
