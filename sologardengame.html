@@ -674,8 +674,10 @@ state.activePlants.forEach(p => {
     const matureIndex = p.powerCurve.length - 1;
     const plantBase = p.powerCurve[matureIndex];
 
-    const miloBonus = state.companionSeedBonus; // pro Ernte
-    const totalGain = plantBase + miloBonus;
+    const miloBonus = state.companionSeedBonus;              // pro Ernte
+    const weatherBonus = state.weatherSeedBonusThisRound || 0; // pro Ernte, falls Wetter aktiv ist
+
+    const totalGain = plantBase + miloBonus + weatherBonus;
 
     state.score += totalGain;
     state.lastSeedPoints = totalGain;
@@ -685,6 +687,11 @@ state.activePlants.forEach(p => {
     if (miloBonus > 0) {
       parts.push(`${miloBonus} Begleiterbonus Milo`);
     }
+    if (weatherBonus > 0) {
+      const weatherName = state.activeWeather ? state.activeWeather.name : "Wetterbonus";
+      parts.push(`${weatherBonus} Wetterbonus (${weatherName})`);
+    }
+
     const detail = parts.join(" + ");
 
     log(`🌿 ${p.name} wurde geerntet (${detail} = +${totalGain} Punkte).`);
@@ -703,6 +710,7 @@ state.activePlants.forEach(p => {
     }
   }
 });
+
 
 
   // Entferne abgeerntete Pflanzen
@@ -914,6 +922,7 @@ function initGame() {
   state.gameOver = false;
   state.activeCompanions = [];
   state.activePlants = [];
+  state.activeWeather = null;
 
   // Deck bauen …
   const deck = [];
