@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Samendeck – Gartenspiel (Singleplayer)</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #050510;
+      color: #f5f5ff;
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 270px;
+      background: rgba(15, 15, 30, 0.97);
+      padding: 20px;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sidebar h1 {
+      font-size: 1.4rem;
+      margin: 0 0 4px;
+      color: #d7c2ff;
+    }
+    .sidebar h2 {
+      font-size: 0.95rem;
+      margin: 10px 0 4px;
+      color: #a9a3ff;
+    }
+    .stat {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    .stat small {
+      opacity: 0.7;
+      font-size: 0.75rem;
+    }
+    .buttons {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    button {
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: none;
+      background: #7b5dff;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.85rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+    button.secondary {
+      background: rgba(255,255,255,0.08);
+      color: #f5f5ff;
+      font-weight: 500;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      gap: 16px;
+    }
+    .main h2 {
+      margin: 0 0 4px;
+      font-size: 1.05rem;
+    }
+    .zone {
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: radial-gradient(circle at top left, rgba(124,96,255,0.14), rgba(0,0,0,0.4));
+      padding: 10px;
+      min-height: 110px;
+    }
+    #hand, #played {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .card {
+      width: 140px;
+      padding: 8px;
+      border-radius: 12px;
+      background: rgba(20, 18, 40, 0.95);
+      border: 1px solid rgba(255,255,255,0.18);
+      cursor: pointer;
+      font-size: 0.78rem;
+      line-height: 1.2;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2px;
+    }
+    .card-title {
+      font-weight: 600;
+    }
+    .card-tag {
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+    .card-type {
+      font-size: 0.72rem;
+      opacity: 0.75;
+    }
+    .card-desc {
+      font-size: 0.72rem;
+      opacity: 0.9;
+    }
+
+    .card.seed { border-left: 4px solid #8be38b; }
+    .card.fertilizer { border-left: 4px solid #f5e38b; }
+    .card.weather { border-left: 4px solid #8bd3f5; }
+    .card.companion { border-left: 4px solid #f58bd6; }
+    .card.tool { border-left: 4px solid #f59e8b; }
+
+    .card.disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    #log {
+      flex: 1;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: radial-gradient(circle at top right, rgba(255,255,255,0.04), rgba(0,0,0,0.5));
+      font-size: 0.8rem;
+      overflow-y: auto;
+      max-height: 200px;
+    }
+    #log p {
+      margin: 2px 0;
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <h1>Samendeck</h1>
+    <p class="stat">Runde: <span id="round">1</span> / <span id="maxRounds">10</span></p>
+    <p class="stat">Punkte: <span id="score">0</span></p>
+    <p class="stat">Highscore: <span id="bestScore">0</span></p>
+    <p class="stat">Deck: <span id="deckSize">0</span> Karten</p>
+    <p class="stat">Ablage: <span id="discardSize">0</span> Karten</p>
+    <p class="stat">Züge in dieser Runde: <span id="playsLeft">3</span> / <span id="maxPlays">3</span></p>
+
+    <h2>Aktionen</h2>
+    <div class="buttons">
+      <button id="endTurnBtn">Runde beenden</button>
+      <button id="restartBtn" class="secondary">Neues Spiel</button>
+    </div>
+    <p class="stat"><small>Klicke Karten in deiner Hand, um sie auszuspielen. Synergien bringen viele Punkte 🌱</small></p>
+  </aside>
+
+  <main class="main">
+    <section>
+      <h2>Hand</h2>
+      <div class="zone">
+        <div id="hand"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>In dieser Runde gespielt</h2>
+      <div class="zone">
+        <div id="played"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Log</h2>
+      <div id="log"></div>
+    </section>
+  </main>
+
+  <script>
+    // --- Kartendaten -------------------------------------------------
+
+    const ALL_CARDS = [
+      // Samen
+      {
+        id: "seed_carrot",
+        name: "Möhrensamen",
+        type: "seed",
+        tag: "Gemüse",
+        basePoints: 3,
+        description: "+3 Punkte."
+      },
+      {
+        id: "seed_pumpkin",
+        name: "Kürbissamen",
+        type: "seed",
+        tag: "Gemüse",
+        basePoints: 6,
+        description: "+6 Punkte."
+      },
+      {
+        id: "seed_potato",
+        name: "Kartoffelknolle",
+        type: "seed",
+        tag: "Wurzel",
+        basePoints: 4,
+        description: "+4 Punkte."
+      },
+      {
+        id: "seed_flower",
+        name: "Sonnenblumensamen",
+        type: "seed",
+        tag: "Blume",
+        basePoints: 5,
+        description: "+5 Punkte."
+      },
+
+      // Dünger
+      {
+        id: "fert_compost",
+        name: "Kompost",
+        type: "fertilizer",
+        tag: "Basis",
+        description: "Verdoppelt die Punkte des zuletzt gespielten Samens."
+      },
+      {
+        id: "fert_super",
+        name: "Superdünger",
+        type: "fertilizer",
+        tag: "Stark",
+        description: "1.5x Punkte des letzten Samens (aufgerundet) + evtl. Begleiterbonus."
+      },
+
+      // Wetter
+      {
+        id: "weather_sun",
+        name: "Sonnenschein",
+        type: "weather",
+        tag: "Wetter",
+        description: "+1 Punkt für alle weiteren Samen in dieser Runde."
+      },
+      {
+        id: "weather_rain",
+        name: "Sommerregen",
+        type: "weather",
+        tag: "Wetter",
+        description: "+2 Punkte sofort, +1 Punkt für alle weiteren Samen in dieser Runde."
+      },
+
+      // Begleiter
+      {
+        id: "comp_milo",
+        name: "Milo, Gartenschnüffler",
+        type: "companion",
+        tag: "Hund",
+        description: "+2 Punkte jedes Mal, wenn du einen Samen spielst (dauerhaft)."
+      },
+      {
+        id: "comp_gnome",
+        name: "Gartenwichtel",
+        type: "companion",
+        tag: "Wichtel",
+        description: "+1 Punkt jedes Mal, wenn du Dünger spielst (dauerhaft)."
+      },
+
+      // Werkzeuge
+      {
+        id: "tool_watering",
+        name: "Gießkanne",
+        type: "tool",
+        tag: "Werkzeug",
+        description: "Wiederholt den letzten Düngereffekt, falls vorhanden."
+      },
+      {
+        id: "tool_rake",
+        name: "Rechen",
+        type: "tool",
+        tag: "Werkzeug",
+        description: "Ziehe sofort 2 zusätzliche Karten."
+      }
+    ];
+
+    // --- Spielzustand ------------------------------------------------
+
+    const state = {
+      round: 1,
+      maxRounds: 10,
+      score: 0,
+      deck: [],
+      hand: [],
+      discard: [],
+      playedThisRound: [],
+      maxPlaysPerRound: 3,
+      playsLeftThisRound: 3,
+      lastSeedPoints: 0,
+      lastFertilizerBonus: 0,
+      weatherSeedBonusThisRound: 0,
+      companionSeedBonus: 0,
+      companionFertilizerBonus: 0,
+      gameOver: false
+    };
+
+    // --- Helfer ------------------------------------------------------
+
+    function shuffle(array) {
+      const arr = array.slice();
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function cloneCard(card) {
+      return JSON.parse(JSON.stringify(card));
+    }
+
+    function log(message) {
+      const logDiv = document.getElementById("log");
+      const p = document.createElement("p");
+      p.textContent = message;
+      logDiv.appendChild(p);
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    function drawToHand(targetSize) {
+      while (state.hand.length < targetSize) {
+        if (state.deck.length === 0) {
+          if (state.discard.length === 0) break;
+          // Ablagestapel neu mischen
+          state.deck = shuffle(state.discard);
+          state.discard = [];
+          log("Deck gemischt – der Ablagestapel wird zum neuen Deck.");
+        }
+        state.hand.push(state.deck.pop());
+      }
+    }
+
+    function updateHighscoreIfNeeded() {
+      const best = parseInt(localStorage.getItem("samendeck_best") || "0", 10);
+      if (state.score > best) {
+        localStorage.setItem("samendeck_best", String(state.score));
+        log(`🎉 Neuer Highscore! (alter Rekord: ${best} Punkte)`);
+      }
+    }
+
+    // --- Karten spielen ----------------------------------------------
+
+    function playCard(cardIndex) {
+      if (state.gameOver) return;
+      if (state.playsLeftThisRound <= 0) {
+        log("Du hast in dieser Runde keine Züge mehr übrig.");
+        return;
+      }
+
+      const card = state.hand[cardIndex];
+      if (!card) return;
+
+      state.hand.splice(cardIndex, 1);
+      state.playedThisRound.push(card);
+      state.playsLeftThisRound--;
+
+      switch (card.type) {
+        case "seed":
+          handleSeed(card);
+          break;
+        case "fertilizer":
+          handleFertilizer(card);
+          break;
+        case "weather":
+          handleWeather(card);
+          break;
+        case "companion":
+          handleCompanion(card);
+          break;
+        case "tool":
+          handleTool(card);
+          break;
+      }
+
+      render();
+    }
+
+    function handleSeed(card) {
+      let gained = card.basePoints;
+      gained += state.weatherSeedBonusThisRound;
+      gained += state.companionSeedBonus;
+
+      state.score += gained;
+      state.lastSeedPoints = gained;
+      log(`🌱 Samen: ${card.name} → +${gained} Punkte.`);
+    }
+
+    function handleFertilizer(card) {
+      if (state.lastSeedPoints <= 0) {
+        log(`💩 ${card.name} hat keinen Effekt – du hast davor keinen Samen gespielt.`);
+        state.lastFertilizerBonus = 0;
+        return;
+      }
+
+      let bonus = 0;
+      if (card.id === "fert_compost") {
+        bonus = state.lastSeedPoints; // Verdoppeln = nochmal so viele Punkte
+      } else if (card.id === "fert_super") {
+        bonus = Math.ceil(state.lastSeedPoints * 1.5);
+      }
+
+      bonus += state.companionFertilizerBonus;
+      state.score += bonus;
+      state.lastFertilizerBonus = bonus;
+
+      log(`🌿 Dünger: ${card.name} → +${bonus} Bonuspunkte.`);
+    }
+
+    function handleWeather(card) {
+      if (card.id === "weather_sun") {
+        state.weatherSeedBonusThisRound += 1;
+        log("☀️ Wetter: Sonnenschein → zukünftige Samen in dieser Runde: +1 Punkt.");
+      } else if (card.id === "weather_rain") {
+        state.weatherSeedBonusThisRound += 1;
+        state.score += 2;
+        log("🌧️ Wetter: Sommerregen → +2 Punkte sofort, zukünftige Samen in dieser Runde: +1 Punkt.");
+      }
+    }
+
+    function handleCompanion(card) {
+      if (card.id === "comp_milo") {
+        state.companionSeedBonus += 2;
+        log("🐶 Milo hilft ab jetzt: +2 Punkte auf jeden zukünftigen Samen.");
+      } else if (card.id === "comp_gnome") {
+        state.companionFertilizerBonus += 1;
+        log("🧙 Gartenwichtel aktiv: +1 Punkt auf jeden zukünftigen Dünger.");
+      } else {
+        log(`Begleiter gespielt: ${card.name}.`);
+      }
+    }
+
+    function handleTool(card) {
+      if (card.id === "tool_watering") {
+        if (state.lastFertilizerBonus > 0) {
+          state.score += state.lastFertilizerBonus;
+          log(`⚒️ Gießkanne: Düngereffekt wiederholt → +${state.lastFertilizerBonus} Punkte.`);
+        } else {
+          log("⚒️ Gießkanne: Kein Düngerbonus vorhanden – kein Effekt.");
+        }
+      } else if (card.id === "tool_rake") {
+        drawToHand(state.hand.length + 2);
+        log("🧹 Rechen: Du ziehst 2 zusätzliche Karten.");
+      } else {
+        log(`Werkzeug gespielt: ${card.name}.`);
+      }
+    }
+
+    // --- Rundenlogik -------------------------------------------------
+
+    function endTurn() {
+      if (state.gameOver) return;
+
+      // Gespielte Karten in den Ablagestapel
+      state.discard.push(...state.playedThisRound);
+      state.playedThisRound = [];
+      state.weatherSeedBonusThisRound = 0;
+      state.lastSeedPoints = 0;
+      state.lastFertilizerBonus = 0;
+      state.playsLeftThisRound = state.maxPlaysPerRound;
+
+      if (state.round >= state.maxRounds) {
+        state.gameOver = true;
+        render();
+        log(`⭐ Spielende! Du hast insgesamt ${state.score} Punkte erreicht.`);
+        updateHighscoreIfNeeded();
+        document.getElementById("endTurnBtn").disabled = true;
+        return;
+      }
+
+      state.round += 1;
+      drawToHand(5);
+      render();
+      log(`— Runde ${state.round} startet. —`);
+    }
+
+    // --- Rendering ---------------------------------------------------
+
+    function render() {
+      document.getElementById("round").textContent = state.round;
+      document.getElementById("maxRounds").textContent = state.maxRounds;
+      document.getElementById("score").textContent = state.score;
+      document.getElementById("deckSize").textContent = state.deck.length;
+      document.getElementById("discardSize").textContent = state.discard.length;
+      document.getElementById("playsLeft").textContent = state.playsLeftThisRound;
+      document.getElementById("maxPlays").textContent = state.maxPlaysPerRound;
+
+      const best = parseInt(localStorage.getItem("samendeck_best") || "0", 10);
+      document.getElementById("bestScore").textContent = best;
+
+      const handDiv = document.getElementById("hand");
+      const playedDiv = document.getElementById("played");
+      handDiv.innerHTML = "";
+      playedDiv.innerHTML = "";
+
+      state.hand.forEach((card, index) => {
+        const div = document.createElement("div");
+        div.className = "card " + card.type + (state.playsLeftThisRound <= 0 || state.gameOver ? " disabled" : "");
+        const typeLabel = {
+          seed: "Samen",
+          fertilizer: "Dünger",
+          weather: "Wetter",
+          companion: "Begleiter",
+          tool: "Werkzeug"
+        }[card.type] || card.type;
+
+        div.innerHTML = `
+          <div class="card-header">
+            <span class="card-title">${card.name}</span>
+            <span class="card-tag">${card.tag || ""}</span>
+          </div>
+          <div class="card-type">${typeLabel}</div>
+          <div class="card-desc">${card.description}</div>
+        `;
+
+        if (!state.gameOver && state.playsLeftThisRound > 0) {
+          div.addEventListener("click", () => playCard(index));
+        }
+        handDiv.appendChild(div);
+      });
+
+      state.playedThisRound.forEach(card => {
+        const div = document.createElement("div");
+        div.className = "card " + card.type + " disabled";
+        const typeLabel = {
+          seed: "Samen",
+          fertilizer: "Dünger",
+          weather: "Wetter",
+          companion: "Begleiter",
+          tool: "Werkzeug"
+        }[card.type] || card.type;
+
+        div.innerHTML = `
+          <div class="card-header">
+            <span class="card-title">${card.name}</span>
+            <span class="card-tag">${card.tag || ""}</span>
+          </div>
+          <div class="card-type">${typeLabel}</div>
+          <div class="card-desc">${card.description}</div>
+        `;
+        playedDiv.appendChild(div);
+      });
+    }
+
+    // --- Init --------------------------------------------------------
+
+    function initGame() {
+      state.round = 1;
+      state.score = 0;
+      state.discard = [];
+      state.hand = [];
+      state.playedThisRound = [];
+      state.playsLeftThisRound = state.maxPlaysPerRound;
+      state.lastSeedPoints = 0;
+      state.lastFertilizerBonus = 0;
+      state.weatherSeedBonusThisRound = 0;
+      state.companionSeedBonus = 0;
+      state.companionFertilizerBonus = 0;
+      state.gameOver = false;
+
+      // Deck bauen: 2x Samen, 2x Dünger, 1x Wetter, 1x Begleiter, 1x Werkzeug etc.
+      const deck = [];
+      ALL_CARDS.forEach(card => {
+        let copies = 2;
+        if (card.type === "companion" || card.type === "tool" || card.type === "weather") {
+          copies = 1;
+        }
+        for (let i = 0; i < copies; i++) {
+          deck.push(cloneCard(card));
+        }
+      });
+
+      state.deck = shuffle(deck);
+      drawToHand(5);
+      render();
+
+      document.getElementById("endTurnBtn").disabled = false;
+
+      const logDiv = document.getElementById("log");
+      logDiv.innerHTML = "";
+      log("Neues Spiel gestartet. Versuche in 10 Runden so viele Punkte wie möglich zu sammeln!");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("endTurnBtn").addEventListener("click", endTurn);
+      document.getElementById("restartBtn").addEventListener("click", initGame);
+      initGame();
+    });
+  </script>
+</body>
+</html>
