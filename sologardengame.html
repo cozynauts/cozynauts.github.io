@@ -482,7 +482,8 @@ const state = {
   companionFertilizerBonus: 0,
   gameOver: false,
   activeCompanions: [],
-  activePlants: []  
+  activePlants: [],
+  activeWeather: null 
 };
 
 
@@ -604,17 +605,26 @@ function handleFertilizer(card) {
 }
 
 
-    function handleWeather(card) {
-      if (card.id === "weather_sun") {
-        state.weatherSeedBonusThisRound += 1;
-        log("☀️ Wetter: Sonnenschein → zukünftige Samen in dieser Runde: +1 Punkt.");
-  } else if (card.id === "weather_rain") {
-    state.weatherSeedBonusThisRound += 1;
-    const rainPoints = 2;
-    state.score += rainPoints;
-
-    log(`🌧️ Wetter: Sommerregen → (${rainPoints} Sofortpunkte als Regenbonus, zukünftige Samen in dieser Runde: +1 Punkt).`);
+function handleWeather(card) {
+  // Falls bereits Wetter aktiv ist, wird es ersetzt
+  if (state.activeWeather) {
+    log(`🌦️ Das bisherige Wetter (${state.activeWeather.name}) endet.`);
   }
+
+  state.activeWeather = card;
+
+  if (card.id === "weather_sun") {
+    state.weatherSeedBonusThisRound = 1;
+    log("☀️ Neues Wetter: Sonnenschein → zukünftige Samen erhalten +1 Punkt.");
+  } else if (card.id === "weather_rain") {
+    state.weatherSeedBonusThisRound = 1;
+    state.score += 2;
+    log("🌧️ Neues Wetter: Sommerregen → +2 Punkte sofort, zukünftige Samen erhalten +1 Punkt.");
+  } else {
+    log(`🌤️ Wettereffekt aktiviert: ${card.name}`);
+  }
+}
+
 
 function handleCompanion(card) {
   // Karte in die Liste der aktiven Begleiter aufnehmen (ohne Duplikate)
@@ -698,12 +708,20 @@ state.activePlants.forEach(p => {
   // Entferne abgeerntete Pflanzen
   state.activePlants = state.activePlants.filter(p => !p.toRemove);
 
-  // 🌾 2. Gespielte Karten dieser Runde in Ablage
-  state.discard.push(...state.playedThisRound);
-  state.playedThisRound = [];
+// 🌾 2. Gespielte Karten dieser Runde in Ablage
+state.discard.push(...state.playedThisRound);
+state.playedThisRound = [];
+state.lastFertilizerBonus = 0;
+state.playsLeftThisRound = state.maxPlaysPerRound;
+
+// Wetter bleibt bestehen, wenn aktiv
+if (state.activeWeather) {
+  if (state.activeWeather.id === "weather_sun" || state.activeWeather.id === "weather_rain") {
+    state.weatherSeedBonusThisRound = 1;
+  }
+} else {
   state.weatherSeedBonusThisRound = 0;
-  state.lastFertilizerBonus = 0;
-  state.playsLeftThisRound = state.maxPlaysPerRound;
+}
 
   // 🌟 3. Prüfen, ob das Spiel vorbei ist (nach Ernte!)
   if (state.round >= state.maxRounds) {
@@ -862,20 +880,19 @@ state.activePlants.forEach(p => {
     }
   }
 
-  // Wetter-Anzeige
-  if (weatherDiv) {
-    const p = document.createElement("p");
-    p.style.fontSize = "0.75rem";
-    p.style.opacity = "0.85";
+// Wetter-Anzeige
+if (weatherDiv) {
+  const p = document.createElement("p");
+  p.style.fontSize = "0.75rem";
+  p.style.opacity = "0.85";
 
-    if (state.weatherSeedBonusThisRound > 0) {
-      p.textContent = `Aktiver Wetterbonus: +${state.weatherSeedBonusThisRound} auf Samen in dieser Runde.`;
-    } else {
-      p.textContent = "Kein aktiver Wetterbonus in dieser Runde.";
-    }
-
-    weatherDiv.appendChild(p);
+  if (state.activeWeather) {
+    p.textContent = `Aktives Wetter: ${state.activeWeather.name} (+${state.weatherSeedBonusThisRound} Samenbonus pro Runde).`;
+  } else {
+    p.textContent = "Kein aktives Wetter.";
   }
+
+  weatherDiv.appendChild(p);
 }
 
 
