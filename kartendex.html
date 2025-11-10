@@ -9,331 +9,333 @@
       font-family: system-ui, sans-serif;
       background: #050510;
       color: #f5f5ff;
+      padding: 24px;
     }
-    header {
-      padding: 18px 24px;
-      background: linear-gradient(90deg, #121225, #22204a);
-      border-bottom: 1px solid rgba(255,255,255,0.12);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
+    main {
+      max-width: 900px;
+      margin: 0 auto;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.4rem;
+    h1, h2, h3 {
       color: #d7c2ff;
     }
-    header p {
-      margin: 0;
-      font-size: 0.85rem;
-      opacity: 0.9;
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.4rem;
     }
-    .header-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    header a {
-      text-decoration: none;
-      padding: 7px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.3);
-      color: #f5f5ff;
-      font-size: 0.85rem;
-      white-space: nowrap;
-    }
-
-    main {
-      max-width: 1100px;
-      margin: 24px auto 40px;
-      padding: 0 16px 16px;
-      font-size: 0.95rem;
-    }
-
     h2 {
-      margin-top: 10px;
-      margin-bottom: 8px;
-      font-size: 1.1rem;
+      font-size: 1.3rem;
+      margin-top: 1.4rem;
+      margin-bottom: 0.4rem;
+    }
+    h3 {
+      font-size: 1.05rem;
+      margin-top: 1rem;
+      margin-bottom: 0.2rem;
       color: #cfd4ff;
     }
-
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 16px;
+    p {
+      margin: 0.2rem 0 0.4rem;
+      line-height: 1.5;
     }
-    .filter-btn {
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.3);
-      background: rgba(255,255,255,0.04);
-      color: #f5f5ff;
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-    .filter-btn.active {
-      background: #7b5dff;
-      border-color: #7b5dff;
-    }
-
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 12px;
+      margin-bottom: 1rem;
     }
-
     .card {
-      padding: 10px;
       border-radius: 12px;
-      background: rgba(20, 18, 40, 0.95);
-      border: 1px solid rgba(255,255,255,0.18);
-      font-size: 0.82rem;
-      line-height: 1.3;
+      padding: 10px 12px;
+      background: rgba(15,15,35,0.95);
+      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.9rem;
     }
     .card-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2px;
+      align-items: baseline;
+      margin-bottom: 4px;
     }
-    .card-title {
+    .card-name {
       font-weight: 600;
     }
     .card-tag {
       font-size: 0.75rem;
-      opacity: 0.7;
-    }
-    .card-type {
-      font-size: 0.75rem;
       opacity: 0.8;
-      margin-bottom: 4px;
     }
-    .card-desc {
-      font-size: 0.78rem;
-      opacity: 0.92;
-    }
-    .card-id {
+    .pill {
+      display: inline-block;
       font-size: 0.7rem;
-      opacity: 0.6;
-      margin-top: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-right: 4px;
+      margin-bottom: 2px;
     }
-
-    .card.seed { border-left: 4px solid #8be38b; }
-    .card.fertilizer { border-left: 4px solid #f5e38b; }
-    .card.weather { border-left: 4px solid #8bd3f5; }
-    .card.companion { border-left: 4px solid #f58bd6; }
-    .card.tool { border-left: 4px solid #f59e8b; }
-
-    .section-hint {
-      font-size: 0.85rem;
-      opacity: 0.8;
-      margin-bottom: 12px;
-    }
-
-    footer {
-      text-align: center;
+    .pill-seed { background: rgba(139,227,139,0.12); border: 1px solid rgba(139,227,139,0.5); }
+    .pill-fertilizer { background: rgba(245,227,139,0.12); border: 1px solid rgba(245,227,139,0.5); }
+    .pill-weather { background: rgba(139,211,245,0.12); border: 1px solid rgba(139,211,245,0.5); }
+    .pill-companion { background: rgba(245,139,214,0.12); border: 1px solid rgba(245,139,214,0.5); }
+    .pill-tool { background: rgba(245,158,139,0.12); border: 1px solid rgba(245,158,139,0.5); }
+    .meta {
       font-size: 0.8rem;
-      opacity: 0.7;
-      margin-top: 24px;
+      opacity: 0.9;
+      margin-bottom: 2px;
+    }
+    ul {
+      margin: 0.2rem 0 0.4rem 1.1rem;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div>
-      <h1>Samendeck – Kartendex</h1>
-      <p>Alle derzeit verfügbaren Karten im Überblick.</p>
-    </div>
-    <div class="header-links">
-      <a href="sologardengame.html">Zum Spiel</a>
-      <a href="hilfe.html">Hilfe & Anleitung</a>
-    </div>
-  </header>
-
   <main>
-    <h2>Kartenübersicht</h2>
-    <p class="section-hint">
-      Nutze die Filter, um dir nur bestimmte Kartentypen anzeigen zu lassen.
-      Neue Karten und Sets können später ergänzt werden.
+    <h1>Samendeck – Kartendex</h1>
+    <p>
+      Hier findest du eine Übersicht aller aktuell im Spiel verwendeten Karten.
+      Werte können sich im Laufe der Entwicklung noch ändern.
     </p>
 
-    <div class="filters">
-      <button class="filter-btn active" data-type="all">Alle</button>
-      <button class="filter-btn" data-type="seed">🌱 Samen</button>
-      <button class="filter-btn" data-type="fertilizer">💩 Dünger</button>
-      <button class="filter-btn" data-type="weather">🌤️ Wetter</button>
-      <button class="filter-btn" data-type="companion">🧍 Begleiter</button>
-      <button class="filter-btn" data-type="tool">⚒️ Werkzeuge</button>
+    <!-- SAMEN -->
+    <h2>Samen 🌱</h2>
+    <div class="card-grid">
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">🥕 Karotte</span>
+          <span class="card-tag">Gemüse</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-seed">Samen</span>
+          Wachstumszeit: <strong>2</strong> &middot; Ernte-Typ: <strong>einmalig</strong>
+        </div>
+        <p>
+          <strong>Ertrag:</strong> Erntet einmalig <strong>5 Punkte</strong>,
+          sobald die Karotte reif ist.
+        </p>
+        <ul>
+          <li>Solider, schneller Ertrag – gutes „Basisgemüse“.</li>
+          <li>Profitiert stark von Dünger, um schneller zur Reife zu kommen.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">🍓 Erdbeere</span>
+          <span class="card-tag">Frucht</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-seed">Samen</span>
+          Wachstumszeit: <strong>1</strong> &middot; Ernte-Typ: <strong>einmalig</strong>
+        </div>
+        <p>
+          <strong>Basis-Ertrag:</strong> 2 Punkte.<br>
+          <strong>Synergien:</strong>
+        </p>
+        <ul>
+          <li>Wenn <strong>Sonnenschein</strong> aktiv ist:
+            +2 zusätzliche Punkte (Spezialsynergie).</li>
+          <li>Die Ernte profitiert außerdem vom allgemeinen Wetterbonus
+              (+1) und ggf. von <strong>Milo</strong> (+2).</li>
+          <li>Damit kann eine Erdbeere mit Sonne + Milo schnell sehr hohe
+              Werte erreichen.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">🍅 Tomate</span>
+          <span class="card-tag">Gemüse</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-seed">Samen</span>
+          Wachstumszeit: <strong>2</strong> &middot; Ernte-Typ: <strong>wiederholbar</strong>
+        </div>
+        <p>
+          <strong>Ertrag:</strong> 4 Punkte pro Ernte (wiederholt).  
+        </p>
+        <ul>
+          <li>Nach Ernte wird das Wachstum zurückgesetzt und die Tomate
+              kann wieder reifen.</li>
+          <li>Stark in längeren Spielen, besonders mit Dünger-Boosts.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">🍎 Apfelbaum</span>
+          <span class="card-tag">Baum</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-seed">Samen</span>
+          Wachstumszeit: <strong>3</strong> &middot; Ernte-Typ: <strong>dauerhaft</strong>
+        </div>
+        <p>
+          <strong>Erster Ertrag:</strong> 5 Punkte bei der ersten Reife.  
+          <strong>Dauerbonus:</strong> Danach jede Runde +1 Punkt zusätzlich.
+        </p>
+        <ul>
+          <li>Skaliert hervorragend über mehrere Runden.</li>
+          <li>Ideal, wenn du ihn früh pflanzt und mit Dünger beschleunigst.</li>
+        </ul>
+      </article>
     </div>
 
-    <div id="cardGrid" class="card-grid"></div>
+    <!-- DÜNGER -->
+    <h2>Dünger 💩</h2>
+    <div class="card-grid">
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">Kompost</span>
+          <span class="card-tag">Basis</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-fertilizer">Dünger</span>
+          Ziel: zuletzt gepflanzte Pflanze
+        </div>
+        <p>
+          Erhöht das Wachstum der zuletzt gepflanzten aktiven Pflanze um
+          <strong>+1</strong> (plus eventuelle Begleiterboni).
+        </p>
+        <ul>
+          <li>Gut, um Karotte oder Tomate rechtzeitig zur Ernte zu bringen.</li>
+        </ul>
+      </article>
 
-    <footer>
-      Dieser Kartendex bildet den aktuellen Stand des Samendecks ab. Balancing
-      und Kartenauswahl können sich in zukünftigen Versionen ändern. 🌱
-    </footer>
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">Superdünger</span>
+          <span class="card-tag">Stark</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-fertilizer">Dünger</span>
+          Ziel: zuletzt gepflanzte Pflanze
+        </div>
+        <p>
+          Erhöht das Wachstum der zuletzt gepflanzten aktiven Pflanze um
+          <strong>+2</strong> (plus eventuelle Begleiterboni).
+        </p>
+        <ul>
+          <li>Ideal, um Apfelbaum oder Tomate massiv zu beschleunigen.</li>
+        </ul>
+      </article>
+    </div>
+
+    <!-- WETTER -->
+    <h2>Wetter 🌤️</h2>
+    <div class="card-grid">
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">Sonnenschein</span>
+          <span class="card-tag">Wetter</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-weather">Wetter</span>
+          Typ: dauerhaft, ersetzbar
+        </div>
+        <p>
+          Setzt das Wetter auf <strong>Sonnenschein</strong>.
+          Solange Sonnenschein aktiv ist:
+        </p>
+        <ul>
+          <li>Alle Ernten erhalten einen <strong>Wetterbonus (+1)</strong>.</li>
+          <li><strong>Erdbeere</strong> erhält zusätzlich +2 Punkte Spezialbonus.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">Sommerregen</span>
+          <span class="card-tag">Wetter</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-weather">Wetter</span>
+          Typ: dauerhaft, ersetzbar
+        </div>
+        <p>
+          Setzt das Wetter auf <strong>Sommerregen</strong>.
+        </p>
+        <ul>
+          <li><strong>+2 Sofortpunkte</strong> beim Ausspielen.</li>
+          <li>Solange aktiv: Ernten erhalten den allgemeinen
+              <strong>Wetterbonus (+1)</strong>.</li>
+        </ul>
+      </article>
+    </div>
+
+    <!-- BEGLEITER -->
+    <h2>Begleiter 🐶🧙</h2>
+    <div class="card-grid">
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">Milo, Gartenschnüffler</span>
+          <span class="card-tag">Hund</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-companion">Begleiter</span>
+          Typ: dauerhaft
+        </div>
+        <p>
+          Jedes Mal, wenn eine Pflanze geerntet wird, erhältst du
+          <strong>+2 zusätzliche Punkte</strong>.
+        </p>
+        <ul>
+          <li>Stapelbar mit Wetter & Erdbeer-Synergien.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">Gartenwichtel</span>
+          <span class="card-tag">Wichtel</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-companion">Begleiter</span>
+          Typ: dauerhaft
+        </div>
+        <p>
+          Verstärkt deine Düngerkarten: jeder Einsatz von Dünger bringt
+          der Zielpflanze <strong>+1 zusätzliches Wachstum</strong>.
+        </p>
+        <ul>
+          <li>In Kombination mit Superdünger extrem stark für Langzeitpflanzen.</li>
+        </ul>
+      </article>
+    </div>
+
+    <!-- WERKZEUGE -->
+    <h2>Werkzeuge ⚒️</h2>
+    <div class="card-grid">
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">Gießkanne</span>
+          <span class="card-tag">Werkzeug</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-tool">Werkzeug</span>
+          Typ: einmalig
+        </div>
+        <p>
+          Experimentelle Karte – geplant ist, dass sie den letzten Düngereffekt
+          erneut auslöst. Im aktuellen Prototyp kann der Effekt noch variieren.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">Rechen</span>
+          <span class="card-tag">Werkzeug</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-tool">Werkzeug</span>
+          Typ: einmalig
+        </div>
+        <p>
+          Ziehe sofort <strong>2 zusätzliche Karten</strong>.
+        </p>
+        <ul>
+          <li>Gut, um schnell an Schlüssel-Karten (Begleiter, Samen, Wetter) zu kommen.</li>
+        </ul>
+      </article>
+    </div>
+
   </main>
-
-  <script>
-    // Die gleichen Kartendaten wie im Spiel
-    const ALL_CARDS = [
-      // Samen
-      {
-        id: "seed_carrot",
-        name: "Möhrensamen",
-        type: "seed",
-        tag: "Gemüse",
-        basePoints: 3,
-        description: "+3 Punkte."
-      },
-      {
-        id: "seed_pumpkin",
-        name: "Kürbissamen",
-        type: "seed",
-        tag: "Gemüse",
-        basePoints: 6,
-        description: "+6 Punkte."
-      },
-      {
-        id: "seed_potato",
-        name: "Kartoffelknolle",
-        type: "seed",
-        tag: "Wurzel",
-        basePoints: 4,
-        description: "+4 Punkte."
-      },
-      {
-        id: "seed_flower",
-        name: "Sonnenblumensamen",
-        type: "seed",
-        tag: "Blume",
-        basePoints: 5,
-        description: "+5 Punkte."
-      },
-
-      // Dünger
-      {
-        id: "fert_compost",
-        name: "Kompost",
-        type: "fertilizer",
-        tag: "Basis",
-        description: "Verdoppelt die Punkte des zuletzt gespielten Samens."
-      },
-      {
-        id: "fert_super",
-        name: "Superdünger",
-        type: "fertilizer",
-        tag: "Stark",
-        description: "1.5x Punkte des letzten Samens (aufgerundet) + evtl. Begleiterbonus."
-      },
-
-      // Wetter
-      {
-        id: "weather_sun",
-        name: "Sonnenschein",
-        type: "weather",
-        tag: "Wetter",
-        description: "+1 Punkt für alle weiteren Samen in dieser Runde."
-      },
-      {
-        id: "weather_rain",
-        name: "Sommerregen",
-        type: "weather",
-        tag: "Wetter",
-        description: "+2 Punkte sofort, +1 Punkt für alle weiteren Samen in dieser Runde."
-      },
-
-      // Begleiter
-      {
-        id: "comp_milo",
-        name: "Milo, Gartenschnüffler",
-        type: "companion",
-        tag: "Hund",
-        description: "+2 Punkte jedes Mal, wenn du einen Samen spielst (dauerhaft)."
-      },
-      {
-        id: "comp_gnome",
-        name: "Gartenwichtel",
-        type: "companion",
-        tag: "Wichtel",
-        description: "+1 Punkt jedes Mal, wenn du Dünger spielst (dauerhaft)."
-      },
-
-      // Werkzeuge
-      {
-        id: "tool_watering",
-        name: "Gießkanne",
-        type: "tool",
-        tag: "Werkzeug",
-        description: "Wiederholt den Effekt des letzten Düngers, falls vorhanden."
-      },
-      {
-        id: "tool_rake",
-        name: "Rechen",
-        type: "tool",
-        tag: "Werkzeug",
-        description: "Ziehe sofort 2 zusätzliche Karten."
-      }
-    ];
-
-    function typeLabel(type) {
-      return {
-        seed: "Samen",
-        fertilizer: "Dünger",
-        weather: "Wetter",
-        companion: "Begleiter",
-        tool: "Werkzeug"
-      }[type] || type;
-    }
-
-    function renderCards(filterType = "all") {
-      const grid = document.getElementById("cardGrid");
-      grid.innerHTML = "";
-
-      const filtered = ALL_CARDS.filter(card =>
-        filterType === "all" ? true : card.type === filterType
-      );
-
-      filtered.forEach(card => {
-        const div = document.createElement("div");
-        div.className = "card " + card.type;
-
-        let desc = card.description || "";
-        if (typeof card.basePoints === "number") {
-          desc = `Basis: ${card.basePoints} Punkte. ` + desc;
-        }
-
-        div.innerHTML = `
-          <div class="card-header">
-            <span class="card-title">${card.name}</span>
-            <span class="card-tag">${card.tag || ""}</span>
-          </div>
-          <div class="card-type">${typeLabel(card.type)}</div>
-          <div class="card-desc">${desc}</div>
-          <div class="card-id">ID: <code>${card.id}</code></div>
-        `;
-        grid.appendChild(div);
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const filterButtons = document.querySelectorAll(".filter-btn");
-
-      filterButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          filterButtons.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-
-          const type = btn.getAttribute("data-type");
-          renderCards(type);
-        });
-      });
-
-      renderCards("all");
-    });
-  </script>
 </body>
 </html>
