@@ -501,13 +501,18 @@ const state = {
       return JSON.parse(JSON.stringify(card));
     }
 
-    function log(message) {
-      const logDiv = document.getElementById("log");
-      const p = document.createElement("p");
-      p.textContent = message;
-      logDiv.appendChild(p);
-      logDiv.scrollTop = logDiv.scrollHeight;
-    }
+   function log(message) {
+  const logDiv = document.getElementById("log");
+  const p = document.createElement("p");
+  p.textContent = message;
+
+  // Neueste Nachricht nach oben
+  if (logDiv.firstChild) {
+    logDiv.insertBefore(p, logDiv.firstChild);
+  } else {
+    logDiv.appendChild(p);
+  }
+}
 
     function drawToHand(targetSize) {
       while (state.hand.length < targetSize) {
@@ -603,12 +608,13 @@ function handleFertilizer(card) {
       if (card.id === "weather_sun") {
         state.weatherSeedBonusThisRound += 1;
         log("☀️ Wetter: Sonnenschein → zukünftige Samen in dieser Runde: +1 Punkt.");
-      } else if (card.id === "weather_rain") {
-        state.weatherSeedBonusThisRound += 1;
-        state.score += 2;
-        log("🌧️ Wetter: Sommerregen → +2 Punkte sofort, zukünftige Samen in dieser Runde: +1 Punkt.");
-      }
-    }
+  } else if (card.id === "weather_rain") {
+    state.weatherSeedBonusThisRound += 1;
+    const rainPoints = 2;
+    state.score += rainPoints;
+
+    log(`🌧️ Wetter: Sommerregen → (${rainPoints} Sofortpunkte als Regenbonus, zukünftige Samen in dieser Runde: +1 Punkt).`);
+  }
 
 function handleCompanion(card) {
   // Karte in die Liste der aktiven Begleiter aufnehmen (ohne Duplikate)
@@ -648,38 +654,46 @@ function handleCompanion(card) {
 function endTurn() {
   if (state.gameOver) return;
 
-  // 🌿 1. Wachstum & Erntephase für alle aktiven Pflanzen
-  state.activePlants.forEach(p => {
-    // jede Runde +1 Wachstum
-    p.growth++;
+// 🌿 1. Wachstum & Erntephase für alle aktiven Pflanzen
+state.activePlants.forEach(p => {
+  // jede Runde +1 Wachstum
+  p.growth++;
 
-    if (p.growth >= p.growthTime) {
-      // Reife erreicht → wir nutzen den "reifen" Wert aus der Power-Kurve
-      const matureIndex = p.powerCurve.length - 1;
-      let baseGain = p.powerCurve[matureIndex];
+  if (p.growth >= p.growthTime) {
+    // Reife erreicht → „Endwert“ der Pflanze
+    const matureIndex = p.powerCurve.length - 1;
+    const plantBase = p.powerCurve[matureIndex];
 
-      // Milo-Bonus auf Samen-Ertrag
-      baseGain += state.companionSeedBonus;
+    const miloBonus = state.companionSeedBonus; // pro Ernte
+    const totalGain = plantBase + miloBonus;
 
-      state.score += baseGain;
-      state.lastSeedPoints = baseGain;
+    state.score += totalGain;
+    state.lastSeedPoints = totalGain;
 
-      log(`🌿 ${p.name} wurde geerntet (+${baseGain} Punkte).`);
-
-      if (p.harvestType === "einmalig") {
-        p.toRemove = true;
-        log(`🥕 ${p.name} wurde entfernt (einmalige Ernte).`);
-      } else if (p.harvestType === "wiederholbar") {
-        // Pflanze bleibt, beginnt neuen Wachstumszyklus
-        p.growth = 0;
-        log(`🍅 ${p.name} wächst weiter und kann erneut geerntet werden.`);
-      } else if (p.harvestType === "dauerhaft") {
-        // bleibt dauerhaft, bringt zusätzlich jede Runde +1
-        state.score += 1;
-        log(`🍎 ${p.name} trägt weiter Früchte (+1 Bonuspunkte extra).`);
-      }
+    // Text-Bausteine für die Erklärung
+    const parts = [`${plantBase} Erntepunkte`];
+    if (miloBonus > 0) {
+      parts.push(`${miloBonus} Begleiterbonus Milo`);
     }
-  });
+    const detail = parts.join(" + ");
+
+    log(`🌿 ${p.name} wurde geerntet (${detail} = +${totalGain} Punkte).`);
+
+    if (p.harvestType === "einmalig") {
+      p.toRemove = true;
+      log(`🥕 ${p.name} wurde entfernt (einmalige Ernte).`);
+    } else if (p.harvestType === "wiederholbar") {
+      // Pflanze bleibt, beginnt neuen Wachstumszyklus
+      p.growth = 0;
+      log(`🍅 ${p.name} wächst weiter und kann erneut geerntet werden.`);
+    } else if (p.harvestType === "dauerhaft") {
+      // bleibt dauerhaft, bringt zusätzlich jede Runde +1
+      state.score += 1;
+      log(`🍎 ${p.name} trägt weiter Früchte (+1 Dauerbonuspunkt).`);
+    }
+  }
+});
+
 
   // Entferne abgeerntete Pflanzen
   state.activePlants = state.activePlants.filter(p => !p.toRemove);
