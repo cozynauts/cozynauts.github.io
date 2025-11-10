@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Samendeck – Hilfe & Anleitung</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #050510;
+      color: #f5f5ff;
+    }
+    header {
+      padding: 18px 24px;
+      background: linear-gradient(90deg, #121225, #22204a);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      color: #d7c2ff;
+    }
+    header p {
+      margin: 0;
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+    header a {
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #f5f5ff;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 24px auto 40px;
+      padding: 0 16px;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+    h2 {
+      margin-top: 24px;
+      margin-bottom: 6px;
+      font-size: 1.15rem;
+      color: #cfd4ff;
+    }
+    h3 {
+      margin-top: 18px;
+      margin-bottom: 4px;
+      font-size: 1rem;
+      color: #bfaeff;
+    }
+    p {
+      margin: 4px 0 10px;
+    }
+    ul {
+      margin: 4px 0 10px 20px;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.85rem;
+      background: rgba(255,255,255,0.06);
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+    .tagline {
+      font-size: 0.9rem;
+      opacity: 0.85;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0 16px;
+    }
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      font-size: 0.8rem;
+      opacity: 0.85;
+    }
+    .rank-table {
+      border-collapse: collapse;
+      margin-top: 6px;
+      width: 100%;
+      max-width: 480px;
+    }
+    .rank-table th,
+    .rank-table td {
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 6px 8px;
+      font-size: 0.85rem;
+    }
+    .rank-table th {
+      background: rgba(255,255,255,0.05);
+    }
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Samendeck – Hilfe & Anleitung</h1>
+      <p class="tagline">Baue dein muckeliges Gartendeck auf und sammle in 10 Runden so viele Punkte wie möglich.</p>
+      <div class="badge-row">
+        <span class="badge">🌱 Singleplayer-Kartenspiel</span>
+        <span class="badge">🎴 Samen · Dünger · Wetter · Werkzeuge · Begleiter</span>
+        <span class="badge">🐶 Mit Milo dem Gartenschnüffler</span>
+      </div>
+    </div>
+    <a href="sologardengame.html">Zum Spiel zurück</a>
+  </header>
+
+  <main>
+    <h2>1. Grundidee</h2>
+    <p>
+      <strong>Samendeck</strong> ist ein rundenbasiertes Einzelspieler-Kartenspiel.
+      Du hast <strong>10 Runden</strong> Zeit, um mithilfe deines Kartendecks die
+      höchste Punktzahl zu erreichen. Jede Karte repräsentiert einen Aspekt deines
+      Gartens – von einfachen Samen bis hin zu hilfreichen Begleitern.
+    </p>
+    <p>
+      Ziel ist es, <strong>clever zu kombinieren</strong>: Samen legen, mit Dünger
+      verstärken, vom Wetter profitieren und mit Begleitern dauerhafte Boni
+      freischalten.
+    </p>
+
+    <h2>2. Rundenablauf</h2>
+    <ul>
+      <li>Das Spiel besteht aus <strong>10 Runden</strong>.</li>
+      <li>In jeder Runde hast du <strong>3 Züge</strong>.</li>
+      <li>Zu Beginn jeder Runde wird deine <strong>Hand auf 5 Karten</strong> aufgefüllt (sofern genug Karten im Deck sind).</li>
+      <li>Jedes Mal, wenn du eine Karte spielst, verbrauchst du einen Zug.</li>
+      <li>Am Rundenende wandern gespielte Karten auf den Ablagestapel.</li>
+      <li>Ist das Deck leer, wird der Ablagestapel neu gemischt und als Deck verwendet.</li>
+    </ul>
+
+    <h2>3. Kartentypen</h2>
+
+    <h3>3.1 Samen 🌱</h3>
+    <p>Samen sind deine Haupt-Punktequelle. Sie bringen sofort Punkte, wenn du sie spielst.</p>
+    <ul>
+      <li><strong>Möhrensamen</strong> – +3 Punkte</li>
+      <li><strong>Kartoffelknolle</strong> – +4 Punkte</li>
+      <li><strong>Sonnenblumensamen</strong> – +5 Punkte</li>
+      <li><strong>Kürbissamen</strong> – +6 Punkte</li>
+    </ul>
+    <p>
+      Die tatsächlichen Punkte eines Samens werden durch <strong>Wetter</strong> und
+      <strong>Begleiter</strong> noch weiter erhöht.
+    </p>
+
+    <h3>3.2 Dünger 💩</h3>
+    <p>Dünger verstärkt die Punkte des zuletzt gespielten Samens.</p>
+    <ul>
+      <li><strong>Kompost</strong> – verdoppelt die Punkte des letzten Samens.</li>
+      <li><strong>Superdünger</strong> – ca. 1,5× der letzten Samenpunkte (aufgerundet), plus evtl. Bonus durch Begleiter.</li>
+    </ul>
+    <p>
+      Dünger ist besonders stark, wenn du vorher einen Samen mit hoher Punktzahl
+      gespielt hast.
+    </p>
+
+    <h3>3.3 Wetter 🌤️</h3>
+    <p>Wetterkarten beeinflussen alle weiteren Samen in der aktuellen Runde.</p>
+    <ul>
+      <li><strong>Sonnenschein</strong> – +1 Punkt auf jeden zukünftigen Samen dieser Runde.</li>
+      <li><strong>Sommerregen</strong> – sofort +2 Punkte und ebenfalls +1 Punkt auf zukünftige Samen dieser Runde.</li>
+    </ul>
+    <p>
+      Wetter wirkt <strong>nicht rückwirkend</strong>, sondern nur auf Samen, die
+      <em>nach</em> der Wetterkarte gespielt werden.
+    </p>
+
+    <h3>3.4 Begleiter 🐶🧙</h3>
+    <p>Begleiter bleiben dauerhaft aktiv und geben dir passiven Bonus.</p>
+    <ul>
+      <li><strong>Milo, Gartenschnüffler</strong> – +2 Punkte auf <em>jeden</em> zukünftigen Samen.</li>
+      <li><strong>Gartenwichtel</strong> – +1 Punkt auf <em>jeden</em> zukünftigen Dünger.</li>
+    </ul>
+    <p>
+      Aktive Begleiter werden im Spiel in einem eigenen Bereich angezeigt. Ihre
+      Effekte summieren sich im Laufe der Partie.
+    </p>
+
+    <h3>3.5 Werkzeuge ⚒️</h3>
+    <p>Werkzeuge sind einmalige Aktionen mit starkem taktischem Einfluss.</p>
+    <ul>
+      <li><strong>Gießkanne</strong> – wiederholt den letzten Düngereffekt (falls vorhanden).</li>
+      <li><strong>Rechen</strong> – du ziehst sofort 2 zusätzliche Karten.</li>
+    </ul>
+    <p>
+      Werkzeuge eignen sich besonders gut, um starke Runden weiter zu boosten oder
+      wenn dir gerade die passenden Karten auf der Hand fehlen.
+    </p>
+
+    <h2>4. Punktesystem (Kurzfassung)</h2>
+    <ul>
+      <li><strong>Samen</strong> – bringen Basis-Punkte (3–6), plus Boni durch Wetter & Begleiter.</li>
+      <li><strong>Dünger</strong> – verstärkt die letzten Samenpunkte (Verdoppler/Multiplikator, plus evtl. Begleiter-Bonus).</li>
+      <li><strong>Wetter</strong> – gibt kleine Sofortpunkte und verbessert zukünftige Samen.</li>
+      <li><strong>Begleiter</strong> – geben keine Sofortpunkte, aber langfristige Vorteile.</li>
+      <li><strong>Werkzeuge</strong> – situative Effekte (mehr Karten, Effekt wiederholen etc.).</li>
+    </ul>
+
+    <h2>5. Ziel & Bewertung</h2>
+    <p>
+      Am Ende von Runde 10 zählt deine <strong>Gesamtpunktzahl</strong>. Zusätzlich
+      speichert das Spiel deinen <strong>Highscore</strong> lokal im Browser
+      (<code>localStorage</code>).
+    </p>
+    <p>Geplante Rangliste (Work in Progress):</p>
+    <table class="rank-table">
+      <tr>
+        <th>Punkte</th>
+        <th>Rang</th>
+        <th>Titel</th>
+      </tr>
+      <tr>
+        <td>0–30</td>
+        <td>🐌</td>
+        <td>Hobbygärtner</td>
+      </tr>
+      <tr>
+        <td>31–60</td>
+        <td>🌿</td>
+        <td>Gartenfreund</td>
+      </tr>
+      <tr>
+        <td>61–90</td>
+        <td>🌻</td>
+        <td>Profi-Gärtner</td>
+      </tr>
+      <tr>
+        <td>91+</td>
+        <td>🌟</td>
+        <td>Meistergärtner</td>
+      </tr>
+    </table>
+
+    <h2>6. Tipps für einen guten Start</h2>
+    <ul>
+      <li>Spiele zuerst einen <strong>Samen mit hoher Punktzahl</strong> (z. B. Kürbis), bevor du Dünger nutzt.</li>
+      <li>Kombiniere <strong>Wetter → Samen → Dünger</strong> in derselben Runde, um die Effekte zu stapeln.</li>
+      <li>Versuche <strong>Milo</strong> früh zu bekommen – je früher er liegt, desto öfter wirkt sein Bonus.</li>
+      <li>Nutze den <strong>Rechen</strong>, wenn du eine schlechte Hand hast oder nach Komboteilen suchst.</li>
+    </ul>
+
+    <footer>
+      Samendeck befindet sich noch im Aufbau – Balancing, neue Karten und Features
+      können sich jederzeit ändern. Viel Spaß beim Ausprobieren und Optimieren deines
+      muckeligen Gartendecks! 🌱
+    </footer>
+  </main>
+</body>
+</html>
