@@ -300,38 +300,52 @@
 
     const ALL_CARDS = [
       // Samen
-      {
-        id: "seed_carrot",
-        name: "Möhrensamen",
-        type: "seed",
-        tag: "Gemüse",
-        basePoints: 3,
-        description: "+3 Punkte."
-      },
-      {
-        id: "seed_pumpkin",
-        name: "Kürbissamen",
-        type: "seed",
-        tag: "Gemüse",
-        basePoints: 6,
-        description: "+6 Punkte."
-      },
-      {
-        id: "seed_potato",
-        name: "Kartoffelknolle",
-        type: "seed",
-        tag: "Wurzel",
-        basePoints: 4,
-        description: "+4 Punkte."
-      },
-      {
-        id: "seed_flower",
-        name: "Sonnenblumensamen",
-        type: "seed",
-        tag: "Blume",
-        basePoints: 5,
-        description: "+5 Punkte."
-      },
+// Samen (neues Design)
+{
+  id: "seed_carrot",
+  name: "🥕 Karotte",
+  type: "seed",
+  tag: "Gemüse",
+  growthTime: 2,
+  harvestType: "einmalig",
+  powerCurve: [1, 3, 5],
+  description: "Einsteigerpflanze. Nach 2 Pflegeaktionen erntbar (+5 Power oder +1 Siegpunkt).",
+  synergy: "Profitierst von Ernteboni (Markttag, Dünger)."
+},
+{
+  id: "seed_strawberry",
+  name: "🍓 Erdbeere",
+  type: "seed",
+  tag: "Frucht",
+  growthTime: 1,
+  harvestType: "einmalig",
+  powerCurve: [2, 4],
+  description: "Schnelle Punktequelle. Bei Sonne +2 zusätzliche Power.",
+  synergy: "Stark mit Sonnentag und Dünger."
+},
+{
+  id: "seed_tomato",
+  name: "🍅 Tomate",
+  type: "seed",
+  tag: "Gemüse",
+  growthTime: 2,
+  harvestType: "wiederholbar",
+  powerCurve: [1, 3, 4],
+  description: "Erntbar alle 2 Runden nach Reife, bleibt aktiv.",
+  synergy: "Synergiert mit Gießkanne und Energie-Karten."
+},
+{
+  id: "seed_apple",
+  name: "🍎 Apfelbaum",
+  type: "seed",
+  tag: "Baum",
+  growthTime: 3,
+  harvestType: "dauerhaft",
+  powerCurve: [1, 2, 3, 5],
+  description: "Langfristiger Ertrag. Ab Reife jede Runde +1 Power.",
+  synergy: "Profitiert von Hacke und Garten der Ruhe."
+},
+
 
       // Dünger
       {
@@ -416,7 +430,8 @@ const state = {
   companionSeedBonus: 0,
   companionFertilizerBonus: 0,
   gameOver: false,
-  activeCompanions: [] // 👈 NEU
+  activeCompanions: [],
+  activePlants: []  
 };
 
 
@@ -501,36 +516,37 @@ const state = {
       render();
     }
 
-    function handleSeed(card) {
-      let gained = card.basePoints;
-      gained += state.weatherSeedBonusThisRound;
-      gained += state.companionSeedBonus;
+function handleSeed(card) {
+  // Neue Samen werden nicht sofort gewertet, sondern in den Garten gesetzt
+  card.growth = 0; // bisher absolvierte Pflegeaktionen / Runden
+  state.activePlants.push(card);
 
-      state.score += gained;
-      state.lastSeedPoints = gained;
-      log(`🌱 Samen: ${card.name} → +${gained} Punkte.`);
-    }
+  log(`🌱 ${card.name} wurde gepflanzt (Wachstumszeit: ${card.growthTime} Pflegeaktionen).`);
+}
 
-    function handleFertilizer(card) {
-      if (state.lastSeedPoints <= 0) {
-        log(`💩 ${card.name} hat keinen Effekt – du hast davor keinen Samen gespielt.`);
-        state.lastFertilizerBonus = 0;
-        return;
-      }
 
-      let bonus = 0;
-      if (card.id === "fert_compost") {
-        bonus = state.lastSeedPoints; // Verdoppeln = nochmal so viele Punkte
-      } else if (card.id === "fert_super") {
-        bonus = Math.ceil(state.lastSeedPoints * 1.5);
-      }
+function handleFertilizer(card) {
+  if (state.activePlants.length === 0) {
+    log(`💩 ${card.name} hat keinen Effekt – es ist noch keine Pflanze im Garten.`);
+    return;
+  }
 
-      bonus += state.companionFertilizerBonus;
-      state.score += bonus;
-      state.lastFertilizerBonus = bonus;
+  // Wir düngen immer die zuletzt gepflanzte Pflanze
+  const plant = state.activePlants[state.activePlants.length - 1];
 
-      log(`🌿 Dünger: ${card.name} → +${bonus} Bonuspunkte.`);
-    }
+  let steps = 1;
+  if (card.id === "fert_super") {
+    steps = 2;
+  }
+
+  // Gartenwichtel gibt Bonus-Wachstum auf Dünger
+  steps += state.companionFertilizerBonus;
+
+  plant.growth += steps;
+
+  log(`💩 ${card.name} düngt ${plant.name} → Wachstum +${steps} (aktueller Fortschritt: ${plant.growth}/${plant.growthTime}).`);
+}
+
 
     function handleWeather(card) {
       if (card.id === "weather_sun") {
@@ -578,30 +594,93 @@ function handleCompanion(card) {
 
     // --- Rundenlogik -------------------------------------------------
 
-    function endTurn() {
-      if (state.gameOver) return;
+function endTurn() {
+  if (state.gameOver) return;
 
-      // Gespielte Karten in den Ablagestapel
-      state.discard.push(...state.playedThisRound);
-      state.playedThisRound = [];
-      state.weatherSeedBonusThisRound = 0;
-      state.lastSeedPoints = 0;
-      state.lastFertilizerBonus = 0;
-      state.playsLeftThisRound = state.maxPlaysPerRound;
+  // 🌿 1. Wachstum & Erntephase für alle aktiven Pflanzen
+  state.activePlants.forEach(p => {
+    // jede Runde +1 Wachstum
+    p.growth++;
 
-      if (state.round >= state.maxRounds) {
-        state.gameOver = true;
-        render();
-        log(`⭐ Spielende! Du hast insgesamt ${state.score} Punkte erreicht.`);
-        updateHighscoreIfNeeded();
-        document.getElementById("endTurnBtn").disabled = true;
-        return;
+    if (p.growth >= p.growthTime) {
+      // Reife erreicht → wir nutzen den "reifen" Wert aus der Power-Kurve
+      const matureIndex = Math.min(p.powerCurve.length - 1, p.powerCurve.length - 1);
+      let baseGain = p.powerCurve[matureIndex];
+
+      // Milo-Bonus auf Samen-Ertrag
+      baseGain += state.companionSeedBonus;
+
+      state.score += baseGain;
+      state.lastSeedPoints = baseGain;
+
+      log(`🌿 ${p.name} wurde geerntet (+${baseGain} Punkte).`);
+
+      if (p.harvestType === "einmalig") {
+        p.toRemove = true;
+        log(`🥕 ${p.name} wurde entfernt (einmalige Ernte).`);
+      } else if (p.harvestType === "wiederholbar") {
+        // Pflanze bleibt, beginnt neuen Wachstumszyklus
+        p.growth = 0;
+        log(`🍅 ${p.name} wächst weiter und kann erneut geerntet werden.`);
+      } else if (p.harvestType === "dauerhaft") {
+        // bleibt dauerhaft, bringt zusätzlich jede Runde +1
+        state.score += 1;
+        log(`🍎 ${p.name} trägt weiter Früchte (+1 Bonuspunkte extra).`);
       }
+    }
+  });
 
-      state.round += 1;
-      drawToHand(5);
-      render();
-      log(`— Runde ${state.round} startet. —`);
+  // Einmalige Pflanzen entfernen
+  state.activePlants = state.activePlants.filter(p => !p.toRemove);
+
+  // 🌾 2. Gespielte Karten dieser Runde in Ablage
+  state.discard.push(...state.playedThisRound);
+  state.playedThisRound = [];
+  state.weatherSeedBonusThisRound = 0;
+  state.lastFertilizerBonus = 0;
+  state.playsLeftThisRound = state.maxPlaysPerRound;
+
+  // 🌟 3. Prüfen, ob das Spiel vorbei ist (nach Ernte!)
+  if (state.round >= state.maxRounds) {
+    state.gameOver = true;
+    render();
+    log(`⭐ Spielende! Du hast insgesamt ${state.score} Punkte erreicht.`);
+    updateHighscoreIfNeeded();
+    document.getElementById("endTurnBtn").disabled = true;
+    return;
+  }
+
+  // 🌱 4. Neue Runde vorbereiten
+  state.round += 1;
+  drawToHand(5);
+  render();
+  log(`— Runde ${state.round} startet. —`);
+}
+
+
+      // Wachstum/Erntephase
+state.activePlants.forEach(p => {
+  p.growth++;
+  if (p.growth >= p.growthTime) {
+    // Ernte!
+    let gain = p.powerCurve[Math.min(p.growthTime, p.powerCurve.length - 1)];
+    state.score += gain;
+    log(`🌿 ${p.name} wurde geerntet (+${gain} Punkte)!`);
+
+    if (p.harvestType === "einmalig") {
+      log(`🥕 ${p.name} wurde entfernt.`);
+      p.toRemove = true;
+    } else if (p.harvestType === "wiederholbar") {
+      p.growth = 0; // Cooldown neu starten
+    } else if (p.harvestType === "dauerhaft") {
+      // bleibt, aber gibt jede Runde +1
+      state.score += 1;
+      log(`🍎 ${p.name} trägt weiter Früchte (+1 Bonus).`);
+    }
+  }
+});
+// Entferne abgeerntete Pflanzen
+state.activePlants = state.activePlants.filter(p => !p.toRemove);
     }
 
     // --- Rendering ---------------------------------------------------
@@ -718,30 +797,31 @@ function initGame() {
   state.companionSeedBonus = 0;
   state.companionFertilizerBonus = 0;
   state.gameOver = false;
-  state.activeCompanions = []; // 👈 NEU
+  state.activeCompanions = [];
+  state.activePlants = [];
 
-      // Deck bauen: 2x Samen, 2x Dünger, 1x Wetter, 1x Begleiter, 1x Werkzeug etc.
-      const deck = [];
-      ALL_CARDS.forEach(card => {
-        let copies = 2;
-        if (card.type === "companion" || card.type === "tool" || card.type === "weather") {
-          copies = 1;
-        }
-        for (let i = 0; i < copies; i++) {
-          deck.push(cloneCard(card));
-        }
-      });
-
-      state.deck = shuffle(deck);
-      drawToHand(5);
-      render();
-
-      document.getElementById("endTurnBtn").disabled = false;
-
-      const logDiv = document.getElementById("log");
-      logDiv.innerHTML = "";
-      log("Neues Spiel gestartet. Versuche in 10 Runden so viele Punkte wie möglich zu sammeln!");
+// Deck bauen …
+  const deck = [];
+  ALL_CARDS.forEach(card => {
+    let copies = 2;
+    if (card.type === "companion" || card.type === "tool" || card.type === "weather") {
+      copies = 1;
     }
+    for (let i = 0; i < copies; i++) {
+      deck.push(cloneCard(card));
+    }
+  });
+
+  state.deck = shuffle(deck);
+  drawToHand(5);
+  render();
+
+  document.getElementById("endTurnBtn").disabled = false;
+
+  const logDiv = document.getElementById("log");
+  logDiv.innerHTML = "";
+  log("Neues Spiel gestartet. Versuche in 10 Runden so viele Punkte wie möglich zu sammeln!");
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("endTurnBtn").addEventListener("click", endTurn);
