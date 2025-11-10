@@ -710,7 +710,7 @@ function endTurn() {
 
     // --- Rendering ---------------------------------------------------
 
-   function render() {
+  function render() {
   document.getElementById("round").textContent = state.round;
   document.getElementById("maxRounds").textContent = state.maxRounds;
   document.getElementById("score").textContent = state.score;
@@ -734,17 +734,20 @@ function endTurn() {
   if (fieldDiv) fieldDiv.innerHTML = "";
   if (weatherDiv) weatherDiv.innerHTML = "";
 
-
   // Hand rendern
   state.hand.forEach((card, index) => {
     const div = document.createElement("div");
-    div.className = "card " + card.type + (state.playsLeftThisRound <= 0 || state.gameOver ? " disabled" : "");
+    div.className =
+      "card " +
+      card.type +
+      (state.playsLeftThisRound <= 0 || state.gameOver ? " disabled" : "");
+
     const typeLabel = {
       seed: "Samen",
       fertilizer: "Dünger",
       weather: "Wetter",
       companion: "Begleiter",
-      tool: "Werkzeug"
+      tool: "Werkzeug",
     }[card.type] || card.type;
 
     div.innerHTML = `
@@ -763,15 +766,16 @@ function endTurn() {
   });
 
   // Diese Runde gespielte Karten
-  state.playedThisRound.forEach(card => {
+  state.playedThisRound.forEach((card) => {
     const div = document.createElement("div");
     div.className = "card " + card.type + " disabled";
+
     const typeLabel = {
       seed: "Samen",
       fertilizer: "Dünger",
       weather: "Wetter",
       companion: "Begleiter",
-      tool: "Werkzeug"
+      tool: "Werkzeug",
     }[card.type] || card.type;
 
     div.innerHTML = `
@@ -787,7 +791,7 @@ function endTurn() {
 
   // Aktive Begleiter & dauerhafte Effekte
   if (companionsDiv) {
-    state.activeCompanions.forEach(card => {
+    state.activeCompanions.forEach((card) => {
       const div = document.createElement("div");
       div.className = "card " + card.type + " disabled";
 
@@ -809,9 +813,8 @@ function endTurn() {
       companionsDiv.appendChild(div);
     });
   }
-}
 
-      // Feld / aktive Pflanzen
+  // Feld / aktive Pflanzen
   if (fieldDiv) {
     if (state.activePlants.length === 0) {
       const info = document.createElement("p");
@@ -820,11 +823,15 @@ function endTurn() {
       info.textContent = "Noch keine Pflanzen gesetzt.";
       fieldDiv.appendChild(info);
     } else {
-      state.activePlants.forEach(plant => {
+      state.activePlants.forEach((plant) => {
         const div = document.createElement("div");
         div.className = "plant-card";
 
-        const progress = `${Math.min(plant.growth || 0, plant.growthTime)}/${plant.growthTime}`;
+        const progress = `${Math.min(
+          plant.growth || 0,
+          plant.growthTime
+        )}/${plant.growthTime}`;
+
         let harvestLabel = "";
         if (plant.harvestType === "einmalig") harvestLabel = "Einmalige Ernte";
         else if (plant.harvestType === "wiederholbar") harvestLabel = "Wiederholbar";
@@ -855,6 +862,7 @@ function endTurn() {
 
     weatherDiv.appendChild(p);
   }
+}
 
 
     // --- Init --------------------------------------------------------
