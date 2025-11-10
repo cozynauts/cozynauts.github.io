@@ -2,275 +2,227 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <title>Samendeck – Hilfe & Anleitung</title>
+  <title>Samendeck – Anleitung</title>
   <style>
     body {
       margin: 0;
       font-family: system-ui, sans-serif;
       background: #050510;
       color: #f5f5ff;
+      padding: 24px;
     }
-    header {
-      padding: 18px 24px;
-      background: linear-gradient(90deg, #121225, #22204a);
-      border-bottom: 1px solid rgba(255,255,255,0.12);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
+    main {
+      max-width: 820px;
+      margin: 0 auto;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.4rem;
+    h1, h2, h3 {
       color: #d7c2ff;
     }
-    header p {
-      margin: 0;
-      font-size: 0.85rem;
-      opacity: 0.9;
-    }
-    header a {
-      text-decoration: none;
-      padding: 7px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.3);
-      color: #f5f5ff;
-      font-size: 0.85rem;
-      white-space: nowrap;
-    }
-
-    main {
-      max-width: 900px;
-      margin: 24px auto 40px;
-      padding: 0 16px;
-      line-height: 1.5;
-      font-size: 0.95rem;
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.2rem;
     }
     h2 {
-      margin-top: 24px;
-      margin-bottom: 6px;
-      font-size: 1.15rem;
-      color: #cfd4ff;
+      font-size: 1.3rem;
+      margin-top: 1.4rem;
+      margin-bottom: 0.3rem;
     }
     h3 {
-      margin-top: 18px;
-      margin-bottom: 4px;
-      font-size: 1rem;
-      color: #bfaeff;
+      font-size: 1.05rem;
+      margin-top: 1rem;
+      margin-bottom: 0.2rem;
+      color: #cfd4ff;
     }
     p {
-      margin: 4px 0 10px;
+      line-height: 1.5;
+      margin: 0.3rem 0 0.6rem;
     }
-    ul {
-      margin: 4px 0 10px 20px;
-      padding: 0;
-    }
-    li {
-      margin-bottom: 4px;
+    ul, ol {
+      margin: 0.3rem 0 0.6rem 1.3rem;
     }
     code {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 0.85rem;
       background: rgba(255,255,255,0.06);
-      padding: 1px 4px;
+      padding: 0 4px;
       border-radius: 4px;
     }
-    .tagline {
+    .note {
+      border-left: 3px solid #7b5dff;
+      padding-left: 10px;
+      margin: 0.6rem 0;
       font-size: 0.9rem;
-      opacity: 0.85;
+      color: #e5e1ff;
     }
-    .badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 8px 0 16px;
-    }
-    .badge {
-      padding: 4px 10px;
+    .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 2px 8px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.15);
-      font-size: 0.8rem;
-      opacity: 0.85;
+      background: rgba(255,255,255,0.06);
+      margin-right: 4px;
+      margin-bottom: 2px;
     }
-    .rank-table {
-      border-collapse: collapse;
-      margin-top: 6px;
-      width: 100%;
-      max-width: 480px;
-    }
-    .rank-table th,
-    .rank-table td {
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 6px 8px;
-      font-size: 0.85rem;
-    }
-    .rank-table th {
-      background: rgba(255,255,255,0.05);
-    }
-    footer {
-      text-align: center;
-      font-size: 0.8rem;
-      opacity: 0.7;
-      margin-top: 30px;
+    a {
+      color: #9cd3ff;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div>
-      <h1>Samendeck – Hilfe & Anleitung</h1>
-      <p class="tagline">Baue dein muckeliges Gartendeck auf und sammle in 10 Runden so viele Punkte wie möglich.</p>
-      <div class="badge-row">
-        <span class="badge">🌱 Singleplayer-Kartenspiel</span>
-        <span class="badge">🎴 Samen · Dünger · Wetter · Werkzeuge · Begleiter</span>
-        <span class="badge">🐶 Mit Milo dem Gartenschnüffler</span>
-      </div>
-    </div>
-    <a href="sologardengame.html">Zum Spiel</a>
-    <a href="kartendex.html">Kartendex</a>
-  </header>
-
   <main>
-    <h2>1. Grundidee</h2>
-    <p>
-      <strong>Samendeck</strong> ist ein rundenbasiertes Einzelspieler-Kartenspiel.
-      Du hast <strong>10 Runden</strong> Zeit, um mithilfe deines Kartendecks die
-      höchste Punktzahl zu erreichen. Jede Karte repräsentiert einen Aspekt deines
-      Gartens – von einfachen Samen bis hin zu hilfreichen Begleitern.
-    </p>
-    <p>
-      Ziel ist es, <strong>clever zu kombinieren</strong>: Samen legen, mit Dünger
-      verstärken, vom Wetter profitieren und mit Begleitern dauerhafte Boni
-      freischalten.
+    <h1>Samendeck – Anleitung</h1>
+    <p class="note">
+      Dies ist die ausführliche Anleitung für das Singleplayer-Gartenspiel
+      <strong>„Samendeck“</strong>. Du kannst diese Seite auch direkt aus dem Spiel heraus öffnen.
     </p>
 
-    <h2>2. Rundenablauf</h2>
-    <ul>
-      <li>Das Spiel besteht aus <strong>10 Runden</strong>.</li>
-      <li>In jeder Runde hast du <strong>3 Züge</strong>.</li>
-      <li>Zu Beginn jeder Runde wird deine <strong>Hand auf 5 Karten</strong> aufgefüllt (sofern genug Karten im Deck sind).</li>
-      <li>Jedes Mal, wenn du eine Karte spielst, verbrauchst du einen Zug.</li>
-      <li>Am Rundenende wandern gespielte Karten auf den Ablagestapel.</li>
-      <li>Ist das Deck leer, wird der Ablagestapel neu gemischt und als Deck verwendet.</li>
-    </ul>
-
-    <h2>3. Kartentypen</h2>
-
-    <h3>3.1 Samen 🌱</h3>
-    <p>Samen sind deine Haupt-Punktequelle. Sie bringen sofort Punkte, wenn du sie spielst.</p>
-    <ul>
-      <li><strong>Möhrensamen</strong> – +3 Punkte</li>
-      <li><strong>Kartoffelknolle</strong> – +4 Punkte</li>
-      <li><strong>Sonnenblumensamen</strong> – +5 Punkte</li>
-      <li><strong>Kürbissamen</strong> – +6 Punkte</li>
-    </ul>
+    <h2>Grundidee</h2>
     <p>
-      Die tatsächlichen Punkte eines Samens werden durch <strong>Wetter</strong> und
-      <strong>Begleiter</strong> noch weiter erhöht.
+      Du spielst einen kleinen Garten über mehrere Runden. Dein Ziel ist es,
+      aus einem einfachen Startdeck mit Samen, Düngern, Wetter, Begleitern und
+      Werkzeugen möglichst viele Punkte zu generieren.
     </p>
 
-    <h3>3.2 Dünger 💩</h3>
-    <p>Dünger verstärkt die Punkte des zuletzt gespielten Samens.</p>
+    <h2>Rahmenbedingungen</h2>
     <ul>
-      <li><strong>Kompost</strong> – verdoppelt die Punkte des letzten Samens.</li>
-      <li><strong>Superdünger</strong> – ca. 1,5× der letzten Samenpunkte (aufgerundet), plus evtl. Bonus durch Begleiter.</li>
+      <li><strong>7 Runden</strong> pro Spiel.</li>
+      <li><strong>7 Startkarten</strong> auf der Hand.</li>
+      <li><strong>Pro Runde ziehst du 1 neue Karte</strong> zu deiner Hand.</li>
+      <li><strong>Maximal 2 Karten pro Runde</strong> spielbar.</li>
+      <li>Gespielte Karten gehen am Rundenende auf den Ablagestapel.</li>
+      <li>Wenn das Deck leer ist, wird der Ablagestapel neu gemischt.</li>
+      <li>Dein Highscore wird lokal im Browser gespeichert.</li>
     </ul>
+
+    <h2>Kartentypen</h2>
+
+    <h3>Samen 🌱</h3>
     <p>
-      Dünger ist besonders stark, wenn du vorher einen Samen mit hoher Punktzahl
-      gespielt hast.
+      Samen pflanzt du in dein Feld. Sie geben <strong>keine sofortigen Punkte</strong>,
+      sondern wachsen über mehrere Runden und werden am Rundenende geerntet.
+    </p>
+    <ul>
+      <li>Jede Pflanze hat eine <strong>Wachstumszeit</strong> (z. B. 1, 2 oder 3 Runden).</li>
+      <li>Jede Runde wächst sie automatisch um +1.</li>
+      <li>Wenn ihr Wachstum die Wachstumszeit erreicht, wird sie geerntet.</li>
+      <li>Beim Ernten erhältst du Punkte – abhängig von der Pflanze und deinen Boni.</li>
+    </ul>
+
+    <h3>Dünger 💩</h3>
+    <p>
+      Dünger beschleunigt das Wachstum deiner Pflanzen, zählt aber nicht direkt als Punkte.
+      Im aktuellen Prototyp:
+    </p>
+    <ul>
+      <li>Dünger verbessert immer die <strong>zuletzt gepflanzte</strong> aktive Pflanze.</li>
+      <li><strong>„Kompost“</strong> erhöht ihr Wachstum um +1.</li>
+      <li><strong>„Superdünger“</strong> erhöht ihr Wachstum um +2.</li>
+      <li>Der <strong>Gartenwichtel</strong> kann diese Werte weiter steigern.</li>
+    </ul>
+
+    <h3>Wetter 🌤️</h3>
+    <p>
+      Im Garten ist immer <strong>höchstens ein Wetter gleichzeitig aktiv</strong>.
+      Spielst du eine Wetterkarte, ersetzt sie das vorherige Wetter.
+    </p>
+    <ul>
+      <li>Wetter bleibt <strong>dauerhaft aktiv</strong>, bis du ein neues Wetter spielst.</li>
+      <li>Solange ein Wetter aktiv ist, bekommen alle Ernten einen
+          <strong>Wetterbonus auf Samen</strong> (derzeit +1 Punkt).</li>
+      <li>Einige Pflanzen haben zusätzliche Synergien mit bestimmten Wetterkarten
+          (z.&nbsp;B. die Erdbeere mit Sonnenschein).</li>
+    </ul>
+
+    <h3>Begleiter 🐶🧙</h3>
+    <p>
+      Begleiter bleiben nach dem Ausspielen dauerhaft aktiv und geben dir
+      wiederkehrende Boni:
+    </p>
+    <ul>
+      <li><strong>Milo</strong> erhöht den Ertrag jeder Ernte von Samen.</li>
+      <li><strong>Gartenwichtel</strong> stärkt deine Düngerkarten.</li>
+    </ul>
+
+    <h3>Werkzeuge ⚒️</h3>
+    <p>
+      Werkzeuge sind einmalige Effekte, die dir taktische Vorteile geben
+      (z.&nbsp;B. zusätzliche Karten ziehen). Manche sind aktuell noch experimentell.
     </p>
 
-    <h3>3.3 Wetter 🌤️</h3>
-    <p>Wetterkarten beeinflussen alle weiteren Samen in der aktuellen Runde.</p>
+    <h2>Rundenablauf</h2>
+
+    <h3>1. Rundenstart</h3>
     <ul>
-      <li><strong>Sonnenschein</strong> – +1 Punkt auf jeden zukünftigen Samen dieser Runde.</li>
-      <li><strong>Sommerregen</strong> – sofort +2 Punkte und ebenfalls +1 Punkt auf zukünftige Samen dieser Runde.</li>
+      <li>Du startest mit 2 verfügbaren Zügen (<strong>Züge in dieser Runde</strong>).</li>
+      <li>Du ziehst automatisch <strong>1 neue Karte</strong> zu deiner Hand.</li>
+    </ul>
+
+    <h3>2. Karten spielen</h3>
+    <p>In deinem Zug kannst du 0–2 Karten spielen:</p>
+    <ul>
+      <li><strong>Samen:</strong> wandern aufs Feld und beginnen zu wachsen.</li>
+      <li><strong>Dünger:</strong> beschleunigt die zuletzt gepflanzte Pflanze.</li>
+      <li><strong>Wetter:</strong> setzt oder ersetzt das aktuelle Wetter.</li>
+      <li><strong>Begleiter:</strong> werden dauerhaft aktiv.</li>
+      <li><strong>Werkzeuge:</strong> führen ihren Spezialeffekt aus.</li>
+    </ul>
+
+    <h3>3. Rundenende: Wachstum & Ernte</h3>
+    <p>Wenn du auf „Runde beenden“ klickst, passiert im Hintergrund:</p>
+    <ol>
+      <li>Alle Pflanzen im Feld erhalten <strong>+1 Wachstum</strong>.</li>
+      <li>
+        Wenn eine Pflanze ihre Wachstumszeit erreicht oder überschreitet,
+        wird sie geerntet.
+      </li>
+      <li>Pro geernteter Pflanze werden Punkte vergeben.</li>
+      <li>Abhängig vom <code>harvestType</code> bleibt die Pflanze stehen oder verschwindet.</li>
+    </ol>
+
+    <h3>4. Punktekalkulation bei der Ernte</h3>
+    <p>
+      Wenn eine Pflanze erntbar ist, werden die Punkte folgendermaßen berechnet:
+    </p>
+    <ul>
+      <li><strong>Basis-Erntewert</strong> der Pflanze (z.&nbsp;B. 2 bei der Erdbeere, 5 beim Apfelbaum).</li>
+      <li><strong>Milo-Bonus</strong> (wenn aktiv): +2 pro Ernte.</li>
+      <li><strong>Wetterbonus</strong> (wenn Wetter aktiv): aktuell +1.</li>
+      <li><strong>Spezialsynergien</strong>:
+        <ul>
+          <li><strong>Erdbeere + Sonnenschein</strong>: zusätzlich +2 Punkte.</li>
+        </ul>
+      </li>
     </ul>
     <p>
-      Wetter wirkt <strong>nicht rückwirkend</strong>, sondern nur auf Samen, die
-      <em>nach</em> der Wetterkarte gespielt werden.
+      Das Spiel zeigt dir im Log immer eine Aufschlüsselung, z.&nbsp;B.:
+    </p>
+    <p class="note">
+      🌿 🍓 Erdbeere wurde geerntet (2 Erntepunkte + 2 Begleiterbonus Milo +
+      1 Wetterbonus (Sonnenschein) + 2 Erdbeer-Synergie mit Sonnenschein = +7 Punkte).
     </p>
 
-    <h3>3.4 Begleiter 🐶🧙</h3>
-    <p>Begleiter bleiben dauerhaft aktiv und geben dir passiven Bonus.</p>
+    <h3>5. Nachbearbeitung & neue Runde</h3>
     <ul>
-      <li><strong>Milo, Gartenschnüffler</strong> – +2 Punkte auf <em>jeden</em> zukünftigen Samen.</li>
-      <li><strong>Gartenwichtel</strong> – +1 Punkt auf <em>jeden</em> zukünftigen Dünger.</li>
+      <li>Einmalige Pflanzen (z.&nbsp;B. Karotte, Erdbeere) werden nach der Ernte entfernt.</li>
+      <li>Wiederholbare Pflanzen (z.&nbsp;B. Tomate) setzen ihr Wachstum zurück und können erneut geerntet werden.</li>
+      <li>Dauerhafte Pflanzen (z.&nbsp;B. Apfelbaum) bleiben stehen, geben beim ersten Mal ihren vollen Erntewert und danach jede Runde einen kleinen Bonus.</li>
+      <li>Alle in dieser Runde gespielten Karten wandern auf den Ablagestapel.</li>
+      <li>Die neue Runde startet mit dem Ziehen einer Karte und 2 frischen Zügen.</li>
     </ul>
+
+    <h2>Spielende & Highscore</h2>
+    <ul>
+      <li>Nach der 7. Runde ist das Spiel vorbei.</li>
+      <li>Dein Endstand wird mit deinem lokalen Highscore verglichen.</li>
+      <li>Wenn du einen neuen Rekord aufstellst, wird dieser gespeichert.</li>
+    </ul>
+
+    <h2>Kartendex</h2>
     <p>
-      Aktive Begleiter werden im Spiel in einem eigenen Bereich angezeigt. Ihre
-      Effekte summieren sich im Laufe der Partie.
+      Eine Übersicht der aktuellen Karten findest du im
+      <code>📚 Kartendex</code> im Spiel, oder direkt als Seite:
+      <a href="kartendex.html">Kartendex öffnen</a>.
     </p>
 
-    <h3>3.5 Werkzeuge ⚒️</h3>
-    <p>Werkzeuge sind einmalige Aktionen mit starkem taktischem Einfluss.</p>
-    <ul>
-      <li><strong>Gießkanne</strong> – wiederholt den letzten Düngereffekt (falls vorhanden).</li>
-      <li><strong>Rechen</strong> – du ziehst sofort 2 zusätzliche Karten.</li>
-    </ul>
-    <p>
-      Werkzeuge eignen sich besonders gut, um starke Runden weiter zu boosten oder
-      wenn dir gerade die passenden Karten auf der Hand fehlen.
-    </p>
-
-    <h2>4. Punktesystem (Kurzfassung)</h2>
-    <ul>
-      <li><strong>Samen</strong> – bringen Basis-Punkte (3–6), plus Boni durch Wetter & Begleiter.</li>
-      <li><strong>Dünger</strong> – verstärkt die letzten Samenpunkte (Verdoppler/Multiplikator, plus evtl. Begleiter-Bonus).</li>
-      <li><strong>Wetter</strong> – gibt kleine Sofortpunkte und verbessert zukünftige Samen.</li>
-      <li><strong>Begleiter</strong> – geben keine Sofortpunkte, aber langfristige Vorteile.</li>
-      <li><strong>Werkzeuge</strong> – situative Effekte (mehr Karten, Effekt wiederholen etc.).</li>
-    </ul>
-
-    <h2>5. Ziel & Bewertung</h2>
-    <p>
-      Am Ende von Runde 10 zählt deine <strong>Gesamtpunktzahl</strong>. Zusätzlich
-      speichert das Spiel deinen <strong>Highscore</strong> lokal im Browser
-      (<code>localStorage</code>).
-    </p>
-    <p>Geplante Rangliste (Work in Progress):</p>
-    <table class="rank-table">
-      <tr>
-        <th>Punkte</th>
-        <th>Rang</th>
-        <th>Titel</th>
-      </tr>
-      <tr>
-        <td>0–30</td>
-        <td>🐌</td>
-        <td>Hobbygärtner</td>
-      </tr>
-      <tr>
-        <td>31–60</td>
-        <td>🌿</td>
-        <td>Gartenfreund</td>
-      </tr>
-      <tr>
-        <td>61–90</td>
-        <td>🌻</td>
-        <td>Profi-Gärtner</td>
-      </tr>
-      <tr>
-        <td>91+</td>
-        <td>🌟</td>
-        <td>Meistergärtner</td>
-      </tr>
-    </table>
-
-    <h2>6. Tipps für einen guten Start</h2>
-    <ul>
-      <li>Spiele zuerst einen <strong>Samen mit hoher Punktzahl</strong> (z. B. Kürbis), bevor du Dünger nutzt.</li>
-      <li>Kombiniere <strong>Wetter → Samen → Dünger</strong> in derselben Runde, um die Effekte zu stapeln.</li>
-      <li>Versuche <strong>Milo</strong> früh zu bekommen – je früher er liegt, desto öfter wirkt sein Bonus.</li>
-      <li>Nutze den <strong>Rechen</strong>, wenn du eine schlechte Hand hast oder nach Komboteilen suchst.</li>
-    </ul>
-
-    <footer>
-      Samendeck befindet sich noch im Aufbau – Balancing, neue Karten und Features
-      können sich jederzeit ändern. Viel Spaß beim Ausprobieren und Optimieren deines
-      muckeligen Gartendecks! 🌱
-    </footer>
   </main>
 </body>
 </html>
