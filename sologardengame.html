@@ -258,7 +258,7 @@
     <p class="stat">Highscore: <span id="bestScore">0</span></p>
     <p class="stat">Deck: <span id="deckSize">0</span> Karten</p>
     <p class="stat">Ablage: <span id="discardSize">0</span> Karten</p>
-    <p class="stat">Züge in dieser Runde: <span id="playsLeft">3</span> / <span id="maxPlays">3</span></p>
+    <p class="stat">Züge in dieser Runde: <span id="playsLeft">2</span> / <span id="maxPlays">2</span></p>
 
     <h2>Aktionen</h2>
     <div class="buttons">
@@ -467,14 +467,14 @@
 
 const state = {
   round: 1,
-  maxRounds: 10,
+  maxRounds: 7,
   score: 0,
   deck: [],
   hand: [],
   discard: [],
   playedThisRound: [],
-  maxPlaysPerRound: 3,
-  playsLeftThisRound: 3,
+  maxPlaysPerRound: 2,
+  playsLeftThisRound: 2,
   lastSeedPoints: 0,
   lastFertilizerBonus: 0,
   weatherSeedBonusThisRound: 0,
@@ -703,7 +703,7 @@ function endTurn() {
 
   // 🌱 4. Neue Runde vorbereiten
   state.round += 1;
-  drawToHand(5);
+  drawToHand(state.hand.length + 1);   // 👈 genau 1 Karte nachziehen
   render();
   log(`— Runde ${state.round} startet. —`);
 }
@@ -873,6 +873,7 @@ function initGame() {
   state.discard = [];
   state.hand = [];
   state.playedThisRound = [];
+  state.maxPlaysPerRound = 2;            // 👈 explizit
   state.playsLeftThisRound = state.maxPlaysPerRound;
   state.lastSeedPoints = 0;
   state.lastFertilizerBonus = 0;
@@ -883,7 +884,7 @@ function initGame() {
   state.activeCompanions = [];
   state.activePlants = [];
 
-// Deck bauen …
+  // Deck bauen …
   const deck = [];
   ALL_CARDS.forEach(card => {
     let copies = 2;
@@ -896,7 +897,7 @@ function initGame() {
   });
 
   state.deck = shuffle(deck);
-  drawToHand(5);
+  drawToHand(7);              // 👈 Start: 7 Karten
   render();
 
   document.getElementById("endTurnBtn").disabled = false;
@@ -905,6 +906,7 @@ function initGame() {
   logDiv.innerHTML = "";
   log("Neues Spiel gestartet. Versuche in 10 Runden so viele Punkte wie möglich zu sammeln!");
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("endTurnBtn").addEventListener("click", endTurn);
