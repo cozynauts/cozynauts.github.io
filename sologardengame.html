@@ -91,6 +91,45 @@
       gap: 10px;
     }
 
+        .zone-boards {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+    }
+    .board {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .board-field { flex: 4; }
+    .board-companions { flex: 2; }
+    .board-weather { flex: 1; }
+
+    #field, #companions, #weather {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .plant-card {
+      width: 130px;
+      padding: 6px;
+      border-radius: 10px;
+      background: rgba(10, 18, 30, 0.95);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-size: 0.72rem;
+      line-height: 1.2;
+    }
+    .plant-card-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .plant-card-meta {
+      font-size: 0.7rem;
+      opacity: 0.8;
+    }
+
+
     .card {
       width: 140px;
       padding: 8px;
@@ -246,12 +285,24 @@
       </div>
     </section>
 
-    <section>
-      <h2>Aktive Begleiter & dauerhafte Effekte</h2>
-      <div class="zone">
-        <div id="companions"></div>
-      </div>
-    </section>
+<section>
+  <h2>Feld, Begleiter & Wetter</h2>
+  <div class="zone zone-boards">
+    <div class="board board-field">
+      <h3 style="margin:0 0 4px;font-size:0.9rem;">Feld</h3>
+      <div id="field"></div>
+    </div>
+    <div class="board board-companions">
+      <h3 style="margin:0 0 4px;font-size:0.9rem;">Aktive Begleiter</h3>
+      <div id="companions"></div>
+    </div>
+    <div class="board board-weather">
+      <h3 style="margin:0 0 4px;font-size:0.9rem;">Wetter</h3>
+      <div id="weather"></div>
+    </div>
+  </div>
+</section>
+
     
     <section>
       <h2>Log</h2>
@@ -673,11 +724,16 @@ function endTurn() {
 
   const handDiv = document.getElementById("hand");
   const playedDiv = document.getElementById("played");
-  const companionsDiv = document.getElementById("companions"); // 👈 NEU
+  const companionsDiv = document.getElementById("companions");
+  const fieldDiv = document.getElementById("field");
+  const weatherDiv = document.getElementById("weather");
 
   handDiv.innerHTML = "";
   playedDiv.innerHTML = "";
-  if (companionsDiv) companionsDiv.innerHTML = ""; // 👈 NEU
+  if (companionsDiv) companionsDiv.innerHTML = "";
+  if (fieldDiv) fieldDiv.innerHTML = "";
+  if (weatherDiv) weatherDiv.innerHTML = "";
+
 
   // Hand rendern
   state.hand.forEach((card, index) => {
@@ -754,6 +810,51 @@ function endTurn() {
     });
   }
 }
+
+      // Feld / aktive Pflanzen
+  if (fieldDiv) {
+    if (state.activePlants.length === 0) {
+      const info = document.createElement("p");
+      info.style.fontSize = "0.75rem";
+      info.style.opacity = "0.8";
+      info.textContent = "Noch keine Pflanzen gesetzt.";
+      fieldDiv.appendChild(info);
+    } else {
+      state.activePlants.forEach(plant => {
+        const div = document.createElement("div");
+        div.className = "plant-card";
+
+        const progress = `${Math.min(plant.growth || 0, plant.growthTime)}/${plant.growthTime}`;
+        let harvestLabel = "";
+        if (plant.harvestType === "einmalig") harvestLabel = "Einmalige Ernte";
+        else if (plant.harvestType === "wiederholbar") harvestLabel = "Wiederholbar";
+        else if (plant.harvestType === "dauerhaft") harvestLabel = "Dauerhaft";
+
+        div.innerHTML = `
+          <div class="plant-card-title">${plant.name}</div>
+          <div class="plant-card-meta">Fortschritt: ${progress}</div>
+          <div class="plant-card-meta">${harvestLabel}</div>
+        `;
+
+        fieldDiv.appendChild(div);
+      });
+    }
+  }
+
+  // Wetter-Anzeige
+  if (weatherDiv) {
+    const p = document.createElement("p");
+    p.style.fontSize = "0.75rem";
+    p.style.opacity = "0.85";
+
+    if (state.weatherSeedBonusThisRound > 0) {
+      p.textContent = `Aktiver Wetterbonus: +${state.weatherSeedBonusThisRound} auf Samen in dieser Runde.`;
+    } else {
+      p.textContent = "Kein aktiver Wetterbonus in dieser Runde.";
+    }
+
+    weatherDiv.appendChild(p);
+  }
 
 
     // --- Init --------------------------------------------------------
