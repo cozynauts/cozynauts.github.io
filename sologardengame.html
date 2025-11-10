@@ -186,6 +186,13 @@
     </section>
 
     <section>
+      <h2>Aktive Begleiter & dauerhafte Effekte</h2>
+      <div class="zone">
+        <div id="companions"></div>
+      </div>
+    </section>
+    
+    <section>
       <h2>Log</h2>
       <div id="log"></div>
     </section>
@@ -296,23 +303,25 @@
 
     // --- Spielzustand ------------------------------------------------
 
-    const state = {
-      round: 1,
-      maxRounds: 10,
-      score: 0,
-      deck: [],
-      hand: [],
-      discard: [],
-      playedThisRound: [],
-      maxPlaysPerRound: 3,
-      playsLeftThisRound: 3,
-      lastSeedPoints: 0,
-      lastFertilizerBonus: 0,
-      weatherSeedBonusThisRound: 0,
-      companionSeedBonus: 0,
-      companionFertilizerBonus: 0,
-      gameOver: false
-    };
+const state = {
+  round: 1,
+  maxRounds: 10,
+  score: 0,
+  deck: [],
+  hand: [],
+  discard: [],
+  playedThisRound: [],
+  maxPlaysPerRound: 3,
+  playsLeftThisRound: 3,
+  lastSeedPoints: 0,
+  lastFertilizerBonus: 0,
+  weatherSeedBonusThisRound: 0,
+  companionSeedBonus: 0,
+  companionFertilizerBonus: 0,
+  gameOver: false,
+  activeCompanions: [] // 👈 NEU
+};
+
 
     // --- Helfer ------------------------------------------------------
 
@@ -437,17 +446,22 @@
       }
     }
 
-    function handleCompanion(card) {
-      if (card.id === "comp_milo") {
-        state.companionSeedBonus += 2;
-        log("🐶 Milo hilft ab jetzt: +2 Punkte auf jeden zukünftigen Samen.");
-      } else if (card.id === "comp_gnome") {
-        state.companionFertilizerBonus += 1;
-        log("🧙 Gartenwichtel aktiv: +1 Punkt auf jeden zukünftigen Dünger.");
-      } else {
-        log(`Begleiter gespielt: ${card.name}.`);
-      }
-    }
+function handleCompanion(card) {
+  // Karte in die Liste der aktiven Begleiter aufnehmen (ohne Duplikate)
+  if (!state.activeCompanions.some(c => c.id === card.id)) {
+    state.activeCompanions.push(card);
+  }
+
+  if (card.id === "comp_milo") {
+    state.companionSeedBonus += 2;
+    log("🐶 Milo hilft ab jetzt: +2 Punkte auf jeden zukünftigen Samen.");
+  } else if (card.id === "comp_gnome") {
+    state.companionFertilizerBonus += 1;
+    log("🧙 Gartenwichtel aktiv: +1 Punkt auf jeden zukünftigen Dünger.");
+  } else {
+    log(`Begleiter gespielt: ${card.name}.`);
+  }
+}
 
     function handleTool(card) {
       if (card.id === "tool_watering") {
@@ -495,87 +509,119 @@
 
     // --- Rendering ---------------------------------------------------
 
-    function render() {
-      document.getElementById("round").textContent = state.round;
-      document.getElementById("maxRounds").textContent = state.maxRounds;
-      document.getElementById("score").textContent = state.score;
-      document.getElementById("deckSize").textContent = state.deck.length;
-      document.getElementById("discardSize").textContent = state.discard.length;
-      document.getElementById("playsLeft").textContent = state.playsLeftThisRound;
-      document.getElementById("maxPlays").textContent = state.maxPlaysPerRound;
+   function render() {
+  document.getElementById("round").textContent = state.round;
+  document.getElementById("maxRounds").textContent = state.maxRounds;
+  document.getElementById("score").textContent = state.score;
+  document.getElementById("deckSize").textContent = state.deck.length;
+  document.getElementById("discardSize").textContent = state.discard.length;
+  document.getElementById("playsLeft").textContent = state.playsLeftThisRound;
+  document.getElementById("maxPlays").textContent = state.maxPlaysPerRound;
 
-      const best = parseInt(localStorage.getItem("samendeck_best") || "0", 10);
-      document.getElementById("bestScore").textContent = best;
+  const best = parseInt(localStorage.getItem("samendeck_best") || "0", 10);
+  document.getElementById("bestScore").textContent = best;
 
-      const handDiv = document.getElementById("hand");
-      const playedDiv = document.getElementById("played");
-      handDiv.innerHTML = "";
-      playedDiv.innerHTML = "";
+  const handDiv = document.getElementById("hand");
+  const playedDiv = document.getElementById("played");
+  const companionsDiv = document.getElementById("companions"); // 👈 NEU
 
-      state.hand.forEach((card, index) => {
-        const div = document.createElement("div");
-        div.className = "card " + card.type + (state.playsLeftThisRound <= 0 || state.gameOver ? " disabled" : "");
-        const typeLabel = {
-          seed: "Samen",
-          fertilizer: "Dünger",
-          weather: "Wetter",
-          companion: "Begleiter",
-          tool: "Werkzeug"
-        }[card.type] || card.type;
+  handDiv.innerHTML = "";
+  playedDiv.innerHTML = "";
+  if (companionsDiv) companionsDiv.innerHTML = ""; // 👈 NEU
 
-        div.innerHTML = `
-          <div class="card-header">
-            <span class="card-title">${card.name}</span>
-            <span class="card-tag">${card.tag || ""}</span>
-          </div>
-          <div class="card-type">${typeLabel}</div>
-          <div class="card-desc">${card.description}</div>
-        `;
+  // Hand rendern
+  state.hand.forEach((card, index) => {
+    const div = document.createElement("div");
+    div.className = "card " + card.type + (state.playsLeftThisRound <= 0 || state.gameOver ? " disabled" : "");
+    const typeLabel = {
+      seed: "Samen",
+      fertilizer: "Dünger",
+      weather: "Wetter",
+      companion: "Begleiter",
+      tool: "Werkzeug"
+    }[card.type] || card.type;
 
-        if (!state.gameOver && state.playsLeftThisRound > 0) {
-          div.addEventListener("click", () => playCard(index));
-        }
-        handDiv.appendChild(div);
-      });
+    div.innerHTML = `
+      <div class="card-header">
+        <span class="card-title">${card.name}</span>
+        <span class="card-tag">${card.tag || ""}</span>
+      </div>
+      <div class="card-type">${typeLabel}</div>
+      <div class="card-desc">${card.description}</div>
+    `;
 
-      state.playedThisRound.forEach(card => {
-        const div = document.createElement("div");
-        div.className = "card " + card.type + " disabled";
-        const typeLabel = {
-          seed: "Samen",
-          fertilizer: "Dünger",
-          weather: "Wetter",
-          companion: "Begleiter",
-          tool: "Werkzeug"
-        }[card.type] || card.type;
-
-        div.innerHTML = `
-          <div class="card-header">
-            <span class="card-title">${card.name}</span>
-            <span class="card-tag">${card.tag || ""}</span>
-          </div>
-          <div class="card-type">${typeLabel}</div>
-          <div class="card-desc">${card.description}</div>
-        `;
-        playedDiv.appendChild(div);
-      });
+    if (!state.gameOver && state.playsLeftThisRound > 0) {
+      div.addEventListener("click", () => playCard(index));
     }
+    handDiv.appendChild(div);
+  });
+
+  // Diese Runde gespielte Karten
+  state.playedThisRound.forEach(card => {
+    const div = document.createElement("div");
+    div.className = "card " + card.type + " disabled";
+    const typeLabel = {
+      seed: "Samen",
+      fertilizer: "Dünger",
+      weather: "Wetter",
+      companion: "Begleiter",
+      tool: "Werkzeug"
+    }[card.type] || card.type;
+
+    div.innerHTML = `
+      <div class="card-header">
+        <span class="card-title">${card.name}</span>
+        <span class="card-tag">${card.tag || ""}</span>
+      </div>
+      <div class="card-type">${typeLabel}</div>
+      <div class="card-desc">${card.description}</div>
+    `;
+    playedDiv.appendChild(div);
+  });
+
+  // Aktive Begleiter & dauerhafte Effekte
+  if (companionsDiv) {
+    state.activeCompanions.forEach(card => {
+      const div = document.createElement("div");
+      div.className = "card " + card.type + " disabled";
+
+      let effectText = card.description;
+      if (card.id === "comp_milo") {
+        effectText += ` (aktuell +${state.companionSeedBonus} auf Samen)`;
+      } else if (card.id === "comp_gnome") {
+        effectText += ` (aktuell +${state.companionFertilizerBonus} auf Dünger)`;
+      }
+
+      div.innerHTML = `
+        <div class="card-header">
+          <span class="card-title">${card.name}</span>
+          <span class="card-tag">${card.tag || ""}</span>
+        </div>
+        <div class="card-type">Begleiter</div>
+        <div class="card-desc">${effectText}</div>
+      `;
+      companionsDiv.appendChild(div);
+    });
+  }
+}
+
 
     // --- Init --------------------------------------------------------
 
-    function initGame() {
-      state.round = 1;
-      state.score = 0;
-      state.discard = [];
-      state.hand = [];
-      state.playedThisRound = [];
-      state.playsLeftThisRound = state.maxPlaysPerRound;
-      state.lastSeedPoints = 0;
-      state.lastFertilizerBonus = 0;
-      state.weatherSeedBonusThisRound = 0;
-      state.companionSeedBonus = 0;
-      state.companionFertilizerBonus = 0;
-      state.gameOver = false;
+function initGame() {
+  state.round = 1;
+  state.score = 0;
+  state.discard = [];
+  state.hand = [];
+  state.playedThisRound = [];
+  state.playsLeftThisRound = state.maxPlaysPerRound;
+  state.lastSeedPoints = 0;
+  state.lastFertilizerBonus = 0;
+  state.weatherSeedBonusThisRound = 0;
+  state.companionSeedBonus = 0;
+  state.companionFertilizerBonus = 0;
+  state.gameOver = false;
+  state.activeCompanions = []; // 👈 NEU
 
       // Deck bauen: 2x Samen, 2x Dünger, 1x Wetter, 1x Begleiter, 1x Werkzeug etc.
       const deck = [];
