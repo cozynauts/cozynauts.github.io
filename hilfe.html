@@ -2,227 +2,153 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <title>Samendeck – Anleitung</title>
+  <title>Samendeck – Hilfe & Changelog</title>
   <style>
     body {
       margin: 0;
       font-family: system-ui, sans-serif;
-      background: #050510;
+      background: #0a0a14;
       color: #f5f5ff;
-      padding: 24px;
-    }
-    main {
-      max-width: 820px;
-      margin: 0 auto;
+      line-height: 1.5;
+      padding: 40px;
     }
     h1, h2, h3 {
       color: #d7c2ff;
     }
     h1 {
-      font-size: 1.8rem;
-      margin-bottom: 0.2rem;
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
     }
     h2 {
-      font-size: 1.3rem;
-      margin-top: 1.4rem;
+      font-size: 1.2rem;
+      margin-top: 1.8rem;
       margin-bottom: 0.3rem;
     }
     h3 {
-      font-size: 1.05rem;
-      margin-top: 1rem;
-      margin-bottom: 0.2rem;
-      color: #cfd4ff;
+      font-size: 1rem;
+      margin-top: 1.2rem;
+      margin-bottom: 0.3rem;
+      color: #a9a3ff;
     }
     p {
-      line-height: 1.5;
-      margin: 0.3rem 0 0.6rem;
+      max-width: 800px;
     }
-    ul, ol {
-      margin: 0.3rem 0 0.6rem 1.3rem;
+    ul {
+      margin: 0.4rem 0 1rem 1.5rem;
     }
-    code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      background: rgba(255,255,255,0.06);
-      padding: 0 4px;
-      border-radius: 4px;
-    }
-    .note {
+    .version {
       border-left: 3px solid #7b5dff;
       padding-left: 10px;
-      margin: 0.6rem 0;
-      font-size: 0.9rem;
-      color: #e5e1ff;
+      margin-bottom: 1.2rem;
     }
-    .tag {
-      display: inline-block;
-      font-size: 0.75rem;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      margin-right: 4px;
-      margin-bottom: 2px;
+    .footer {
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      opacity: 0.7;
     }
     a {
-      color: #9cd3ff;
+      color: #a9a3ff;
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Samendeck – Anleitung</h1>
-    <p class="note">
-      Dies ist die ausführliche Anleitung für das Singleplayer-Gartenspiel
-      <strong>„Samendeck“</strong>. Du kannst diese Seite auch direkt aus dem Spiel heraus öffnen.
-    </p>
+  <h1>📖 Samendeck – Hilfe & Anleitung</h1>
 
-    <h2>Grundidee</h2>
-    <p>
-      Du spielst einen kleinen Garten über mehrere Runden. Dein Ziel ist es,
-      aus einem einfachen Startdeck mit Samen, Düngern, Wetter, Begleitern und
-      Werkzeugen möglichst viele Punkte zu generieren.
-    </p>
+  <p><strong>Ziel:</strong> Sammle in <strong>10 Runden</strong> so viele Punkte wie möglich!  
+  In jeder Runde hast du <strong>2 Spielzüge</strong> und kannst Karten aus deiner Hand ausspielen.  
+  Jede Karte wirkt sich auf dein Gartenfeld, deine Begleiter oder das Wetter aus.</p>
 
-    <h2>Rahmenbedingungen</h2>
+  <h2>Kartentypen</h2>
+  <ul>
+    <li><strong>🌱 Samen:</strong> Pflanzen, die über mehrere Runden wachsen und bei der Ernte Punkte bringen.</li>
+    <li><strong>💩 Dünger:</strong> Beschleunigen das Wachstum oder verstärken Ernte-Erträge.</li>
+    <li><strong>🌤️ Wetter:</strong> Bleibende Bedingungen, die alle Pflanzen beeinflussen (ersetzbar durch neues Wetter).</li>
+    <li><strong>🐶🧙 Begleiter:</strong> Dauerhafte Boni wie zusätzliche Punkte für Samen oder Dünger.</li>
+    <li><strong>⚒️ Werkzeuge:</strong> Einmalige Spezialeffekte (z. B. Karten ziehen oder Erträge wiederholen).</li>
+  </ul>
+
+  <h2>Runden & Punkte</h2>
+  <p>
+    Jede Runde wachsen deine Pflanzen automatisch weiter.  
+    Sobald eine Pflanze ihre Wachstumszeit erreicht, wird sie geerntet und bringt Punkte.  
+    Manche Pflanzen bleiben danach dauerhaft (z. B. <strong>Apfelbaum</strong>), andere verschwinden nach der Ernte (z. B. <strong>Karotte</strong>).
+  </p>
+
+  <h2>Synergien</h2>
+  <p>
+    Viele Karten harmonieren miteinander:  
     <ul>
-      <li><strong>7 Runden</strong> pro Spiel.</li>
-      <li><strong>7 Startkarten</strong> auf der Hand.</li>
-      <li><strong>Pro Runde ziehst du 1 neue Karte</strong> zu deiner Hand.</li>
-      <li><strong>Maximal 2 Karten pro Runde</strong> spielbar.</li>
-      <li>Gespielte Karten gehen am Rundenende auf den Ablagestapel.</li>
-      <li>Wenn das Deck leer ist, wird der Ablagestapel neu gemischt.</li>
-      <li>Dein Highscore wird lokal im Browser gespeichert.</li>
+      <li>☀️ <strong>Sonnenschein</strong> erhöht die Punkte künftiger Samen.</li>
+      <li>💩 <strong>Kompost</strong> beschleunigt das Wachstum aller Pflanzen.</li>
+      <li>🐶 <strong>Milo</strong> gibt Bonuspunkte auf alle Samen-Ernten.</li>
+      <li>🧙 <strong>Gartenwichtel</strong> verstärkt alle Dünger-Effekte.</li>
     </ul>
+  </p>
 
-    <h2>Kartentypen</h2>
+  <h2>Spielende</h2>
+  <p>
+    Nach Runde 10 endet das Spiel automatisch.  
+    Dein Punktestand wird mit deinem bisherigen Highscore verglichen – erreiche neue Rekorde!
+  </p>
 
-    <h3>Samen 🌱</h3>
-    <p>
-      Samen pflanzt du in dein Feld. Sie geben <strong>keine sofortigen Punkte</strong>,
-      sondern wachsen über mehrere Runden und werden am Rundenende geerntet.
-    </p>
+  <h2>🌿 Changelog</h2>
+
+    <div class="version">
+    <h3>v0.5 – Ranglisten- & Abschluss-Update (11. November 2025)</h3>
     <ul>
-      <li>Jede Pflanze hat eine <strong>Wachstumszeit</strong> (z. B. 1, 2 oder 3 Runden).</li>
-      <li>Jede Runde wächst sie automatisch um +1.</li>
-      <li>Wenn ihr Wachstum die Wachstumszeit erreicht, wird sie geerntet.</li>
-      <li>Beim Ernten erhältst du Punkte – abhängig von der Pflanze und deinen Boni.</li>
+      <li>🏆 Neue Rangliste mit <strong>rangliste.html</strong> und <em>Top 5 Spieler:innen</em> in der Sidebar.</li>
+      <li>📸 Neues Abschluss-Overlay mit Discord-Hinweis & Buttons (Rangliste / Neues Spiel / Schließen).</li>
+      <li>🌱 Sidebar zeigt jetzt automatisch die besten Runs mit Datum & Punkten an.</li>
+      <li>📖 Hilfe-Fenster überarbeitet und um Changelog erweitert.</li>
+      <li>✨ Kleine UI-Verbesserungen (Abstände, Textfarben, Übergänge).</li>
     </ul>
+  </div>
 
-    <h3>Dünger 💩</h3>
-    <p>
-      Dünger beschleunigt das Wachstum deiner Pflanzen, zählt aber nicht direkt als Punkte.
-      Im aktuellen Prototyp:
-    </p>
+
+  <div class="version">
+    <h3>v0.4 – Garten-Update (10. November 2025)</h3>
     <ul>
-      <li>Dünger verbessert immer die <strong>zuletzt gepflanzte</strong> aktive Pflanze.</li>
-      <li><strong>„Kompost“</strong> erhöht ihr Wachstum um +1.</li>
-      <li><strong>„Superdünger“</strong> erhöht ihr Wachstum um +2.</li>
-      <li>Der <strong>Gartenwichtel</strong> kann diese Werte weiter steigern.</li>
+      <li>🌧️ Wetter bleibt nun dauerhaft aktiv und kann durch neue Wetterkarten ersetzt werden.</li>
+      <li>🍎 Apfelbaum überarbeitet: Startet mit 2 Punkten, trägt ab Reife jede Runde +1.</li>
+      <li>💩 Superdünger verbessert: Wirkt jetzt auf alle Pflanzen, die in dieser Runde geerntet werden (×1.5 Ertrag).</li>
+      <li>🔢 Ernteanzeige zeigt jetzt, wie sich Punkte zusammensetzen (z. B. „4 Ernte + 2 Milo“).</li>
+      <li>🕒 Versionierung & Build-Zeit im Spiel hinzugefügt.</li>
     </ul>
+  </div>
 
-    <h3>Wetter 🌤️</h3>
-    <p>
-      Im Garten ist immer <strong>höchstens ein Wetter gleichzeitig aktiv</strong>.
-      Spielst du eine Wetterkarte, ersetzt sie das vorherige Wetter.
-    </p>
+  <div class="version">
+    <h3>v0.3 – Wachstum & Wetter (9. November 2025)</h3>
     <ul>
-      <li>Wetter bleibt <strong>dauerhaft aktiv</strong>, bis du ein neues Wetter spielst.</li>
-      <li>Solange ein Wetter aktiv ist, bekommen alle Ernten einen
-          <strong>Wetterbonus auf Samen</strong> (derzeit +1 Punkt).</li>
-      <li>Einige Pflanzen haben zusätzliche Synergien mit bestimmten Wetterkarten
-          (z.&nbsp;B. die Erdbeere mit Sonnenschein).</li>
+      <li>🌤️ Wettermechanik eingeführt (Sonne / Regen mit temporären Boni).</li>
+      <li>🌱 Pflanzen wachsen nun über mehrere Pflegeaktionen hinweg.</li>
+      <li>📜 Log-Einträge werden in umgekehrter Reihenfolge angezeigt (neueste oben).</li>
+      <li>📚 Hilfe-Overlay mit Kurzbeschreibung hinzugefügt.</li>
     </ul>
+  </div>
 
-    <h3>Begleiter 🐶🧙</h3>
-    <p>
-      Begleiter bleiben nach dem Ausspielen dauerhaft aktiv und geben dir
-      wiederkehrende Boni:
-    </p>
+  <div class="version">
+    <h3>v0.2 – Garten erwacht (7. November 2025)</h3>
     <ul>
-      <li><strong>Milo</strong> erhöht den Ertrag jeder Ernte von Samen.</li>
-      <li><strong>Gartenwichtel</strong> stärkt deine Düngerkarten.</li>
+      <li>🐶 Milo & 🧙 Gartenwichtel als Begleiter hinzugefügt (dauerhafte Effekte).</li>
+      <li>🌦️ Erste Wettereffekte implementiert.</li>
+      <li>🎨 Neues UI mit Spielfeld, Begleitern & Wetterbereich.</li>
+      <li>💾 Highscore-System (localStorage).</li>
     </ul>
+  </div>
 
-    <h3>Werkzeuge ⚒️</h3>
-    <p>
-      Werkzeuge sind einmalige Effekte, die dir taktische Vorteile geben
-      (z.&nbsp;B. zusätzliche Karten ziehen). Manche sind aktuell noch experimentell.
-    </p>
-
-    <h2>Rundenablauf</h2>
-
-    <h3>1. Rundenstart</h3>
+  <div class="version">
+    <h3>v0.1 – Prototyp-Sprössling (5. November 2025)</h3>
     <ul>
-      <li>Du startest mit 2 verfügbaren Zügen (<strong>Züge in dieser Runde</strong>).</li>
-      <li>Du ziehst automatisch <strong>1 neue Karte</strong> zu deiner Hand.</li>
+      <li>Erstes Spielkonzept mit Handkarten & Rundenmechanik.</li>
+      <li>Grundlayout mit Sidebar, Hand- und Spielfeld.</li>
+      <li>Einfache Logik für Punkte und Kartenaktionen.</li>
+      <li>Basis-Design & GitHub Pages Setup.</li>
     </ul>
+  </div>
 
-    <h3>2. Karten spielen</h3>
-    <p>In deinem Zug kannst du 0–2 Karten spielen:</p>
-    <ul>
-      <li><strong>Samen:</strong> wandern aufs Feld und beginnen zu wachsen.</li>
-      <li><strong>Dünger:</strong> beschleunigt die zuletzt gepflanzte Pflanze.</li>
-      <li><strong>Wetter:</strong> setzt oder ersetzt das aktuelle Wetter.</li>
-      <li><strong>Begleiter:</strong> werden dauerhaft aktiv.</li>
-      <li><strong>Werkzeuge:</strong> führen ihren Spezialeffekt aus.</li>
-    </ul>
-
-    <h3>3. Rundenende: Wachstum & Ernte</h3>
-    <p>Wenn du auf „Runde beenden“ klickst, passiert im Hintergrund:</p>
-    <ol>
-      <li>Alle Pflanzen im Feld erhalten <strong>+1 Wachstum</strong>.</li>
-      <li>
-        Wenn eine Pflanze ihre Wachstumszeit erreicht oder überschreitet,
-        wird sie geerntet.
-      </li>
-      <li>Pro geernteter Pflanze werden Punkte vergeben.</li>
-      <li>Abhängig vom <code>harvestType</code> bleibt die Pflanze stehen oder verschwindet.</li>
-    </ol>
-
-    <h3>4. Punktekalkulation bei der Ernte</h3>
-    <p>
-      Wenn eine Pflanze erntbar ist, werden die Punkte folgendermaßen berechnet:
-    </p>
-    <ul>
-      <li><strong>Basis-Erntewert</strong> der Pflanze (z.&nbsp;B. 2 bei der Erdbeere, 5 beim Apfelbaum).</li>
-      <li><strong>Milo-Bonus</strong> (wenn aktiv): +2 pro Ernte.</li>
-      <li><strong>Wetterbonus</strong> (wenn Wetter aktiv): aktuell +1.</li>
-      <li><strong>Spezialsynergien</strong>:
-        <ul>
-          <li><strong>Erdbeere + Sonnenschein</strong>: zusätzlich +2 Punkte.</li>
-        </ul>
-      </li>
-    </ul>
-    <p>
-      Das Spiel zeigt dir im Log immer eine Aufschlüsselung, z.&nbsp;B.:
-    </p>
-    <p class="note">
-      🌿 🍓 Erdbeere wurde geerntet (2 Erntepunkte + 2 Begleiterbonus Milo +
-      1 Wetterbonus (Sonnenschein) + 2 Erdbeer-Synergie mit Sonnenschein = +7 Punkte).
-    </p>
-
-    <h3>5. Nachbearbeitung & neue Runde</h3>
-    <ul>
-      <li>Einmalige Pflanzen (z.&nbsp;B. Karotte, Erdbeere) werden nach der Ernte entfernt.</li>
-      <li>Wiederholbare Pflanzen (z.&nbsp;B. Tomate) setzen ihr Wachstum zurück und können erneut geerntet werden.</li>
-      <li>Dauerhafte Pflanzen (z.&nbsp;B. Apfelbaum) bleiben stehen, geben beim ersten Mal ihren vollen Erntewert und danach jede Runde einen kleinen Bonus.</li>
-      <li>Alle in dieser Runde gespielten Karten wandern auf den Ablagestapel.</li>
-      <li>Die neue Runde startet mit dem Ziehen einer Karte und 2 frischen Zügen.</li>
-    </ul>
-
-    <h2>Spielende & Highscore</h2>
-    <ul>
-      <li>Nach der 7. Runde ist das Spiel vorbei.</li>
-      <li>Dein Endstand wird mit deinem lokalen Highscore verglichen.</li>
-      <li>Wenn du einen neuen Rekord aufstellst, wird dieser gespeichert.</li>
-    </ul>
-
-    <h2>Kartendex</h2>
-    <p>
-      Eine Übersicht der aktuellen Karten findest du im
-      <code>📚 Kartendex</code> im Spiel, oder direkt als Seite:
-      <a href="kartendex.html">Kartendex öffnen</a>.
-    </p>
-
-  </main>
+  <div class="footer">
+    <p>💜 Samendeck – entwickelt von <strong>Tzwehn</strong> • IndieTonne Games • Version v0.4 🌱</p>
+    <p><a href="index.html">Zurück zum Spiel</a></p>
+  </div>
 </body>
 </html>
