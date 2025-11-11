@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Samendeck – Rangliste</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #050510;
+      color: #f5f5ff;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #d7c2ff;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    p {
+      text-align: center;
+      opacity: 0.8;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(20, 18, 40, 0.95);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      text-align: center;
+    }
+
+    th {
+      background: rgba(124, 96, 255, 0.2);
+      color: #d7c2ff;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background: rgba(255,255,255,0.05);
+    }
+
+    tr:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .back-btn {
+      display: block;
+      width: fit-content;
+      margin: 30px auto 0;
+      padding: 8px 14px;
+      background: #7b5dff;
+      color: white;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    /* 🏆 Platzierungen farblich hervorheben */
+tr.top1 td {
+  background: linear-gradient(90deg, rgba(255,215,0,0.15), rgba(255,215,0,0.05));
+  font-weight: 600;
+  color: #ffe680;
+}
+tr.top2 td {
+  background: linear-gradient(90deg, rgba(192,192,192,0.12), rgba(192,192,192,0.04));
+  font-weight: 600;
+  color: #dddddd;
+}
+tr.top3 td {
+  background: linear-gradient(90deg, rgba(205,127,50,0.15), rgba(205,127,50,0.05));
+  font-weight: 600;
+  color: #ffbb88;
+}
+
+  </style>
+  
+</head>
+<body>
+  <h1>🏆 Samendeck – Rangliste</h1>
+  <p>Hier findest du alle bisherigen Gartenmeister:innen mit mindestens 50 Punkten.</p>
+
+  <table id="leaderboard">
+    <thead>
+      <tr>
+        <th>Platz</th>
+        <th>Name</th>
+        <th>Punkte</th>
+        <th>Datum</th>
+        <th>Uhrzeit</th>
+      </tr>
+    </thead>
+    <tbody id="leaderboardBody">
+      <!-- CSV-Daten werden hier eingefügt -->
+    </tbody>
+  </table>
+
+  <a href="sologardengame.html" class="back-btn">🔁 Zurück zum Spiel</a>
+
+  <script>
+    async function loadCSV() {
+      try {
+        const response = await fetch("rangliste.csv");
+        const text = await response.text();
+        const rows = text.trim().split("\n").slice(1); // Kopfzeile überspringen
+
+        const data = rows.map(row => {
+          const [time, date, name, score] = row.split(";");
+          return { time, date, name, score: parseInt(score, 10) };
+        });
+
+        // Sortiere nach Punkten (absteigend)
+        data.sort((a, b) => b.score - a.score);
+
+        const tbody = document.getElementById("leaderboardBody");
+        tbody.innerHTML = "";
+
+        data.forEach((entry, index) => {
+  const tr = document.createElement("tr");
+
+  // 🥇🥈🥉 Platzierungen markieren
+  if (index === 0) tr.classList.add("top1");
+  else if (index === 1) tr.classList.add("top2");
+  else if (index === 2) tr.classList.add("top3");
+
+  tr.innerHTML = `
+    <td>${index + 1}</td>
+    <td>${entry.name}</td>
+    <td>${entry.score}</td>
+    <td>${entry.date}</td>
+    <td>${entry.time.replace(/"/g, "")}</td>
+  `;
+  tbody.appendChild(tr);
+});
+
+      } catch (err) {
+        console.error("Fehler beim Laden der CSV:", err);
+        document.getElementById("leaderboardBody").innerHTML =
+          "<tr><td colspan='5'>Keine Ranglisten-Daten gefunden.</td></tr>";
+      }
+    }
+
+    loadCSV();
+  </script>
+</body>
+</html>
