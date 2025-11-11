@@ -294,9 +294,15 @@
     let csvRows = [];
     let csvSep = ";";
 
-    async function initAlbum() {
-      const resp = await fetch("cards_user_summary.csv");
-      const text = await resp.text();
+async function initAlbum() {
+  // Timestamp als Query-Parameter anhängen, damit der Browser immer neu lädt
+  const url = "cards_user_summary.csv?ts=" + Date.now();
+
+  const resp = await fetch(url, {
+    cache: "no-store" // sagt dem Browser zusätzlich: bitte nix aus dem Cache nehmen
+  });
+
+  const text = await resp.text();
 
       const lines = text.trim().split(/\r?\n/);
       if (lines.length < 2) {
