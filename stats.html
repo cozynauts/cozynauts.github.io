@@ -285,22 +285,30 @@
       return headersArray.filter(h => header.includes(h));
     }
 
-    async function loadStats() {
-      const resp = await fetch("cards_user_summary.csv");
-      const text = await resp.text();
-      const lines = text.trim().split(/\r?\n/);
-      if (lines.length < 2) {
-        console.warn("CSV hat keine Daten.");
-        return;
-      }
+async function loadStats() {
+  // Cache-Busting durch Timestamp
+  const url = "cards_user_summary.csv?ts=" + Date.now();
 
-      const headerLine = lines[0];
-      const sep = headerLine.includes(";") ? ";" : ",";
-      header = headerLine.split(sep).map(h => h.trim());
-      rows   = lines.slice(1).map(l => l.split(sep));
+  const resp = await fetch(url, {
+    cache: "no-store"
+  });
 
-      updateScope("all");
-    }
+  const text = await resp.text();
+  const lines = text.trim().split(/\r?\n/);
+
+  if (lines.length < 2) {
+    console.warn("CSV hat keine Daten.");
+    return;
+  }
+
+  const headerLine = lines[0];
+  const sep = headerLine.includes(";") ? ";" : ",";
+  header = headerLine.split(sep).map(h => h.trim());
+  rows   = lines.slice(1).map(l => l.split(sep));
+
+  updateScope("all");
+}
+
 
     function updateScope(scope) {
       currentScope = scope;
