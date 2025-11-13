@@ -37,12 +37,32 @@
       margin: 0.2rem 0 0.4rem;
       line-height: 1.5;
     }
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px;
-      margin-bottom: 1rem;
-    }
+    /* Standard-Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+/* Speziell für die 4 Samen-Karten */
+.card-grid.seeds-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* Responsive: auf schmaleren Screens wieder umbrechen */
+@media (max-width: 900px) {
+  .card-grid.seeds-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 540px) {
+  .card-grid.seeds-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
     .card {
       border-radius: 12px;
       padding: 10px 12px;
@@ -84,6 +104,18 @@
     ul {
       margin: 0.2rem 0 0.4rem 1.1rem;
     }
+
+    /* Bild im Kartendex */
+    .card-image {
+      margin: 0 0 6px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .card-image img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
   </style>
 </head>
 <body>
@@ -96,12 +128,15 @@
 
     <!-- SAMEN -->
     <h2>Samen 🌱</h2>
-    <div class="card-grid">
+    <div class="card-grid seeds-grid">
       <!-- KAROTTE -->
       <article class="card">
         <div class="card-header">
           <span class="card-name">🥕 Karotte</span>
           <span class="card-tag">Gemüse</span>
+        </div>
+        <div class="card-image">
+          <img src="Kartenbilder/seed_carrot.png" alt="Karotte">
         </div>
         <div class="meta">
           <span class="pill pill-seed">Samen</span>
@@ -122,6 +157,9 @@
         <div class="card-header">
           <span class="card-name">🍓 Erdbeere</span>
           <span class="card-tag">Frucht</span>
+        </div>
+        <div class="card-image">
+          <img src="Kartenbilder/seed_strawberry.png" alt="Erdbeere">
         </div>
         <div class="meta">
           <span class="pill pill-seed">Samen</span>
@@ -145,6 +183,9 @@
           <span class="card-name">🍅 Tomate</span>
           <span class="card-tag">Gemüse</span>
         </div>
+        <div class="card-image">
+          <img src="Kartenbilder/seed_tomato.png" alt="Tomate">
+        </div>
         <div class="meta">
           <span class="pill pill-seed">Samen</span>
           Wachstumszeit: <strong>2</strong> · Ernte-Typ: <strong>wiederholbar</strong>
@@ -166,6 +207,9 @@
         <div class="card-header">
           <span class="card-name">🍎 Apfelbaum</span>
           <span class="card-tag">Baum</span>
+        </div>
+        <div class="card-image">
+          <img src="Kartenbilder/seed_apple.png" alt="Apfelbaum">
         </div>
         <div class="meta">
           <span class="pill pill-seed">Samen</span>
@@ -196,6 +240,9 @@
           <span class="card-name">Kompost</span>
           <span class="card-tag">Basis</span>
         </div>
+        <div class="card-image">
+          <img src="Kartenbilder/fert_compost.png" alt="Kompost">
+        </div>
         <div class="meta">
           <span class="pill pill-fertilizer">Dünger</span>
           Ziel: alle aktiven Pflanzen
@@ -219,6 +266,9 @@
           <span class="card-name">Superdünger</span>
           <span class="card-tag">Stark</span>
         </div>
+        <div class="card-image">
+          <img src="Kartenbilder/fert_super.png" alt="Superdünger">
+        </div>
         <div class="meta">
           <span class="pill pill-fertilizer">Dünger</span>
           Ziel: alle Ernten dieser Runde
@@ -233,8 +283,10 @@
           <li>Erzeugt selbst <strong>kein Wachstum</strong> – außer über den
               <strong>Gartenwichtel</strong>, der beim Ausspielen von Dünger
               zusätzliches Wachstum geben kann.</li>
+          <li><strong>Mehrfach stapelbar:</strong> Jeder weitere Superdünger
+              (oder eine Gießkannen-Wiederholung davon) erhöht den Multiplikator
+              um weitere 50&nbsp;% (×2,0, ×2,5, …).</li>
           <li>Am besten einsetzen, wenn mehrere Pflanzen gleichzeitig erntebereit sind.</li>
-          <li>Perfekt für eine große „Boom-Runde“ mit vielen Punkten auf einmal.</li>
         </ul>
       </article>
     </div>
@@ -247,6 +299,9 @@
         <div class="card-header">
           <span class="card-name">Sonnenschein</span>
           <span class="card-tag">Wetter</span>
+        </div>
+        <div class="card-image">
+          <img src="Kartenbilder/weather_sun.png" alt="Sonnenschein">
         </div>
         <div class="meta">
           <span class="pill pill-weather">Wetter</span>
@@ -269,6 +324,9 @@
         <div class="card-header">
           <span class="card-name">Sommerregen</span>
           <span class="card-tag">Wetter</span>
+        </div>
+        <div class="card-image">
+          <img src="Kartenbilder/weather_rain.png" alt="Sommerregen">
         </div>
         <div class="meta">
           <span class="pill pill-weather">Wetter</span>
@@ -298,6 +356,9 @@
           <span class="card-name">Milo, Gartenschnüffler</span>
           <span class="card-tag">Hund</span>
         </div>
+        <div class="card-image">
+          <img src="Kartenbilder/comp_milo.png" alt="Milo, Gartenschnüffler">
+        </div>
         <div class="meta">
           <span class="pill pill-companion">Begleiter</span>
           Typ: dauerhaft
@@ -317,6 +378,9 @@
         <div class="card-header">
           <span class="card-name">Gartenwichtel</span>
           <span class="card-tag">Wichtel</span>
+        </div>
+        <div class="card-image">
+          <img src="Kartenbilder/comp_gnome.png" alt="Gartenwichtel">
         </div>
         <div class="meta">
           <span class="pill pill-companion">Begleiter</span>
@@ -345,6 +409,9 @@
           <span class="card-name">Gießkanne</span>
           <span class="card-tag">Werkzeug</span>
         </div>
+        <div class="card-image">
+          <img src="Kartenbilder/tool_watering.png" alt="Gießkanne">
+        </div>
         <div class="meta">
           <span class="pill pill-tool">Werkzeug</span>
           Typ: einmalig
@@ -354,10 +421,10 @@
           aktuellen Pflanzen.
         </p>
         <ul>
-          <li>Wenn vorher Kompost gespielt wurde, wird dessen Wachstumsbonus
-              erneut auf alle Pflanzen angewandt.</li>
-          <li>Ist der Gartenwichtel aktiv, wird auch dessen zusätzlicher
-              Wachstumsbonus mitkopiert.</li>
+          <li>Wenn vorher <strong>Kompost</strong> gespielt wurde, wird dessen Wachstumsbonus
+              (inkl. Gartenwichtel-Bonus) erneut auf alle Pflanzen angewandt.</li>
+          <li>War der letzte Dünger <strong>Superdünger</strong>, verstärkt die Gießkanne
+              dessen Effekt um weitere 50&nbsp;% (erhöht also den aktiven Multiplikator).</li>
           <li>Hat es in dieser Runde noch keinen Dünger gegeben,
               verpufft die Gießkanne ohne Effekt.</li>
         </ul>
@@ -368,6 +435,9 @@
         <div class="card-header">
           <span class="card-name">Rechen</span>
           <span class="card-tag">Werkzeug</span>
+        </div>
+        <div class="card-image">
+          <img src="Kartenbilder/tool_rake.png" alt="Rechen">
         </div>
         <div class="meta">
           <span class="pill pill-tool">Werkzeug</span>
