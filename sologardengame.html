@@ -152,19 +152,33 @@ button.danger {
     }
 
 
-    .card {
-      width: 140px;
-      padding: 8px;
-      border-radius: 12px;
-      background: rgba(20, 18, 40, 0.95);
-      border: 1px solid rgba(255,255,255,0.18);
-      cursor: pointer;
-      font-size: 0.78rem;
-      line-height: 1.2;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
+.card {
+  width: 105px;              /* 140 * 0,75 */
+  padding: 6px;              /* 8 * 0,75 */
+  border-radius: 9px;        /* 12 * 0,75 */
+  background: rgba(20, 18, 40, 0.95);
+  border: 1px solid rgba(255,255,255,0.18);
+  cursor: pointer;
+  font-size: 0.6rem;         /* alles etwas kleiner */
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+    .card-image {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.card-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
     .card-header {
       display: flex;
       justify-content: space-between;
@@ -175,16 +189,16 @@ button.danger {
       font-weight: 600;
     }
     .card-tag {
-      font-size: 0.7rem;
+      font-size: 0.55rem;
       opacity: 0.7;
     }
     .card-type {
-      font-size: 0.72rem;
-      opacity: 0.75;
+      font-size: 0.55rem;
+      opacity: 0.7;
     }
     .card-desc {
-      font-size: 0.72rem;
-      opacity: 0.9;
+      font-size: 0.55rem;
+      opacity: 0.7;
     }
 
     .card.seed { border-left: 4px solid #8be38b; }
@@ -338,13 +352,6 @@ button.danger {
       <h2>Hand</h2>
       <div class="zone">
         <div id="hand"></div>
-      </div>
-    </section>
-
-    <section>
-      <h2>In dieser Runde gespielt</h2>
-      <div class="zone">
-        <div id="played"></div>
       </div>
     </section>
 
@@ -606,8 +613,9 @@ const state = {
   maxPlaysPerRound: 2,
   playsLeftThisRound: 2,
   lastSeedPoints: 0,
-  lastFertilizerSteps: 0,     // NEU: Wieviel Wachstum gab der letzte Dünger?
-  lastFertilizerDetail: "",   // NEU: Logtext für Gießkanne (z.B. "1 Dünger + 1 Wichtel"),
+  lastFertilizerSteps: 0,            // Wieviel Wachstum gab der letzte Dünger?
+  lastFertilizerDetail: "",          // Logtext für Gießkanne (z.B. "1 Dünger + 1 Wichtel"),
+    lastFertilizerId: null,          // merkt, welcher Dünger zuletzt gespielt wurde
   weatherSeedBonusThisRound: 0,
   companionSeedBonus: 0,
   companionFertilizerBonus: 0,
@@ -615,6 +623,7 @@ const state = {
   activeCompanions: [],
   activePlants: [],
   activeWeather: null,
+  superFertilizerStacks: 0,          // wie oft Superdünger aktiv ist (Stacks)
   superFertilizerActive: false,
   logEntries: [],
   harvestSummary: {},
@@ -637,6 +646,11 @@ const state = {
     function cloneCard(card) {
       return JSON.parse(JSON.stringify(card));
     }
+
+function getCardImage(card) {
+  return `Kartenbilder/${card.id}.png`;
+}
+
 
 function log(message) {
   const logDiv = document.getElementById("log");
@@ -763,41 +777,29 @@ function handleFertilizer(card) {
   let baseSteps = 0; // Standard: kein Wachstum
 
   if (card.id === "fert_compost") {
-    // 💩 Kompost: klassischer Wachstumsdünger
+    // Kompost: Wachstum + evtl. Wichtel
     baseSteps = 1;
   } else if (card.id === "fert_super") {
-    // 💩 Superdünger: nur Erntebuff, kein eigenes Wachstum
-    state.superFertilizerActive = true;
-    log("💥 Superdünger aktiviert: Alle Ernten in dieser Runde werden um 50 % verstärkt (×1,5, aufgerundet).");
+    // Superdünger: nur Erntebuff, kein eigenes Wachstum
+    state.superFertilizerStacks += 1;
+    const multi = 1 + 0.5 * state.superFertilizerStacks;
+    log(`💥 Superdünger aktiviert: Alle Ernten in dieser Runde werden um 50 % verstärkt (insgesamt ×${multi.toFixed(1)}, aufgerundet).`);
   }
 
-  // Wachstum nur durch Basis (Kompost) + Wichtel
   const totalSteps = baseSteps + gnomeBonus;
 
   const detailParts = [];
   if (baseSteps > 0) detailParts.push(`${baseSteps} Dünger`);
   if (gnomeBonus > 0) detailParts.push(`${gnomeBonus} Wichtel`);
-  const detail = detailParts.length > 0 ? detailParts.join(" + ") : "nur Wichtel-Effekt";
+  const detail = detailParts.length > 0 ? detailParts.join(" + ") : "kein Wachstumseffekt";
 
-  // 🌿 Wirkung auf **alle** aktiven Pflanzen (Wachstum nur, wenn totalSteps > 0)
-  state.activePlants.forEach((plant) => {
-    if (totalSteps > 0) {
-      plant.growth += totalSteps;
-      log(
-        `💩 ${card.name} düngt ${plant.name} → Wachstum +${totalSteps} (${detail}). ` +
-        `Fortschritt: ${plant.growth}/${plant.growthTime}`
-      );
-    } else {
-      // z. B. Superdünger ohne Wichtel: kein Wachstum, nur Erntebuff
-      if (card.id === "fert_super") {
-        log(`💩 ${card.name} wirkt auf ${plant.name}: kein zusätzliches Wachstum, aber Erntebuff ist aktiv.`);
-      }
-    }
-  });
+  // Wachstum auf Pflanzen anwenden (wie gehabt) ...
+  // (dein bestehender Block mit state.activePlants.forEach(...) bleibt gleich)
 
-    // Infos für die Gießkanne merken
   state.lastFertilizerSteps = totalSteps;
   state.lastFertilizerDetail = detail;
+  state.lastFertilizerId = card.id;   // NEU: merken, welcher Dünger es war
+
 
 }
 
@@ -868,30 +870,49 @@ function handleCompanion(card) {
 function handleTool(card) {
 
   // ⚒️ Gießkanne – NEUE LOGIK
-  if (card.id === "tool_watering") {
-    const steps = state.lastFertilizerSteps || 0;
-
-    if (steps <= 0) {
-      log("⚒️ Gießkanne: Kein gespeicherter Düngereffekt – kein zusätzlicher Wachstumseffekt.");
-      return;
-    }
-
-    if (state.activePlants.length === 0) {
-      log("⚒️ Gießkanne: Es sind keine Pflanzen im Feld – kein Effekt.");
-      return;
-    }
-
-    state.activePlants.forEach((plant) => {
-      plant.growth += steps;
-      log(
-        `⚒️ Gießkanne wiederholt den letzten Düngereffekt auf ${plant.name} ` +
-        `→ Wachstum +${steps} (${state.lastFertilizerDetail}). ` +
-        `Fortschritt: ${plant.growth}/${plant.growthTime}`
-      );
-    });
-
+if (card.id === "tool_watering") {
+  // Es muss überhaupt schon einmal Dünger gespielt worden sein
+  if (!state.lastFertilizerId) {
+    log("⚒️ Gießkanne: Kein gespeicherter Düngereffekt – noch kein Dünger gespielt.");
     return;
   }
+
+  const steps = state.lastFertilizerSteps || 0;
+
+  // Spezialfall: Letzter Dünger war Superdünger → Erntebuff erneut verstärken
+  if (state.lastFertilizerId === "fert_super") {
+    state.superFertilizerStacks += 1;
+    const multi = 1 + 0.5 * state.superFertilizerStacks;
+    log(
+      `⚒️ Gießkanne verstärkt den Superdünger erneut: ` +
+      `Alle Ernten in dieser Runde werden um weitere 50 % verstärkt ` +
+      `(insgesamt ×${multi.toFixed(1)}, aufgerundet).`
+    );
+  }
+
+  // Wachstumseffekt (z. B. Kompost + Wichtel) wiederholen, falls vorhanden
+  if (steps <= 0) {
+    // Kein Wachstum, aber evtl. nur Superdünger-Effekt → dann sind wir hier fertig
+    return;
+  }
+
+  if (state.activePlants.length === 0) {
+    log("⚒️ Gießkanne: Es sind keine Pflanzen im Feld – Wachstumseffekt kann nicht angewendet werden.");
+    return;
+  }
+
+  state.activePlants.forEach((plant) => {
+    plant.growth += steps;
+    log(
+      `⚒️ Gießkanne wiederholt den letzten Düngereffekt auf ${plant.name} ` +
+      `→ Wachstum +${steps} (${state.lastFertilizerDetail}). ` +
+      `Fortschritt: ${plant.growth}/${plant.growthTime}`
+    );
+  });
+
+  return;
+}
+
 
   // 🧹 Rechen – bleibt unverändert
   else if (card.id === "tool_rake") {
@@ -942,11 +963,11 @@ function harvestPlantOnce(p) {
   }
 
   // Superdünger-Multiplikator (nur in dieser Runde)
-  const baseSum = plantBase + miloBonus + weatherBonus + strawberrySynergy;
-  let multiplier = 1;
-  if (state.superFertilizerActive) {
-    multiplier = 1.5;
-  }
+const baseSum = plantBase + miloBonus + weatherBonus + strawberrySynergy;
+
+// Superdünger-Multiplikator (Stacks à 50 %)
+const stacks = state.superFertilizerStacks || 0;
+const multiplier = 1 + 0.5 * stacks;
 
   const totalGain = Math.ceil(baseSum * multiplier);
 
@@ -962,7 +983,11 @@ function harvestPlantOnce(p) {
     };
   }
   state.harvestSummary[p.id].cycles++;
-  state.harvestSummary[p.id].gains.push(totalGain);
+
+  // Nur den Pflanzen-Anteil im Log anzeigen (ohne Milo),
+  // damit Milo nicht doppelt erscheint.
+  const plantGainForLog = Math.max(totalGain - miloBonus, 0);
+  state.harvestSummary[p.id].gains.push(plantGainForLog);
 
   // 🐶 Milo-Beteiligung sammeln (falls aktiv)
   if (miloBonus > 0) {
@@ -971,6 +996,7 @@ function harvestPlantOnce(p) {
     }
     state.miloSummary.bonuses.push(miloBonus);
   }
+
 
   // Verhalten nach der Ernte je nach Typ
   if (p.harvestType === "einmalig") {
@@ -1080,8 +1106,8 @@ state.miloSummary = { bonuses: [] };
   // Entferne abgeerntete Pflanzen
   state.activePlants = state.activePlants.filter(p => !p.toRemove);
 
-  // Superdünger-Effekt gilt nur für diese Runde
-state.superFertilizerActive = false;
+// Superdünger-Effekte gelten nur für diese Runde
+state.superFertilizerStacks = 0;
 
 
   // 🌾 2. Gespielte Karten dieser Runde in Ablage
@@ -1141,96 +1167,77 @@ if (state.round >= state.maxRounds) {
   document.getElementById("bestScore").textContent = best;
 
   const handDiv = document.getElementById("hand");
-  const playedDiv = document.getElementById("played");
   const companionsDiv = document.getElementById("companions");
   const fieldDiv = document.getElementById("field");
   const weatherDiv = document.getElementById("weather");
 
   handDiv.innerHTML = "";
-  playedDiv.innerHTML = "";
   if (companionsDiv) companionsDiv.innerHTML = "";
   if (fieldDiv) fieldDiv.innerHTML = "";
   if (weatherDiv) weatherDiv.innerHTML = "";
 
-  // Hand rendern
-  state.hand.forEach((card, index) => {
-    const div = document.createElement("div");
-    div.className =
-      "card " +
-      card.type +
-      (state.playsLeftThisRound <= 0 || state.gameOver ? " disabled" : "");
+// Hand rendern – jetzt mit Bild + Text
+state.hand.forEach((card, index) => {
+  const div = document.createElement("div");
+  div.className =
+    "card " +
+    card.type +
+    (state.playsLeftThisRound <= 0 || state.gameOver ? " disabled" : "");
 
-    const typeLabel = {
-      seed: "Samen",
-      fertilizer: "Dünger",
-      weather: "Wetter",
-      companion: "Begleiter",
-      tool: "Werkzeug",
-    }[card.type] || card.type;
+  const typeLabel = {
+    seed: "Samen",
+    fertilizer: "Dünger",
+    weather: "Wetter",
+    companion: "Begleiter",
+    tool: "Werkzeug",
+  }[card.type] || card.type;
 
-    div.innerHTML = `
-      <div class="card-header">
-        <span class="card-title">${card.name}</span>
-        <span class="card-tag">${card.tag || ""}</span>
-      </div>
-      <div class="card-type">${typeLabel}</div>
-      <div class="card-desc">${card.description}</div>
-    `;
+  div.innerHTML = `
+    <div class="card-image">
+      <img src="${getCardImage(card)}" alt="${card.name}">
+    </div>
+    <div class="card-header">
+      <span class="card-title">${card.name}</span>
+      <span class="card-tag">${card.tag || ""}</span>
+    </div>
+    <div class="card-type">${typeLabel}</div>
+    <div class="card-desc">${card.description}</div>
+  `;
 
-    if (!state.gameOver && state.playsLeftThisRound > 0) {
-      div.addEventListener("click", () => playCard(index));
-    }
-    handDiv.appendChild(div);
-  });
+  if (!state.gameOver && state.playsLeftThisRound > 0) {
+    div.addEventListener("click", () => playCard(index));
+  }
+  handDiv.appendChild(div);
+});
 
-  // Diese Runde gespielte Karten
-  state.playedThisRound.forEach((card) => {
+// Aktive Begleiter & dauerhafte Effekte (mit Bild)
+if (companionsDiv) {
+  state.activeCompanions.forEach((card) => {
     const div = document.createElement("div");
     div.className = "card " + card.type + " disabled";
 
-    const typeLabel = {
-      seed: "Samen",
-      fertilizer: "Dünger",
-      weather: "Wetter",
-      companion: "Begleiter",
-      tool: "Werkzeug",
-    }[card.type] || card.type;
+    let effectText = card.description;
+    if (card.id === "comp_milo") {
+      effectText += ` (aktuell +${state.companionSeedBonus} auf Samen)`;
+    } else if (card.id === "comp_gnome") {
+      effectText += ` (aktuell +${state.companionFertilizerBonus} Wachstum auf Dünger)`;
+    }
 
     div.innerHTML = `
+      <div class="card-image">
+        <img src="${getCardImage(card)}" alt="${card.name}">
+      </div>
       <div class="card-header">
         <span class="card-title">${card.name}</span>
         <span class="card-tag">${card.tag || ""}</span>
       </div>
-      <div class="card-type">${typeLabel}</div>
-      <div class="card-desc">${card.description}</div>
+      <div class="card-type">Begleiter</div>
+      <div class="card-desc">${effectText}</div>
     `;
-    playedDiv.appendChild(div);
+    companionsDiv.appendChild(div);
   });
-
-  // Aktive Begleiter & dauerhafte Effekte
-  if (companionsDiv) {
-    state.activeCompanions.forEach((card) => {
-      const div = document.createElement("div");
-      div.className = "card " + card.type + " disabled";
-
-      let effectText = card.description;
-      if (card.id === "comp_milo") {
-        effectText += ` (aktuell +${state.companionSeedBonus} auf Samen)`;
-      } else if (card.id === "comp_gnome") {
-  effectText += ` (aktuell +${state.companionFertilizerBonus} Wachstum auf Dünger)`;
 }
 
-      div.innerHTML = `
-        <div class="card-header">
-          <span class="card-title">${card.name}</span>
-          <span class="card-tag">${card.tag || ""}</span>
-        </div>
-        <div class="card-type">Begleiter</div>
-        <div class="card-desc">${effectText}</div>
-      `;
-      companionsDiv.appendChild(div);
-    });
-  }
 
   // Feld / aktive Pflanzen
   if (fieldDiv) {
@@ -1278,13 +1285,17 @@ if (state.round >= state.maxRounds) {
         else if (plant.harvestType === "wiederholbar") harvestLabel = "Wiederholbar";
         else if (plant.harvestType === "dauerhaft") harvestLabel = "Dauerhaft";
 
-        div.innerHTML = `
-          <div class="plant-card-title">${plant.name}</div>
-          <div class="plant-card-meta">
-            Fortschritt: ${progress}${extraInfo}
-          </div>
-          <div class="plant-card-meta">${harvestLabel}</div>
-        `;
+    div.innerHTML = `
+      <div class="card-image">
+        <img src="${getCardImage(plant)}" alt="${plant.name}">
+      </div>
+      <div class="plant-card-title">${plant.name}</div>
+      <div class="plant-card-meta">
+        Fortschritt: ${progress}${extraInfo}
+      </div>
+      <div class="plant-card-meta">${harvestLabel}</div>
+    `;
+
 
         fieldDiv.appendChild(div);
       });
@@ -1292,26 +1303,44 @@ if (state.round >= state.maxRounds) {
   }
 
 
-// Wetter-Anzeige
+// Wetter-Anzeige mit Karte
 if (weatherDiv) {
-  const p = document.createElement("p");
-  p.style.fontSize = "0.75rem";
-  p.style.opacity = "0.85";
-
   if (state.activeWeather) {
-    if (state.activeWeather.id === "weather_sun") {
-      p.textContent = `Aktives Wetter: ${state.activeWeather.name} (+1 Erntebonus).`;
-    } else if (state.activeWeather.id === "weather_rain") {
-      p.textContent = `Aktives Wetter: ${state.activeWeather.name} (schnelleres Wachstum für alle Pflanzen).`;
-    } else {
-      p.textContent = `Aktives Wetter: ${state.activeWeather.name}.`;
-    }
-  } else {
-    p.textContent = "Kein aktives Wetter.";
-  }
+    const card = state.activeWeather;
+    const div = document.createElement("div");
+    div.className = "card weather disabled";
 
-  weatherDiv.appendChild(p);
+    let effectText;
+    if (card.id === "weather_sun") {
+      effectText = "Aktives Wetter: Sonnenschein (+1 Erntebonus auf alle Ernten).";
+    } else if (card.id === "weather_rain") {
+      effectText = "Aktives Wetter: Sommerregen (schnelleres Wachstum für alle Pflanzen).";
+    } else {
+      effectText = `Aktives Wetter: ${card.name}.`;
+    }
+
+    div.innerHTML = `
+      <div class="card-image">
+        <img src="${getCardImage(card)}" alt="${card.name}">
+      </div>
+      <div class="card-header">
+        <span class="card-title">${card.name}</span>
+        <span class="card-tag">${card.tag || ""}</span>
+      </div>
+      <div class="card-type">Wetter</div>
+      <div class="card-desc">${effectText}</div>
+    `;
+
+    weatherDiv.appendChild(div);
+  } else {
+    const p = document.createElement("p");
+    p.style.fontSize = "0.75rem";
+    p.style.opacity = "0.85";
+    p.textContent = "Kein aktives Wetter.";
+    weatherDiv.appendChild(p);
+  }
 }
+
 
 }
 
@@ -1326,17 +1355,21 @@ function initGame() {
   state.playedThisRound = [];
   state.maxPlaysPerRound = 2;           
   state.playsLeftThisRound = state.maxPlaysPerRound;
-  state.lastSeedPoints = 0;
-  state.lastFertilizerBonus = 0;
-  state.weatherSeedBonusThisRound = 0;
-  state.companionSeedBonus = 0;
-  state.companionFertilizerBonus = 0;
-  state.gameOver = false;
-  state.activeCompanions = [];
-  state.activePlants = [];
-  state.activeWeather = null;
-  state.superFertilizerActive = false;
-  state.logEntries = [];
+state.lastSeedPoints = 0;
+state.lastFertilizerBonus = 0;
+state.lastFertilizerSteps = 0;
+state.lastFertilizerDetail = "";
+state.lastFertilizerId = null;
+state.weatherSeedBonusThisRound = 0;
+state.companionSeedBonus = 0;
+state.companionFertilizerBonus = 0;
+state.gameOver = false;
+state.activeCompanions = [];
+state.activePlants = [];
+state.activeWeather = null;
+state.superFertilizerStacks = 0;
+state.logEntries = [];
+
 
   
 
