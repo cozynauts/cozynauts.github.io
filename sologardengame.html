@@ -313,6 +313,7 @@ button.danger {
     <p class="stat">Deck: <span id="deckSize">0</span> Karten</p>
     <p class="stat">Ablage: <span id="discardSize">0</span> Karten</p>
     <p class="stat">Züge in dieser Runde: <span id="playsLeft">2</span> / <span id="maxPlays">2</span></p>
+    <p class="stat" id="resetInfo">Resets heute: 0/3</p>
 
     <h2>Aktionen</h2>
 <div class="buttons">
@@ -628,7 +629,8 @@ const state = {
   logEntries: [],
   harvestSummary: {},
   growthLogDone: {},
-  miloSummary: { bonuses: [] }      
+  miloSummary: { bonuses: [] },
+  dailyResetsUsed: 0      
 };
 
 
@@ -718,6 +720,50 @@ function copyLogToClipboard() {
   textarea.setSelectionRange(0, textarea.value.length);
   document.execCommand("copy");
 }
+
+// 🔁 Neustart-Limit pro Tag
+const RESET_LIMIT = 3;
+
+function getTodayKey() {
+  const d = new Date();
+  // Nur yyyy-mm-dd
+  return d.toISOString().slice(0, 10);
+}
+
+function loadResetState() {
+  const today = getTodayKey();
+  const savedDay = localStorage.getItem("samendeck_reset_day");
+  const savedCount = parseInt(localStorage.getItem("samendeck_reset_count") || "0", 10);
+
+  if (savedDay === today) {
+    state.dailyResetsUsed = isNaN(savedCount) ? 0 : savedCount;
+  } else {
+    state.dailyResetsUsed = 0;
+    localStorage.setItem("samendeck_reset_day", today);
+    localStorage.setItem("samendeck_reset_count", "0");
+  }
+}
+
+function saveResetState() {
+  const today = getTodayKey();
+  localStorage.setItem("samendeck_reset_day", today);
+  localStorage.setItem("samendeck_reset_count", String(state.dailyResetsUsed));
+}
+
+function updateResetInfo() {
+  const info = document.getElementById("resetInfo");
+  if (info) {
+    info.textContent = `Resets heute: ${state.dailyResetsUsed}/${RESET_LIMIT}`;
+  }
+
+  const restartBtn = document.getElementById("restartBtn");
+  if (restartBtn) {
+    // 🔒 Nur sperren, wenn Spiel läuft UND Limit erreicht
+    const limitReached = state.dailyResetsUsed >= RESET_LIMIT;
+    restartBtn.disabled = !state.gameOver && limitReached;
+  }
+}
+
 
 
     // --- Karten spielen ----------------------------------------------
@@ -1152,8 +1198,12 @@ if (state.round >= state.maxRounds) {
   log(`⭐ Spielende! Du hast insgesamt ${state.score} Punkte erreicht.`);
   log("🎉 Öffne das Abschlussfenster, um Infos zur Rangliste zu sehen.");
 
+  // 🔁 Neustart-Button jetzt immer freigeben (Spiel ist vorbei)
+  updateResetInfo();
+
   return;
 }
+
 
 
 
@@ -1408,12 +1458,34 @@ state.logEntries = [];
   const logDiv = document.getElementById("log");
   logDiv.innerHTML = "";
   log("Neues Spiel gestartet. Versuche in 7 Runden so viele Punkte wie möglich zu sammeln!");
+
+    // 🔢 Reset-Anzeige aktualisieren
+  updateResetInfo();
 }
 
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("endTurnBtn").addEventListener("click", endTurn);
-  document.getElementById("restartBtn").addEventListener("click", initGame);
+  const restartBtn = document.getElementById("restartBtn");
+if (restartBtn) {
+  restartBtn.addEventListener("click", () => {
+    // Wenn das Spiel NOCH LÄUFT → Tageslimit prüfen
+    if (!state.gameOver) {
+      if (state.dailyResetsUsed >= RESET_LIMIT) {
+        log("🚫 Du hast deine 3 Neustarts für heute verbraucht. Spiele diese Runde zu Ende! 🌱");
+        updateResetInfo();
+        return;
+      }
+      state.dailyResetsUsed++;
+      saveResetState();
+    }
+
+    // Wenn Spiel vorbei ODER Reset noch erlaubt → normal neu starten
+    initGame();
+    updateResetInfo();
+  });
+}
+
 
   // Bestehende Elemente
   const helpBtn = document.getElementById("helpBtn");
@@ -1495,6 +1567,9 @@ document.addEventListener("DOMContentLoaded", () => {
     copyLogBtn.addEventListener("click", copyLogToClipboard);
   }
 
+  // Reset-Infos laden
+  loadResetState();
+  updateResetInfo();
 
   // Spiel starten
   loadMiniLeaderboard();
@@ -1538,7 +1613,7 @@ async function loadMiniLeaderboard() {
 
   </script>
 <div id="version-label">
-  v0.6 – Garten-Update 🌱 • 
+  v0.7 – Garten-Update 🌱 • 
   Erstellt von 
 <a href="https://www.twitch.tv/tzwehn" target="_blank"
    style="color:#d7c2ff; font-weight:700; text-decoration:none;">
