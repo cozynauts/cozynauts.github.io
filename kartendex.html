@@ -37,13 +37,12 @@
       margin: 0.2rem 0 0.4rem;
       line-height: 1.5;
     }
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
-  margin-bottom: 1rem;
-}
-
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 1rem;
+    }
     .card {
       border-radius: 12px;
       padding: 10px 12px;
@@ -98,6 +97,7 @@
     <!-- SAMEN -->
     <h2>Samen 🌱</h2>
     <div class="card-grid">
+      <!-- KAROTTE -->
       <article class="card">
         <div class="card-header">
           <span class="card-name">🥕 Karotte</span>
@@ -105,18 +105,19 @@
         </div>
         <div class="meta">
           <span class="pill pill-seed">Samen</span>
-          Wachstumszeit: <strong>2</strong> &middot; Ernte-Typ: <strong>einmalig</strong>
+          Wachstumszeit: <strong>2</strong> · Ernte-Typ: <strong>einmalig</strong>
         </div>
         <p>
           <strong>Ertrag:</strong> Erntet einmalig <strong>5 Punkte</strong>,
           sobald die Karotte reif ist.
         </p>
         <ul>
-          <li>Solider, schneller Ertrag – gutes „Basisgemüse“.</li>
-          <li>Profitiert stark von Dünger, um schneller zur Reife zu kommen.</li>
+          <li>Schnelle, solide Punkte – gutes „Basisgemüse“.</li>
+          <li>Profitiert stark von Dünger und Sommerregen, um schneller zur Reife zu kommen.</li>
         </ul>
       </article>
 
+      <!-- ERDBEERE -->
       <article class="card">
         <div class="card-header">
           <span class="card-name">🍓 Erdbeere</span>
@@ -124,22 +125,21 @@
         </div>
         <div class="meta">
           <span class="pill pill-seed">Samen</span>
-          Wachstumszeit: <strong>1</strong> &middot; Ernte-Typ: <strong>einmalig</strong>
+          Wachstumszeit: <strong>1</strong> · Ernte-Typ: <strong>einmalig</strong>
         </div>
         <p>
-          <strong>Basis-Ertrag:</strong> 2 Punkte.<br>
-          <strong>Synergien:</strong>
+          <strong>Basis-Ertrag:</strong> 2 Punkte.
         </p>
         <ul>
-          <li>Wenn <strong>Sonnenschein</strong> aktiv ist:
-            +2 zusätzliche Punkte (Spezialsynergie).</li>
-          <li>Die Ernte profitiert außerdem vom allgemeinen Wetterbonus
-              (+1) und ggf. von <strong>Milo</strong> (+2).</li>
-          <li>Damit kann eine Erdbeere mit Sonne + Milo schnell sehr hohe
-              Werte erreichen.</li>
+          <li>Wenn <strong>Sonnenschein</strong> aktiv ist: +2 zusätzliche Punkte (Spezialsynergie).</li>
+          <li>Die Ernte profitiert zusätzlich vom allgemeinen Wetterbonus
+              (+1 durch Sonne) und ggf. von <strong>Milo</strong> (+2).</li>
+          <li>Damit kann eine Erdbeere mit Sonne + Milo sehr schnell sehr hohe
+              Werte erreichen – perfekt für „Burst“-Runden.</li>
         </ul>
       </article>
 
+      <!-- TOMATE -->
       <article class="card">
         <div class="card-header">
           <span class="card-name">🍅 Tomate</span>
@@ -147,90 +147,102 @@
         </div>
         <div class="meta">
           <span class="pill pill-seed">Samen</span>
-          Wachstumszeit: <strong>2</strong> &middot; Ernte-Typ: <strong>wiederholbar</strong>
+          Wachstumszeit: <strong>2</strong> · Ernte-Typ: <strong>wiederholbar</strong>
         </div>
         <p>
-          <strong>Ertrag:</strong> 4 Punkte pro Ernte (wiederholt).  
+          <strong>Ertrag:</strong> 3 Punkte pro Ernte (wiederholbar).
         </p>
         <ul>
-          <li>Nach Ernte wird das Wachstum zurückgesetzt und die Tomate
-              kann wieder reifen.</li>
-          <li>Stark in längeren Spielen, besonders mit Dünger-Boosts.</li>
+          <li>Nach jeder Ernte wird der Wachstumsfortschritt um 2 reduziert
+              und die Tomate kann erneut reifen.</li>
+          <li>Mit viel Wachstum (Dünger, Sommerregen, Gießkanne) können
+              mehrere Ernten in einer Runde möglich sein.</li>
+          <li>Stark in längeren Runs, besonders mit Superdünger + Milo.</li>
         </ul>
       </article>
 
+      <!-- APFELBAUM -->
       <article class="card">
-  <div class="card-header">
-    <span class="card-name">🍎 Apfelbaum</span>
-    <span class="card-tag">Baum</span>
-  </div>
-  <div class="meta">
-    <span class="pill pill-seed">Samen</span>
-    Wachstum: 3 Pflegeaktionen · Ernte: dauerhaft
-  </div>
-  <p>
-    <strong>Effekt:</strong> Ein langsam wachsender Baum, der nach seiner Reife jede Runde
-    <strong>+1 Punkt</strong> generiert. Lohnt sich vor allem im langen Spielverlauf.
-  </p>
-  <ul>
-    <li>Power-Kurve: 2 → 3 → 4 (+1 pro Runde nach Reife)</li>
-    <li>Ideal in Kombination mit „Hacke“ oder „Garten der Ruhe“.</li>
-    <li>Baut stetig Punkte auf, wenn früh genug gepflanzt.</li>
-  </ul>
-</article>
-
+        <div class="card-header">
+          <span class="card-name">🍎 Apfelbaum</span>
+          <span class="card-tag">Baum</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-seed">Samen</span>
+          Wachstumszeit: <strong>3</strong> · Ernte-Typ: <strong>dauerhaft</strong>
+        </div>
+        <p>
+          <strong>Effekt:</strong> Langsam wachsender Baum mit wachsendem Ertrag.
+          Die erste Ernte bringt <strong>2 Punkte</strong>. Nach jeder Ernte steigt
+          der Erntewert dieses Baums dauerhaft um <strong>+1</strong>
+          (3, 4, 5, …).
+        </p>
+        <ul>
+          <li>Kann mit genügend Wachstum (Dünger, Sommerregen, Gießkanne)
+              auch mehrfach pro Runde geerntet werden.</li>
+          <li>Skaliert extrem gut über die Zeit – je früher gepflanzt,
+              desto stärker im Late Game.</li>
+          <li>Sehr stark in Kombination mit Milo, Superdünger und Regen.</li>
+        </ul>
+      </article>
     </div>
 
     <!-- DÜNGER -->
-<h2>Dünger 💩</h2>
-<div class="card-grid">
-  <article class="card">
-    <div class="card-header">
-      <span class="card-name">Kompost</span>
-      <span class="card-tag">Basis</span>
-    </div>
-    <div class="meta">
-      <span class="pill pill-fertilizer">Dünger</span>
-      Ziel: alle aktiven Pflanzen
-    </div>
-    <p>
-      <strong>Effekt:</strong> Alle aktuell eingepflanzten Pflanzen auf deinem Feld
-      erhalten <strong>+1 Wachstum</strong>
-      (plus ggf. <strong>+1 zusätzlich</strong> durch den Gartenwichtel).
-    </p>
-    <ul>
-      <li>Skaliert mit der Anzahl deiner aktiven Pflanzen.</li>
-      <li>Sehr stark, wenn bereits mehrere Samen im Feld liegen.</li>
-      <li>Ideal, um Tomate und Apfelbaum gemeinsam Richtung Ernte zu schieben.</li>
-    </ul>
-  </article>
+    <h2>Dünger 💩</h2>
+    <div class="card-grid">
+      <!-- KOMPOST -->
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">Kompost</span>
+          <span class="card-tag">Basis</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-fertilizer">Dünger</span>
+          Ziel: alle aktiven Pflanzen
+        </div>
+        <p>
+          <strong>Effekt:</strong> Alle aktuell eingepflanzten Pflanzen auf deinem Feld
+          erhalten <strong>+1 Wachstum</strong>.
+          Ist der <strong>Gartenwichtel</strong> aktiv, kommt
+          <strong>+1 zusätzliches Wachstum</strong> oben drauf.
+        </p>
+        <ul>
+          <li>Skaliert mit der Anzahl deiner aktiven Pflanzen.</li>
+          <li>Ideal, um mehrere Tomaten und Apfelbäume gemeinsam Richtung Ernte zu schieben.</li>
+          <li>In Kombination mit Sommerregen extrem stark für Multi-Ernten.</li>
+        </ul>
+      </article>
 
-  <article class="card">
-    <div class="card-header">
-      <span class="card-name">Superdünger</span>
-      <span class="card-tag">Stark</span>
+      <!-- SUPERDÜNGER -->
+      <article class="card">
+        <div class="card-header">
+          <span class="card-name">Superdünger</span>
+          <span class="card-tag">Stark</span>
+        </div>
+        <div class="meta">
+          <span class="pill pill-fertilizer">Dünger</span>
+          Ziel: alle Ernten dieser Runde
+        </div>
+        <p>
+          <strong>Effekt:</strong> Alle Pflanzen, die <strong>in dieser Runde geerntet werden</strong>,
+          bringen <strong>50&nbsp;% mehr Ertrag</strong>
+          (<strong>× 1,5</strong>, aufgerundet). Milo-, Wetter- und Synergieboni
+          werden mitverstärkt.
+        </p>
+        <ul>
+          <li>Erzeugt selbst <strong>kein Wachstum</strong> – außer über den
+              <strong>Gartenwichtel</strong>, der beim Ausspielen von Dünger
+              zusätzliches Wachstum geben kann.</li>
+          <li>Am besten einsetzen, wenn mehrere Pflanzen gleichzeitig erntebereit sind.</li>
+          <li>Perfekt für eine große „Boom-Runde“ mit vielen Punkten auf einmal.</li>
+        </ul>
+      </article>
     </div>
-    <div class="meta">
-      <span class="pill pill-fertilizer">Dünger</span>
-      Ziel: alle Ernten dieser Runde
-    </div>
-    <p>
-      <strong>Effekt:</strong> Alle Pflanzen, die <strong>in dieser Runde geerntet werden</strong>,
-      bringen <strong>50&nbsp;% mehr Ertrag</strong>
-      (<strong>× 1,5</strong>, aufgerundet). Milo-, Wetter- und Synergieboni werden mitverstärkt.
-    </p>
-    <ul>
-      <li>Am besten einsetzen, wenn mehrere Pflanzen gleichzeitig reif werden.</li>
-      <li>Kombiniert extrem gut mit Milo und aktivem Wetter.</li>
-      <li>Perfekt für eine große „Boom-Runde“ mit vielen Punkten auf einmal.</li>
-    </ul>
-  </article>
-</div>
-
 
     <!-- WETTER -->
     <h2>Wetter 🌤️</h2>
     <div class="card-grid">
+      <!-- SONNENSCHEIN -->
       <article class="card">
         <div class="card-header">
           <span class="card-name">Sonnenschein</span>
@@ -245,11 +257,14 @@
           Solange Sonnenschein aktiv ist:
         </p>
         <ul>
-          <li>Alle Ernten erhalten einen <strong>Wetterbonus (+1)</strong>.</li>
+          <li>Alle <strong>Ernten</strong> erhalten einen
+              <strong>Wetterbonus (+1)</strong>.</li>
           <li><strong>Erdbeere</strong> erhält zusätzlich +2 Punkte Spezialbonus.</li>
+          <li>Wirkt nicht auf Wachstum, sondern nur auf die Erntepunkte.</li>
         </ul>
       </article>
 
+      <!-- SOMMERREGEN -->
       <article class="card">
         <div class="card-header">
           <span class="card-name">Sommerregen</span>
@@ -260,12 +275,16 @@
           Typ: dauerhaft, ersetzbar
         </div>
         <p>
-          Setzt das Wetter auf <strong>Sommerregen</strong>.
+          Setzt das Wetter auf <strong>Sommerregen</strong> und beschleunigt das Wachstum
+          deiner Pflanzen.
         </p>
         <ul>
-          <li><strong>+2 Sofortpunkte</strong> beim Ausspielen.</li>
-          <li>Solange aktiv: Ernten erhalten den allgemeinen
-              <strong>Wetterbonus (+1)</strong>.</li>
+          <li>Beim Ausspielen: alle aktuell gepflanzten Pflanzen erhalten
+              <strong>einmalig +1 Wachstum</strong>.</li>
+          <li>Solange Sommerregen aktiv ist, wachsen Pflanzen pro Runde
+              <strong>+1 Schritt schneller</strong>
+              (also z.&nbsp;B. 2 statt 1 Wachstum pro Rundenende).</li>
+          <li>Ideal, um Tomaten und Apfelbäume in Multi-Ernten zu schieben.</li>
         </ul>
       </article>
     </div>
@@ -273,6 +292,7 @@
     <!-- BEGLEITER -->
     <h2>Begleiter 🐶🧙</h2>
     <div class="card-grid">
+      <!-- MILO -->
       <article class="card">
         <div class="card-header">
           <span class="card-name">Milo, Gartenschnüffler</span>
@@ -283,14 +303,16 @@
           Typ: dauerhaft
         </div>
         <p>
-          Jedes Mal, wenn eine Pflanze geerntet wird, erhältst du
+          Immer wenn eine Pflanze geerntet wird, erhältst du
           <strong>+2 zusätzliche Punkte</strong>.
         </p>
         <ul>
-          <li>Stapelbar mit Wetter & Erdbeer-Synergien.</li>
+          <li>Wirkt auf jede einzelne Ernte – auch bei Mehrfachernten in einer Runde.</li>
+          <li>Skaliert extrem gut mit Tomaten, Apfelbäumen, Sommerregen und Superdünger.</li>
         </ul>
       </article>
 
+      <!-- GARTENWICHTEL -->
       <article class="card">
         <div class="card-header">
           <span class="card-name">Gartenwichtel</span>
@@ -301,11 +323,15 @@
           Typ: dauerhaft
         </div>
         <p>
-          Verstärkt deine Düngerkarten: jeder Einsatz von Dünger bringt
-          der Zielpflanze <strong>+1 zusätzliches Wachstum</strong>.
+          Verstärkt deine Düngerkarten: Immer wenn du eine
+          <strong>Düngerkarten</strong> spielst, erhalten alle Pflanzen
+          <strong>+1 zusätzliches Wachstum</strong> oben auf den normalen Düngereffekt.
         </p>
         <ul>
-          <li>In Kombination mit Superdünger extrem stark für Langzeitpflanzen.</li>
+          <li>In Kombination mit Kompost oder Superdünger extrem stark
+              für Langzeitpflanzen.</li>
+          <li>Synergiert mit der Gießkanne, da diese den letzten Düngereffekt
+              (inkl. Wichtelbonus) erneut auslösen kann.</li>
         </ul>
       </article>
     </div>
@@ -313,6 +339,7 @@
     <!-- WERKZEUGE -->
     <h2>Werkzeuge ⚒️</h2>
     <div class="card-grid">
+      <!-- GIEßKANNE -->
       <article class="card">
         <div class="card-header">
           <span class="card-name">Gießkanne</span>
@@ -323,11 +350,20 @@
           Typ: einmalig
         </div>
         <p>
-          Experimentelle Karte – geplant ist, dass sie den letzten Düngereffekt
-          erneut auslöst. Im aktuellen Prototyp kann der Effekt noch variieren.
+          Wiederholt den <strong>zuletzt gespielten Düngereffekt</strong> auf alle
+          aktuellen Pflanzen.
         </p>
+        <ul>
+          <li>Wenn vorher Kompost gespielt wurde, wird dessen Wachstumsbonus
+              erneut auf alle Pflanzen angewandt.</li>
+          <li>Ist der Gartenwichtel aktiv, wird auch dessen zusätzlicher
+              Wachstumsbonus mitkopiert.</li>
+          <li>Hat es in dieser Runde noch keinen Dünger gegeben,
+              verpufft die Gießkanne ohne Effekt.</li>
+        </ul>
       </article>
 
+      <!-- RECHEN -->
       <article class="card">
         <div class="card-header">
           <span class="card-name">Rechen</span>
@@ -341,7 +377,8 @@
           Ziehe sofort <strong>2 zusätzliche Karten</strong>.
         </p>
         <ul>
-          <li>Gut, um schnell an Schlüssel-Karten (Begleiter, Samen, Wetter) zu kommen.</li>
+          <li>Typischer Einsatz: von 7 Handkarten auf 9 hochziehen,
+              um schneller an Schlüssel-Karten (Begleiter, Samen, Wetter) zu kommen.</li>
         </ul>
       </article>
     </div>
