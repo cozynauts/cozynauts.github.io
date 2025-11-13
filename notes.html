@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Samendeck – Patchnotes & Changelog</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #0a0a14;
+      color: #f5f5ff;
+      line-height: 1.5;
+      padding: 40px;
+    }
+    h1, h2, h3 {
+      color: #d7c2ff;
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      font-size: 1.2rem;
+      margin-top: 1.8rem;
+      margin-bottom: 0.3rem;
+    }
+    h3 {
+      font-size: 1rem;
+      margin-top: 1.2rem;
+      margin-bottom: 0.3rem;
+      color: #a9a3ff;
+    }
+    p {
+      max-width: 800px;
+    }
+    ul {
+      margin: 0.4rem 0 1rem 1.5rem;
+    }
+    .version {
+      border-left: 3px solid #7b5dff;
+      padding-left: 10px;
+      margin-bottom: 1.2rem;
+    }
+    .footer {
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+    a {
+      color: #a9a3ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>🛠️ Samendeck – Patchnotes & Changelog</h1>
+
+  <p>
+    Hier findest du alle Änderungen, Balancing-Pässe und neuen Features von Samendeck
+    in chronologischer Reihenfolge. Die neuesten Updates stehen oben.
+  </p>
+
+  <h2>🌿 Versionen</h2>
+
+<div class="version">
+  <h3>v0.6 – Wetter- & Wichtel-Update (12. November 2025)</h3>
+  <ul>
+    <li>🧚‍♂️ Überarbeitete <strong>Wichtel-Mechanik</strong>: Der Gartenwichtel triggert nun korrekt <em>einmal pro ausgespielter Düngerkarten</em> (nicht mehr pro Pflanze).</li>
+
+    <li>🌦️ <strong>Sommerregen neu ausbalanciert:</strong>
+      <ul>
+        <li>Der alte Sofortbonus von +2 Punkten wurde entfernt.</li>
+        <li>Beim Ausspielen erhalten alle Pflanzen einmalig +1 Wachstum.</li>
+        <li>Solange Regen aktiv ist, wächst jede Pflanze pro Runde um +1 schneller.</li>
+      </ul>
+    </li>
+
+    <li>☀️ <strong>Sonne wirkt jetzt ausschließlich auf Ernten</strong> (nicht mehr beim Pflanzen oder Wachstumsprozessen).</li>
+
+    <li>💩 <strong>Superdünger komplett überarbeitet:</strong>
+      <ul>
+        <li>Gibt keinerlei eigenes Wachstum mehr.</li>
+        <li>Verstärkt alle Ernten dieser Runde mittels Multiplikator ×1,5 (aufgerundet).</li>
+        <li>Kann über den Gartenwichtel dennoch Wachstum auslösen.</li>
+      </ul>
+    </li>
+
+    <li>📈 <strong>Mehrfachernten vollständig implementiert</strong> (Tomate & Apfelbaum können innerhalb einer Runde mehrfach geerntet werden).</li>
+
+    <li>🥕 <strong>Einmalige Pflanzen korrigiert:</strong>
+      <ul>
+        <li>Karotte und Erdbeere zeigen jetzt korrekt „(ausgewachsen)“ an.</li>
+        <li>Keine falschen „+1 Ernte bereit“-Hinweise mehr.</li>
+      </ul>
+    </li>
+
+    <li>🍎 <strong>Apfelbaum-Logik verbessert:</strong> Erhöht seinen Basis-Ertrag nach jeder Ernte sauber um +1 und setzt korrekt mehrfaches Ernten um.</li>
+
+    <li>💡 <strong>Pflanzen-Fortschrittsanzeige überarbeitet:</strong>
+      <ul>
+        <li>Einmalige Pflanzen zeigen Fortschritt als „X/Y (ausgewachsen)“.</li>
+        <li>Wiederholbare Pflanzen zeigen „Rest/X (+N Ernten bereit)“.</li>
+      </ul>
+    </li>
+
+    <li>⚒️ <strong>Gießkanne vollständig neu implementiert:</strong>
+      <ul>
+        <li>Wiederholt exakt den letzten Düngerwachstumseffekt.</li>
+        <li>Korrekte Berücksichtigung des Gartenwichtels.</li>
+        <li>Präzise Log-Ausgabe („1 Dünger + 1 Wichtel“).</li>
+      </ul>
+    </li>
+
+    <li>🧹 <strong>Rechen verbessert:</strong> zieht nun zuverlässig +2 Karten (z. B. 7 → 9).</li>
+
+    <li>🌤️ <strong>Wetter ersetzt sich nun korrekt selbst</strong> (altes Wetter endet sauber, neues beginnt).</li>
+
+    <li>🐶 <strong>Milo fasst seine Ernteboni zusammen:</strong> Am Rundenende erscheint jetzt eine kompakte Zusammenfassung, wie oft Milo geholfen hat.</li>
+
+    <li>📜 <strong>Erntelog überarbeitet:</strong> Alle Ernten der Runde werden zu lesbaren Zusammenfassungen kombiniert (inkl. Mehrfachernten).</li>
+
+    <li>📝 <strong>Kartentexte aktualisiert</strong>, um neue Logiken klar darzustellen (Sommerregen, Superdünger, Sonne, Karotte, Erdbeere, Tomate, Apfelbaum).</li>
+
+    <li>🔧 Diverse kleinere Bugfixes im Ernte- und Wachstumsablauf (doppelte Trigger, falsche Reihenfolgen).</li>
+  </ul>
+</div>
+
+
+  <div class="version">
+    <h3>v0.5 – Ranglisten- & Abschluss-Update (11. November 2025)</h3>
+    <ul>
+      <li>🏆 Neue Rangliste mit <strong>rangliste.html</strong> und <em>Top 5 Spieler:innen</em> in der Sidebar.</li>
+      <li>📸 Neues Abschluss-Overlay mit Discord-Hinweis & Buttons (Rangliste / Neues Spiel / Schließen).</li>
+      <li>🌱 Sidebar zeigt jetzt automatisch die besten Runs mit Datum & Punkten an.</li>
+      <li>📖 Hilfe-Fenster überarbeitet und um Changelog erweitert.</li>
+      <li>✨ Kleine UI-Verbesserungen (Abstände, Textfarben, Übergänge).</li>
+    </ul>
+  </div>
+
+  <div class="version">
+    <h3>v0.4 – Garten-Update (10. November 2025)</h3>
+    <ul>
+      <li>🌧️ Wetter bleibt nun dauerhaft aktiv und kann durch neue Wetterkarten ersetzt werden.</li>
+      <li>🍎 Apfelbaum überarbeitet: Startet mit 2 Punkten, trägt ab Reife jede Runde +1.</li>
+      <li>💩 Superdünger verbessert: Wirkt jetzt auf alle Pflanzen, die in dieser Runde geerntet werden (×1.5 Ertrag).</li>
+      <li>🔢 Ernteanzeige zeigt jetzt, wie sich Punkte zusammensetzen (z. B. „4 Ernte + 2 Milo“).</li>
+      <li>🕒 Versionierung & Build-Zeit im Spiel hinzugefügt.</li>
+    </ul>
+  </div>
+
+  <div class="version">
+    <h3>v0.3 – Wachstum & Wetter (9. November 2025)</h3>
+    <ul>
+      <li>🌤️ Wettermechanik eingeführt (Sonne / Regen mit temporären Boni).</li>
+      <li>🌱 Pflanzen wachsen nun über mehrere Pflegeaktionen hinweg.</li>
+      <li>📜 Log-Einträge werden in umgekehrter Reihenfolge angezeigt (neueste oben).</li>
+      <li>📚 Hilfe-Overlay mit Kurzbeschreibung hinzugefügt.</li>
+    </ul>
+  </div>
+
+  <div class="version">
+    <h3>v0.2 – Garten erwacht (7. November 2025)</h3>
+    <ul>
+      <li>🐶 Milo & 🧙 Gartenwichtel als Begleiter hinzugefügt (dauerhafte Effekte).</li>
+      <li>🌦️ Erste Wettereffekte implementiert.</li>
+      <li>🎨 Neues UI mit Spielfeld, Begleitern & Wetterbereich.</li>
+      <li>💾 Highscore-System (localStorage).</li>
+    </ul>
+  </div>
+
+  <div class="version">
+    <h3>v0.1 – Prototyp-Sprössling (5. November 2025)</h3>
+    <ul>
+      <li>Erstes Spielkonzept mit Handkarten & Rundenmechanik.</li>
+      <li>Grundlayout mit Sidebar, Hand- und Spielfeld.</li>
+      <li>Einfache Logik für Punkte und Kartenaktionen.</li>
+      <li>Basis-Design & GitHub Pages Setup.</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    <p>💜 Samendeck – entwickelt von <strong>Tzwehn</strong> • IndieTonne Games • Version v0.6 🌱</p>
+    <p>
+      <a href="sologardengame.html">Zurück zum Spiel</a> ·
+      <a href="hilfe.html">Zur Hilfe</a>
+    </p>
+  </div>
+</body>
+</html>
