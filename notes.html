@@ -62,6 +62,83 @@
   <h2>🌿 Versionen</h2>
 
 <div class="version">
+  <h3>v0.7 – Garten-Update II (13. November 2025)</h3>
+  <ul>
+    <li>🌿 <strong>Wachstumssystem repariert</strong>:
+      <ul>
+        <li>Düngereffekte (Kompost & Superdünger) geben wieder korrekt Wachstum.</li>
+        <li>Gartenwichtel-Bonus wird zuverlässig addiert.</li>
+        <li>Sommerregen löst wieder +1 sofort sowie +1 pro Runde aus.</li>
+      </ul>
+    </li>
+
+    <li>💦 <strong>Gießkanne vollständig überarbeitet</strong>:
+      <ul>
+        <li>Wiederholt den letzten <em>Düngereffekt</em> inklusive Wichtelbonus.</li>
+        <li>Funktioniert jetzt auch mit aktiven Superdünger-Stacks.</li>
+      </ul>
+    </li>
+
+    <li>🐶 <strong>Milo-Log verbessert</strong>:
+      <ul>
+        <li>Basis-Ernte und Milo-Bonus werden nun sauber getrennt angezeigt.</li>
+        <li>Keine irreführenden Summen (z. B. „+9 statt +5“) mehr.</li>
+      </ul>
+    </li>
+
+    <li>📸 <strong>Neue Pixel-Art-Kartengrafiken</strong>:
+      <ul>
+        <li>Samenkarten (Karotte, Erdbeere, Tomate, Apfelbaum).</li>
+        <li>Dünger, Wetter, Begleiter, Werkzeuge.</li>
+        <li>Milo als eigene Karte im einheitlichen Stil.</li>
+      </ul>
+    </li>
+
+    <li>⚡ <strong>Performance-Upgrade für Kartenbilder</strong>:
+      <ul>
+        <li>Alle Bilder stark verkleinert (Mini-PNGs statt 2–3 MB).</li>
+        <li>Schnelleres Laden & mobile Daten werden geschont.</li>
+        <li>Browser-Caching funktioniert jetzt zuverlässig.</li>
+      </ul>
+    </li>
+
+    <li>🃏 <strong>Kartenanzeige skaliert</strong>:
+      <ul>
+        <li>Karten im Spiel um ca. 25 % verkleinert.</li>
+        <li>Bessere Darstellung auf Desktop, Tablet und Mobile.</li>
+      </ul>
+    </li>
+
+    <li>📑 <strong>Kartendex aktualisiert</strong>:
+      <ul>
+        <li>Alle neuen Pixel-Art-Bilder integriert.</li>
+        <li>Samengruppe jetzt in einer 4-Spalten-Reihe.</li>
+        <li>Texte an alle neuen Mechaniken angepasst.</li>
+      </ul>
+    </li>
+
+    <li>🔁 <strong>Neues Feature: Tageslimit für Neustarts</strong>:
+      <ul>
+        <li>„Neues Spiel“ ist jetzt 3× pro Tag über den Button verfügbar.</li>
+        <li>Anzeige: <code>(0/3 Resets)</code> zeigt den Verbrauch an.</li>
+        <li>Durchspielen einer Runde erlaubt unbegrenzte Neustarts.</li>
+        <li>Täglicher Reset des Kontingents um Mitternacht.</li>
+      </ul>
+    </li>
+
+    <li>🐞 <strong>Weitere Bugfixes</strong>:
+      <ul>
+        <li>Doppelte <code>state.round >= maxRounds</code>-Blöcke entfernt.</li>
+        <li>Logikfehler im Wachstum behoben.</li>
+        <li>Bildcache lädt nicht neu → gefixt.</li>
+        <li>Kleinere UI-Glitches im Log & Layout korrigiert.</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+
+<div class="version">
   <h3>v0.6 – Wetter- & Wichtel-Update (12. November 2025)</h3>
   <ul>
     <li>🧚‍♂️ Überarbeitete <strong>Wichtel-Mechanik</strong>: Der Gartenwichtel triggert nun korrekt <em>einmal pro ausgespielter Düngerkarten</em> (nicht mehr pro Pflanze).</li>
@@ -89,7 +166,7 @@
     <li>🥕 <strong>Einmalige Pflanzen korrigiert:</strong>
       <ul>
         <li>Karotte und Erdbeere zeigen jetzt korrekt „(ausgewachsen)“ an.</li>
-        <li>Kein falschen „+1 Ernte bereit“-Hinweis mehr.</li>
+        <li>Keine falschen „+1 Ernte bereit“-Hinweise mehr.</li>
       </ul>
     </li>
 
