@@ -42,9 +42,14 @@
     .buttons {
       margin-top: 8px;
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       gap: 6px;
     }
+
+    /* Alle Buttons direkt in .buttons bekommen volle Breite */
+.buttons > button {
+  width: 100%;
+}
     button {
       padding: 7px 12px;
       border-radius: 999px;
@@ -66,6 +71,23 @@
       cursor: default;
       box-shadow: none;
     }
+
+    .button-row {
+  display: flex;
+  gap: 6px;
+}
+
+/* Buttons in einer Reihe teilen sich den Platz */
+.button-row button {
+  flex: 1;
+  width: auto; /* überschreibt die 100% von oben */
+}
+
+button.danger {
+  background: #d94b4b;       /* Roter Button für "Neues Spiel" */
+  color: white;
+  font-weight: 600;
+}
 
     .main {
       flex: 1;
@@ -255,8 +277,16 @@
   color: rgba(255,255,255,0.6);
   font-style: italic;
   user-select: none;
-  pointer-events: none;
 }
+
+#version-label a {
+  user-select: auto;        /* Link darf wieder markiert/angeklickt werden */
+  pointer-events: auto;
+  color: #d7c2ff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
     
   </style>
 </head>
@@ -272,12 +302,25 @@
 
     <h2>Aktionen</h2>
 <div class="buttons">
+  <!-- 1. Oben: Runde beenden -->
   <button id="endTurnBtn">Runde beenden</button>
-  <button id="restartBtn" class="secondary">Neues Spiel</button>
-  <button id="helpBtn" class="secondary">📖 Hilfe</button>
-  <button class="secondary" onclick="window.open('kartendex.html','_blank')">📚 Kartendex</button>
-  <button class="secondary" onclick="window.open('rangliste.html','_blank')">🏆 Rangliste</button>
+
+  <!-- 2. Darunter: roter "Neues Spiel"-Button -->
+  <button id="restartBtn" class="danger">Neues Spiel</button>
+
+  <!-- 3. Kartendex & Rangliste nebeneinander -->
+  <div class="button-row">
+    <button class="secondary" onclick="window.open('kartendex.html','_blank')">📚 Kartendex</button>
+    <button class="secondary" onclick="window.open('rangliste.html','_blank')">🏆 Rangliste</button>
+  </div>
+
+  <!-- 4. Unten: Hilfe & Patchnotes nebeneinander -->
+  <div class="button-row">
+    <button id="helpBtn" class="secondary">📖 Hilfe</button>
+    <button class="secondary" onclick="window.open('notes.html','_blank')">🛠️ Patchnotes</button>
+  </div>
 </div>
+
 
 <p class="stat"><small>
   Klicke Karten in deiner Hand, um sie auszuspielen. Synergien bringen viele Punkte 🌱
@@ -343,8 +386,8 @@
       <h3>Kurzüberblick über die Karten</h3>
       <ul>
         <li><strong>Samen</strong> 🌱 – bringen direkte Punkte.</li>
-        <li><strong>Dünger</strong> 💩 – verstärkt den zuletzt gespielten Samen.</li>
-        <li><strong>Wetter</strong> 🌤️ – verbessert zukünftige Ernten.</li>
+        <li><strong>Dünger</strong> 💩 – lässt alle Pflanzen im Feld schneller wachsen.</li>
+        <li><strong>Wetter</strong> 🌤️ – beeinflusst Ernten (Sonnenschein) oder Wachstum (Sommerregen).</li>
         <li><strong>Begleiter</strong> 🐶🧙 – geben dauerhafte Boni und bleiben aktiv.</li>
         <li><strong>Werkzeuge</strong> ⚒️ – einmalige Spezialeffekte (z. B. Karten nachziehen).</li>
       </ul>
@@ -365,11 +408,6 @@
     </div>
   </div>
 
-    <!-- Hilfe-Overlay -->
-  <div id="helpOverlay" class="help-overlay">
-    ...
-  </div>
-
 <!-- Abschluss-Overlay -->
 <div id="endOverlay" class="help-overlay">
   <div class="help-content">
@@ -384,17 +422,38 @@
     </p>
 
     <p>
-      📸 Mache einen Screenshot von dieser Ansicht und lade ihn auf unserem Discord hoch:<br>
-      <a href="https://discord.gg/nkWaWQwuMj" target="_blank" class="link-btn">
-        Zum Discord-Server
+      📸 Mache einen Screenshot von dieser Ansicht und lade ihn im offiziellen Samendeck-Ranking-Thread hoch:<br>
+      <a href="https://discord.com/channels/1335378445131055145/1437953177537351871"
+         target="_blank"
+         class="link-btn">
+        📁 Zum Ranglisten-Thread (Discord)
       </a>
+    </p>
+
+    <p style="margin-top:8px; opacity:0.8; font-size:0.85rem;">
+      Falls du den Beitrag nicht öffnen kannst, tritt zuerst unserem Discord-Server bei:<br>
+      <a href="https://discord.gg/nkWaWQwuMj" target="_blank" class="link-btn">💜 Server beitreten</a>
     </p>
 
     <p>
       Bitte denke daran: <strong>Pro Nutzer ist nur ein Eintrag in der Rangliste möglich.</strong>
     </p>
 
-    <div class="help-footer" style="justify-content: center;">
+    <p style="margin-top: 10px;">
+      ⚠️ <strong>Wichtig:</strong> Nur Runs von Spieler:innen, die
+      <a href="https://www.twitch.tv/tzwehn" target="_blank" style="color:#d7c2ff;">
+        dem Twitch-Kanal folgen
+      </a>
+      können in die Rangliste aufgenommen werden.
+    </p>
+
+    <!-- NEU: Log anzeigen -->
+    <div class="help-footer" style="justify-content:flex-start; margin-top: 10px;">
+      <button id="showLogCopyBtn" class="secondary">📄 Log anzeigen</button>
+    </div>
+
+    <!-- EINMALIG: Rangliste / Neues Spiel / Schließen -->
+    <div class="help-footer" style="justify-content: center; margin-top: 6px;">
       <button id="openLeaderboardBtn" class="secondary">🏆 Rangliste öffnen</button>
       <button id="restartGameBtn" class="secondary">🔁 Neues Spiel</button>
       <button id="closeEndBtn" class="secondary" style="margin-left:auto;">Schließen</button>
@@ -418,8 +477,8 @@
   growthTime: 2,
   harvestType: "einmalig",
   powerCurve: [1, 3, 5],
-  description: "Einsteigerpflanze. Nach 2 Pflegeaktionen erntbar (+5 Power oder +1 Siegpunkt).",
-  synergy: "Profitierst von Ernteboni (Markttag, Dünger)."
+description: "Bringt einmalig 5 Punkte nach 2 Wachstumsschritten.",
+  synergy: "Profitierst von Ernteboni (Dünger)."
 },
 {
   id: "seed_strawberry",
@@ -431,7 +490,7 @@
   // Basis-Erntewert: 2 Punkte
   powerCurve: [2],
   // Text erklärt genau, was passiert
-  description: "Erntet 2 Punkte. Bei Sonnenschein: +2 Punkte (plus Wetterbonus).",
+  description: "Einmalige Frucht: bringt 2 Punkte. Bei Sonnenschein zusätzlich +2 Punkte.",
   synergy: "Explodiert mit Sonnenschein für einen schnellen Punktekick."
 },
 {
@@ -442,7 +501,7 @@
   growthTime: 2,
   harvestType: "wiederholbar",
   powerCurve: [3],
-  description: "Mittelschnelle Pflanze mit stabilem Ertrag. Alle 2 Runden erntbar für 3 Punkte.",
+  description: "Wiederholbare Ernte: alle 2 Wachstumsschritte 3 Punkte.",
   synergy: "Mag Dünger und Superdünger, besonders wenn mehrere Tomaten im Feld stehen."
 },
 
@@ -455,7 +514,7 @@
   harvestType: "dauerhaft",
   // Startet bei 2 Punkten – wir steuern den Rest über currentYield
   powerCurve: [2],
-  description: "Langsam wachsender Baum. Ab Reife jede Runde Ertrag: erst 2, dann +1 pro weiterer Runde.",
+description: "Dauerpflanze: erste Ernte 2 Punkte. Nach jeder Ernte steigt der Erntewert dauerhaft um +1.",
   synergy: "Profitiert von Dünger und Effekten auf Dauerpflanzen."
 },
 
@@ -465,51 +524,56 @@
       // Dünger
 {
   id: "fert_compost",
-  name: "Kompost",
+  name: "💩 Kompost",
   type: "fertilizer",
   tag: "Basis",
-  description: "Gibt allen gepflanzten Pflanzen +1 Wachstum (plus evtl. Gartenwichtel-Bonus)."
+description: "Gibt allen Pflanzen +1 Wachstum (plus Gartenwichtel-Bonus)."
 },
 {
   id: "fert_super",
-  name: "Superdünger",
+  name: "💩 Superdünger",
   type: "fertilizer",
   tag: "Stark",
-  description: "Alle Ernten dieser Runde werden um 50 % verstärkt (×1,5, aufgerundet)."
+description: "Verstärkt alle Ernten dieser Runde um 50 % (×1,5, aufgerundet). Löst den Gartenwichtel aus."
+
 },
 
 
       // Wetter
       {
         id: "weather_sun",
-        name: "Sonnenschein",
+        name: "☀️ Sonnenschein",
         type: "weather",
         tag: "Wetter",
-        description: "+1 Punkt für alle weiteren Samen in dieser Runde."
+      description: "Dauerhaftes Wetter: alle Ernten erhalten +1 Punkt."
       },
       {
         id: "weather_rain",
-        name: "Sommerregen",
+        name: "🌧️ Sommerregen",
         type: "weather",
         tag: "Wetter",
-        description: "+2 Punkte sofort, +1 Punkt für alle weiteren Samen in dieser Runde."
+     description: "Alle Pflanzen erhalten einmalig +1 Wachstum und wachsen ab sofort pro Runde 1 Schritt schneller."
+
       },
 
       // Begleiter
       {
         id: "comp_milo",
-        name: "Milo, Gartenschnüffler",
+        name: "🐶 Milo, Gartenschnüffler",
         type: "companion",
         tag: "Hund",
-        description: "+2 Punkte jedes Mal, wenn du einen Samen spielst (dauerhaft)."
+        description: "Bleibt im Garten und gibt dir bei jeder Ernte dauerhaft +2 Punkte."
+
       },
-      {
-        id: "comp_gnome",
-        name: "Gartenwichtel",
-        type: "companion",
-        tag: "Wichtel",
-        description: "+1 Punkt jedes Mal, wenn du Dünger spielst (dauerhaft)."
-      },
+{
+  id: "comp_gnome",
+  name: "🧙‍♂️ Gartenwichtel",
+  type: "companion",
+  tag: "", 
+ description: "Gibt +1 Wachstum jedes Mal, wenn du Dünger spielst."
+
+},
+
 
       // Werkzeuge
       {
@@ -517,7 +581,8 @@
         name: "Gießkanne",
         type: "tool",
         tag: "Werkzeug",
-        description: "Wiederholt den letzten Düngereffekt, falls vorhanden."
+        description: "Wiederholt den letzten Düngereffekt."
+
       },
       {
         id: "tool_rake",
@@ -541,7 +606,8 @@ const state = {
   maxPlaysPerRound: 2,
   playsLeftThisRound: 2,
   lastSeedPoints: 0,
-  lastFertilizerBonus: 0,
+  lastFertilizerSteps: 0,     // NEU: Wieviel Wachstum gab der letzte Dünger?
+  lastFertilizerDetail: "",   // NEU: Logtext für Gießkanne (z.B. "1 Dünger + 1 Wichtel"),
   weatherSeedBonusThisRound: 0,
   companionSeedBonus: 0,
   companionFertilizerBonus: 0,
@@ -549,7 +615,11 @@ const state = {
   activeCompanions: [],
   activePlants: [],
   activeWeather: null,
-  superFertilizerActive: false 
+  superFertilizerActive: false,
+  logEntries: [],
+  harvestSummary: {},
+  growthLogDone: {},
+  miloSummary: { bonuses: [] }      
 };
 
 
@@ -568,18 +638,22 @@ const state = {
       return JSON.parse(JSON.stringify(card));
     }
 
-   function log(message) {
+function log(message) {
   const logDiv = document.getElementById("log");
   const p = document.createElement("p");
   p.textContent = message;
 
-  // Neueste Nachricht nach oben
+  // Neueste Nachricht nach oben im UI
   if (logDiv.firstChild) {
     logDiv.insertBefore(p, logDiv.firstChild);
   } else {
     logDiv.appendChild(p);
   }
+
+  // Für Export in chronologischer Reihenfolge merken
+  state.logEntries.push(message);
 }
+
 
     function drawToHand(targetSize) {
       while (state.hand.length < targetSize) {
@@ -601,6 +675,36 @@ const state = {
         log(`🎉 Neuer Highscore! (alter Rekord: ${best} Punkte)`);
       }
     }
+
+    // --- Log kopierbar machen -------------------------------------------------
+
+function openLogCopyOverlay() {
+  const box = document.getElementById("logCopyOverlay");
+  const textarea = document.getElementById("logCopyText");
+
+  const now = new Date();
+  const header = [
+    "Samendeck – Run-Log",
+    `Datum: ${now.toLocaleString("de-DE")}`,
+    `Punkte: ${state.score}`,
+    `Runden: ${state.round}/${state.maxRounds}`,
+    "",
+    "Ereignisse:"
+  ];
+
+  const lines = header.concat(state.logEntries.map(l => "- " + l));
+  textarea.value = lines.join("\n");
+
+  box.style.display = "flex";
+}
+
+function copyLogToClipboard() {
+  const textarea = document.getElementById("logCopyText");
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+  document.execCommand("copy");
+}
+
 
     // --- Karten spielen ----------------------------------------------
 
@@ -650,27 +754,55 @@ function handleSeed(card) {
 
 function handleFertilizer(card) {
   if (state.activePlants.length === 0) {
-    log(`💩 ${card.name} hat keinen Effekt – es ist noch keine Pflanze im Garten.`);
+    log(`${card.name} hat keinen Effekt – es ist noch keine Pflanze im Garten.`);
     return;
   }
 
-  if (card.id === "fert_compost") {
-    // Kompost: Wachstum auf ALLE aktiven Pflanzen
-    let steps = 1 + state.companionFertilizerBonus;
-    state.activePlants.forEach(p => {
-      p.growth += steps;
-    });
+  const gnomeBonus = state.companionFertilizerBonus; // vom Gartenwichtel
 
-    log(`💩 Kompost: Alle ${state.activePlants.length} Pflanzen erhalten +${steps} Wachstum.`);
+  let baseSteps = 0; // Standard: kein Wachstum
+
+  if (card.id === "fert_compost") {
+    // 💩 Kompost: klassischer Wachstumsdünger
+    baseSteps = 1;
   } else if (card.id === "fert_super") {
-    // Superdünger: Ernte-Verstärker für diese Runde
+    // 💩 Superdünger: nur Erntebuff, kein eigenes Wachstum
     state.superFertilizerActive = true;
-    log("💥 Superdünger: Alle Ernten in dieser Runde werden um 50 % verstärkt (×1,5, aufgerundet).");
-  } else {
-    // Fallback für zukünftige Düngerkarten
-    log(`💩 ${card.name} hat derzeit keinen speziellen Effekt.`);
+    log("💥 Superdünger aktiviert: Alle Ernten in dieser Runde werden um 50 % verstärkt (×1,5, aufgerundet).");
   }
+
+  // Wachstum nur durch Basis (Kompost) + Wichtel
+  const totalSteps = baseSteps + gnomeBonus;
+
+  const detailParts = [];
+  if (baseSteps > 0) detailParts.push(`${baseSteps} Dünger`);
+  if (gnomeBonus > 0) detailParts.push(`${gnomeBonus} Wichtel`);
+  const detail = detailParts.length > 0 ? detailParts.join(" + ") : "nur Wichtel-Effekt";
+
+  // 🌿 Wirkung auf **alle** aktiven Pflanzen (Wachstum nur, wenn totalSteps > 0)
+  state.activePlants.forEach((plant) => {
+    if (totalSteps > 0) {
+      plant.growth += totalSteps;
+      log(
+        `💩 ${card.name} düngt ${plant.name} → Wachstum +${totalSteps} (${detail}). ` +
+        `Fortschritt: ${plant.growth}/${plant.growthTime}`
+      );
+    } else {
+      // z. B. Superdünger ohne Wichtel: kein Wachstum, nur Erntebuff
+      if (card.id === "fert_super") {
+        log(`💩 ${card.name} wirkt auf ${plant.name}: kein zusätzliches Wachstum, aber Erntebuff ist aktiv.`);
+      }
+    }
+  });
+
+    // Infos für die Gießkanne merken
+  state.lastFertilizerSteps = totalSteps;
+  state.lastFertilizerDetail = detail;
+
 }
+
+
+
 
 
 
@@ -679,21 +811,41 @@ function handleWeather(card) {
   if (state.activeWeather) {
     log(`🌦️ Das bisherige Wetter (${state.activeWeather.name}) endet.`);
   }
+// Reset alter Wettereffekte
+state.weatherSeedBonusThisRound = 0;
 
   state.activeWeather = card;
 
   if (card.id === "weather_sun") {
+    // Sonne: dauerhafter +1 Erntebonus
     state.weatherSeedBonusThisRound = 1;
-    log("☀️ Neues Wetter: Sonnenschein → zukünftige Samen erhalten +1 Punkt.");
-  } else if (card.id === "weather_rain") {
+    log("☀️ Neues Wetter: Sonnenschein → zukünftige Samen erhalten dauerhaft +1 Erntebonus.");
+  }
+
+  else if (card.id === "weather_rain") {
+    // 🌧️ Sommerregen: sofort +2 Punkte
+    log("🌧️ Neues Wetter: Sommerregen aktiviert.");
+
+
+    // 🌱 +1 Wachstum für alle bestehenden Pflanzen (einmalig beim Ausspielen)
+    if (state.activePlants.length > 0) {
+      state.activePlants.forEach(p => {
+        p.growth += 1;
+        log(`💧 ${p.name} wächst durch den Regen! Fortschritt: ${p.growth}/${p.growthTime}`);
+      });
+    } else {
+      log("💧 Es regnet – aber noch sind keine Pflanzen im Feld.");
+    }
+
+    // Sommerregen gibt ebenfalls einen dauerhaften +1 Erntebonus
     state.weatherSeedBonusThisRound = 1;
-    state.score += 2;
-    log("🌧️ Neues Wetter: Sommerregen → +2 Punkte sofort, zukünftige Samen erhalten +1 Punkt.");
-  } else {
-    log(`🌤️ Wettereffekt aktiviert: ${card.name}`);
+  }
+
+  else {
+    state.weatherSeedBonusThisRound = 0;
+    log(`🌤️ Neues Wetter aktiviert: ${card.name}.`);
   }
 }
-
 
 function handleCompanion(card) {
   // Karte in die Liste der aktiven Begleiter aufnehmen (ohne Duplikate)
@@ -706,121 +858,224 @@ function handleCompanion(card) {
     log("🐶 Milo hilft ab jetzt: +2 Punkte auf jeden zukünftigen Samen.");
   } else if (card.id === "comp_gnome") {
     state.companionFertilizerBonus += 1;
-    log("🧙 Gartenwichtel aktiv: +1 Punkt auf jeden zukünftigen Dünger.");
+    log("🧙 Gartenwichtel ist jetzt aktiv: +1 Wachstum auf jeden zukünftigen Dünger.");
   } else {
     log(`Begleiter gespielt: ${card.name}.`);
   }
 }
 
-    function handleTool(card) {
-      if (card.id === "tool_watering") {
-        if (state.lastFertilizerBonus > 0) {
-          state.score += state.lastFertilizerBonus;
-          log(`⚒️ Gießkanne: Düngereffekt wiederholt → +${state.lastFertilizerBonus} Punkte.`);
-        } else {
-          log("⚒️ Gießkanne: Kein Düngerbonus vorhanden – kein Effekt.");
-        }
-      } else if (card.id === "tool_rake") {
-        drawToHand(state.hand.length + 2);
-        log("🧹 Rechen: Du ziehst 2 zusätzliche Karten.");
-      } else {
-        log(`Werkzeug gespielt: ${card.name}.`);
-      }
+
+function handleTool(card) {
+
+  // ⚒️ Gießkanne – NEUE LOGIK
+  if (card.id === "tool_watering") {
+    const steps = state.lastFertilizerSteps || 0;
+
+    if (steps <= 0) {
+      log("⚒️ Gießkanne: Kein gespeicherter Düngereffekt – kein zusätzlicher Wachstumseffekt.");
+      return;
     }
 
-// --- Rundenlogik -------------------------------------------------
+    if (state.activePlants.length === 0) {
+      log("⚒️ Gießkanne: Es sind keine Pflanzen im Feld – kein Effekt.");
+      return;
+    }
+
+    state.activePlants.forEach((plant) => {
+      plant.growth += steps;
+      log(
+        `⚒️ Gießkanne wiederholt den letzten Düngereffekt auf ${plant.name} ` +
+        `→ Wachstum +${steps} (${state.lastFertilizerDetail}). ` +
+        `Fortschritt: ${plant.growth}/${plant.growthTime}`
+      );
+    });
+
+    return;
+  }
+
+  // 🧹 Rechen – bleibt unverändert
+  else if (card.id === "tool_rake") {
+for (let i = 0; i < 2; i++) {
+  drawToHand(state.hand.length + 1);
+}
+    log("🧹 Rechen: Du ziehst 2 zusätzliche Karten.");
+  }
+
+  // ✨ Fallback für alle anderen Werkzeuge (falls du später weitere einbaust)
+  else {
+    log(`Werkzeug gespielt: ${card.name}.`);
+  }
+}
+
 
 // --- Rundenlogik -------------------------------------------------
+
+function harvestPlantOnce(p) {
+  // Reife erreicht → „Endwert“ der Pflanze
+  const matureIndex = p.powerCurve.length - 1;
+  let plantBase = p.powerCurve[matureIndex];
+
+  // 🍎 Apfelbaum: startet bei 2 Punkten und erhöht sich nach jeder Ernte um +1
+  if (p.id === "seed_apple") {
+    if (typeof p.currentYield !== "number") {
+      p.currentYield = 2; // Startwert
+    }
+    plantBase = p.currentYield;
+  }
+
+  const miloBonus = state.companionSeedBonus;
+
+  // ☀️ Nur Sonnenschein gibt Erntebonus
+  let weatherBonus = 0;
+  if (state.activeWeather && state.activeWeather.id === "weather_sun") {
+    weatherBonus = 1;
+  }
+
+  // 🍓 Spezialfall: Erdbeere + Sonnenschein → extra +2
+  let strawberrySynergy = 0;
+  if (
+    p.id === "seed_strawberry" &&
+    state.activeWeather &&
+    state.activeWeather.id === "weather_sun"
+  ) {
+    strawberrySynergy = 2;
+  }
+
+  // Superdünger-Multiplikator (nur in dieser Runde)
+  const baseSum = plantBase + miloBonus + weatherBonus + strawberrySynergy;
+  let multiplier = 1;
+  if (state.superFertilizerActive) {
+    multiplier = 1.5;
+  }
+
+  const totalGain = Math.ceil(baseSum * multiplier);
+
+  state.score += totalGain;
+  state.lastSeedPoints = totalGain;
+
+  // 🔹 Statt direkt loggen → für Zusammenfassung sammeln
+  if (!state.harvestSummary[p.id]) {
+    state.harvestSummary[p.id] = {
+      name: p.name,
+      cycles: 0,
+      gains: []
+    };
+  }
+  state.harvestSummary[p.id].cycles++;
+  state.harvestSummary[p.id].gains.push(totalGain);
+
+  // 🐶 Milo-Beteiligung sammeln (falls aktiv)
+  if (miloBonus > 0) {
+    if (!state.miloSummary) {
+      state.miloSummary = { bonuses: [] };
+    }
+    state.miloSummary.bonuses.push(miloBonus);
+  }
+
+  // Verhalten nach der Ernte je nach Typ
+  if (p.harvestType === "einmalig") {
+    p.toRemove = true;
+    log(`🥕 ${p.name} wurde entfernt (einmalige Ernte).`);
+  } else if (p.harvestType === "wiederholbar") {
+    // Tomate & Co.: Info maximal 1x pro Runde loggen (optional)
+    if (!state.growthLogDone[p.id]) {
+      log(`🍅 ${p.name} wächst weiter.`);
+      state.growthLogDone[p.id] = true;
+    }
+  } else if (p.harvestType === "dauerhaft") {
+    if (p.id === "seed_apple") {
+      const oldYield = p.currentYield ?? plantBase;
+      p.currentYield = oldYield + 1;
+      log(`🍎 ${p.name} wächst weiter: zukünftiger Basis-Ertrag steigt auf ${p.currentYield} Punkte.`);
+    } else {
+      state.score += 1;
+      log(`🍎 ${p.name} trägt weiter Früchte (+1 Dauerbonuspunkt).`);
+    }
+  }
+}
+
+
 
 function endTurn() {
   if (state.gameOver) return;
 
 // 🌿 1. Wachstum & Erntephase für alle aktiven Pflanzen
-state.activePlants.forEach(p => {
-  // jede Runde +1 Wachstum
-  p.growth++;
+state.activePlants.forEach((p) => {
+  // Basis: jede Runde +1 Wachstum
+  let growthStep = 1;
 
-  if (p.growth >= p.growthTime) {
-    // Reife erreicht → „Endwert“ der Pflanze
-    const matureIndex = p.powerCurve.length - 1;
-    let plantBase = p.powerCurve[matureIndex];
-
-    // 🍎 Apfelbaum: startet bei 2 Punkten und erhöht sich nach jeder Ernte um +1
-if (p.id === "seed_apple") {
-  if (typeof p.currentYield !== "number") {
-    p.currentYield = 2; // Startwert
+  // 🌧️ Sommerregen aktiv? → +1 zusätzliches Wachstum pro Runde
+  if (state.activeWeather && state.activeWeather.id === "weather_rain") {
+    growthStep = 2;
   }
-  plantBase = p.currentYield;
-}
 
-    const miloBonus = state.companionSeedBonus;                 // pro Ernte
-    const weatherBonus = state.weatherSeedBonusThisRound || 0;  // Wetterbonus
+  // Rundenwachstum anwenden
+  p.growth += growthStep;
 
-    // 🍓 Spezialfall: Erdbeere + Sonnenschein → extra +2
-    let strawberrySynergy = 0;
-    if (
-      p.id === "seed_strawberry" &&
-      state.activeWeather &&
-      state.activeWeather.id === "weather_sun"
-    ) {
-      strawberrySynergy = 2;
+  // 👉 Mehrfach-Ernten erlauben:
+  // Solange genug Wachstum für mindestens eine Ernte vorhanden ist
+  // und die Pflanze nicht entfernt wurde (einmalige Ernte)
+  while (p.growth >= p.growthTime && !p.toRemove) {
+    // Eine Ernte durchführen (Punkte, Boni, Logs)
+    harvestPlantOnce(p);
+
+    if (p.harvestType === "wiederholbar" || p.harvestType === "dauerhaft") {
+      // Wiederholbare / dauerhafte Pflanzen: Wachstum um die "Kosten"
+      // einer Ernte reduzieren (Tomate: z.B. 4/2 -> nach 1. Ernte 2/2 -> 2. Ernte 0/2)
+      p.growth -= p.growthTime;
+    } else {
+      // Einmalige Pflanzen: nach der Ernte raus, restliches Wachstum egal
+      break;
     }
-
-    // Superdünger-Multiplikator (nur in dieser Runde)
-    const baseSum = plantBase + miloBonus + weatherBonus + strawberrySynergy;
-    let multiplier = 1;
-    if (state.superFertilizerActive) {
-      multiplier = 1.5;
-    }
-
-    const totalGain = Math.ceil(baseSum * multiplier);
-
-    state.score += totalGain;
-    state.lastSeedPoints = totalGain;
-
-    // Text-Bausteine für die Erklärung
-    const parts = [`${plantBase} Erntepunkte`];
-    if (miloBonus > 0) {
-      parts.push(`${miloBonus} Begleiterbonus Milo`);
-    }
-    if (weatherBonus > 0) {
-      const weatherName = state.activeWeather ? state.activeWeather.name : "Wetterbonus";
-      parts.push(`${weatherBonus} Wetterbonus (${weatherName})`);
-    }
-    if (strawberrySynergy > 0) {
-      parts.push(`${strawberrySynergy} Erdbeer-Synergie mit Sonnenschein`);
-    }
-    if (multiplier > 1) {
-      parts.push(`×1,5 durch Superdünger`);
-    }
-
-    const detail = parts.join(" + ");
-
-    log(`🌿 ${p.name} wurde geerntet (${detail} = +${totalGain} Punkte).`);
-
-if (p.harvestType === "einmalig") {
-  p.toRemove = true;
-  log(`🥕 ${p.name} wurde entfernt (einmalige Ernte).`);
-} else if (p.harvestType === "wiederholbar") {
-  p.growth = 0;
-  log(`🍅 ${p.name} wächst weiter und kann erneut geerntet werden.`);
-} else if (p.harvestType === "dauerhaft") {
-  if (p.id === "seed_apple") {
-    // Apfelbaum bleibt stehen und steigert seinen Basis-Ertrag für zukünftige Runden
-    const oldYield = p.currentYield ?? plantBase;
-    p.currentYield = oldYield + 1;
-    log(`🍎 ${p.name} wächst weiter: zukünftiger Basis-Ertrag steigt auf ${p.currentYield} Punkte.`);
-    // p.growth lassen wir >= growthTime → damit er ab jetzt jede Runde erntet
-  } else {
-    // generische dauerhafte Pflanzen (falls du später noch andere baust)
-    state.score += 1;
-    log(`🍎 ${p.name} trägt weiter Früchte (+1 Dauerbonuspunkt).`);
-  }
-}
-
   }
 });
 
+// 🌿 Zusammenfassung der Ernten dieser Runde
+for (const plantId in state.harvestSummary) {
+  const entry = state.harvestSummary[plantId];
+  const total = entry.gains.reduce((a, b) => a + b, 0);
+
+  // Punkte-Details
+  const uniqueGains = [...new Set(entry.gains)];
+
+  let gainText = "";
+  if (uniqueGains.length === 1) {
+    // z. B. (3× +3 Punkte = +9)
+    gainText = `${entry.cycles}× +${uniqueGains[0]} Punkte = +${total}`;
+  } else {
+    // z. B. (1× +4, 1× +5 = +9)
+    gainText = entry.gains
+      .map((g) => `+${g}`)
+      .join(", ") + ` = +${total}`;
+  }
+
+  log(`🌿 ${entry.name} wurde ${entry.cycles}× geerntet (${gainText}).`);
+}
+
+// 🐶 Zusammenfassung von Milos Hilfe in dieser Runde
+if (state.miloSummary && state.miloSummary.bonuses && state.miloSummary.bonuses.length > 0) {
+  const count = state.miloSummary.bonuses.length;
+  const totalBase = state.miloSummary.bonuses.reduce((a, b) => a + b, 0);
+  const unique = [...new Set(state.miloSummary.bonuses)];
+
+  let line = "";
+
+  if (unique.length === 1) {
+    const val = unique[0]; // z. B. 2 Punkte pro Ernte
+    line = `🐶 Milo hat bei ${count} Ernte${count > 1 ? "n" : ""} geholfen ` +
+           `(${count}× +${val} Punkte = +${totalBase} Punkte).`;
+  } else {
+    // Falls du später mal variierende Milo-Boni hast
+    const detail = state.miloSummary.bonuses.join(" / ");
+    line = `🐶 Milo hat bei ${count} Ernten geholfen (${detail} Punkte insgesamt = +${totalBase} Punkte).`;
+  }
+
+  log(line);
+}
+
+// Reset für nächste Runde
+state.harvestSummary = {};
+state.miloSummary = { bonuses: [] };
 
   // Entferne abgeerntete Pflanzen
   state.activePlants = state.activePlants.filter(p => !p.toRemove);
@@ -834,15 +1089,6 @@ state.superFertilizerActive = false;
   state.playedThisRound = [];
   state.lastFertilizerBonus = 0;
   state.playsLeftThisRound = state.maxPlaysPerRound;
-
-  // Wetter bleibt bestehen, wenn aktiv
-  if (state.activeWeather) {
-    if (state.activeWeather.id === "weather_sun" || state.activeWeather.id === "weather_rain") {
-      state.weatherSeedBonusThisRound = 1;
-    }
-  } else {
-    state.weatherSeedBonusThisRound = 0;
-  }
 
 // 🌟 3. Prüfen, ob das Spiel vorbei ist (nach Ernte!)
 if (state.round >= state.maxRounds) {
@@ -873,6 +1119,7 @@ if (state.round >= state.maxRounds) {
 
 
   // 🌱 4. Neue Runde vorbereiten
+  state.growthLogDone = {};
   state.round += 1;
   drawToHand(state.hand.length + 1);   // genau 1 Karte nachziehen
   render();
@@ -970,8 +1217,8 @@ if (state.round >= state.maxRounds) {
       if (card.id === "comp_milo") {
         effectText += ` (aktuell +${state.companionSeedBonus} auf Samen)`;
       } else if (card.id === "comp_gnome") {
-        effectText += ` (aktuell +${state.companionFertilizerBonus} auf Dünger)`;
-      }
+  effectText += ` (aktuell +${state.companionFertilizerBonus} Wachstum auf Dünger)`;
+}
 
       div.innerHTML = `
         <div class="card-header">
@@ -998,10 +1245,33 @@ if (state.round >= state.maxRounds) {
         const div = document.createElement("div");
         div.className = "plant-card";
 
-        const progress = `${Math.min(
-          plant.growth || 0,
-          plant.growthTime
-        )}/${plant.growthTime}`;
+        const currentGrowth = plant.growth || 0;
+        let progress;
+        let extraInfo = "";
+
+        // 🌱 Einmalige Pflanzen (z. B. Karotte, Erdbeere)
+        if (plant.harvestType === "einmalig") {
+          const reached = currentGrowth >= plant.growthTime;
+          const clamped = Math.min(currentGrowth, plant.growthTime);
+
+          // Anzeige z.B. "1/1" oder "2/2"
+          progress = `${clamped}/${plant.growthTime}`;
+
+          if (reached) {
+            extraInfo = " (ausgewachsen)";
+          }
+
+        // 🍅 / 🍎 Wiederholbare / dauerhafte Pflanzen mit Mehrfach-Ernte
+        } else {
+          const cycles = Math.floor(currentGrowth / plant.growthTime);
+          const remainder = currentGrowth % plant.growthTime;
+
+          progress = `${remainder}/${plant.growthTime}`;
+
+          if (cycles > 0) {
+            progress += ` (+${cycles} Ernte${cycles > 1 ? "n" : ""} bereit bei Rundenende)`;
+          }
+        }
 
         let harvestLabel = "";
         if (plant.harvestType === "einmalig") harvestLabel = "Einmalige Ernte";
@@ -1010,7 +1280,9 @@ if (state.round >= state.maxRounds) {
 
         div.innerHTML = `
           <div class="plant-card-title">${plant.name}</div>
-          <div class="plant-card-meta">Fortschritt: ${progress}</div>
+          <div class="plant-card-meta">
+            Fortschritt: ${progress}${extraInfo}
+          </div>
           <div class="plant-card-meta">${harvestLabel}</div>
         `;
 
@@ -1019,6 +1291,7 @@ if (state.round >= state.maxRounds) {
     }
   }
 
+
 // Wetter-Anzeige
 if (weatherDiv) {
   const p = document.createElement("p");
@@ -1026,13 +1299,20 @@ if (weatherDiv) {
   p.style.opacity = "0.85";
 
   if (state.activeWeather) {
-    p.textContent = `Aktives Wetter: ${state.activeWeather.name} (+${state.weatherSeedBonusThisRound} Samenbonus pro Runde).`;
+    if (state.activeWeather.id === "weather_sun") {
+      p.textContent = `Aktives Wetter: ${state.activeWeather.name} (+1 Erntebonus).`;
+    } else if (state.activeWeather.id === "weather_rain") {
+      p.textContent = `Aktives Wetter: ${state.activeWeather.name} (schnelleres Wachstum für alle Pflanzen).`;
+    } else {
+      p.textContent = `Aktives Wetter: ${state.activeWeather.name}.`;
+    }
   } else {
     p.textContent = "Kein aktives Wetter.";
   }
 
   weatherDiv.appendChild(p);
 }
+
 }
 
 
@@ -1056,6 +1336,7 @@ function initGame() {
   state.activePlants = [];
   state.activeWeather = null;
   state.superFertilizerActive = false;
+  state.logEntries = [];
 
   
 
@@ -1091,12 +1372,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const helpBtn = document.getElementById("helpBtn");
   const helpOverlay = document.getElementById("helpOverlay");
   const closeHelpBtn = document.getElementById("closeHelpBtn");
-
-  // Neu für das Abschluss-Overlay
   const endOverlay = document.getElementById("endOverlay");
   const closeEndBtn = document.getElementById("closeEndBtn");
   const restartGameBtn = document.getElementById("restartGameBtn");
   const openLeaderboardBtn = document.getElementById("openLeaderboardBtn");
+  const showLogCopyBtn = document.getElementById("showLogCopyBtn");  
+  const logCopyOverlay = document.getElementById("logCopyOverlay");   
+  const closeLogCopyBtn = document.getElementById("closeLogCopyBtn"); 
+  const copyLogBtn = document.getElementById("copyLogBtn");           
+
 
   // --- Hilfe-Overlay ---
   if (helpBtn && helpOverlay && closeHelpBtn) {
@@ -1141,6 +1425,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+    // --- Log-Overlay öffnen ---
+  if (showLogCopyBtn) {
+    showLogCopyBtn.addEventListener("click", openLogCopyOverlay);
+  }
+
+  // --- Log-Overlay schließen ---
+  if (closeLogCopyBtn && logCopyOverlay) {
+    closeLogCopyBtn.addEventListener("click", () => {
+      logCopyOverlay.style.display = "none";
+    });
+
+    logCopyOverlay.addEventListener("click", (e) => {
+      if (e.target === logCopyOverlay) {
+        logCopyOverlay.style.display = "none";
+      }
+    });
+  }
+
+  // --- Log in Zwischenablage kopieren ---
+  if (copyLogBtn) {
+    copyLogBtn.addEventListener("click", copyLogToClipboard);
+  }
+
+
   // Spiel starten
   loadMiniLeaderboard();
   initGame();
@@ -1165,7 +1473,7 @@ async function loadMiniLeaderboard() {
   .map(
     (p, i) =>
       `${i + 1}. 🌱 <strong>${p.score}</strong> Punkte – ${p.name} ` +
-      `<span style="font-size:0.7rem; opacity:0.6;">(${p.date})</span>`
+      `<span style="font-size:0.5rem; opacity:0.6;">(${p.date})</span>`
   )
   .join("<br>");
 
@@ -1182,13 +1490,21 @@ async function loadMiniLeaderboard() {
 
 
   </script>
-  <div id="version-label">v0.4 – Garten-Update 🌱</div>
+<div id="version-label">
+  v0.6 – Garten-Update 🌱 • 
+  Erstellt von 
+<a href="https://www.twitch.tv/tzwehn" target="_blank"
+   style="color:#d7c2ff; font-weight:700; text-decoration:none;">
+  💜 Tzwehn
+</a>
+
+</div>
+
 
 <script>
   // 🔄 Zeigt Datum & Uhrzeit des letzten Updates (laut Dateisystem)
   const versionLabel = document.getElementById("version-label");
   if (versionLabel) {
-    // Letzte Änderung laut Browser-Cache/HTTP-Header
     fetch(window.location.href, { method: "HEAD" })
       .then((res) => {
         const lastMod = res.headers.get("last-modified");
@@ -1201,14 +1517,15 @@ async function loadMiniLeaderboard() {
             hour: "2-digit",
             minute: "2-digit",
           });
-          versionLabel.textContent += ` • Stand: ${formatted}`;
+          versionLabel.innerHTML += ` • Stand: ${formatted}`;
         }
       })
       .catch(() => {
-        versionLabel.textContent += " • Stand: unbekannt";
+        versionLabel.innerHTML += " • Stand: unbekannt";
       });
   }
 </script>
+
 
 </body>
 </html>
