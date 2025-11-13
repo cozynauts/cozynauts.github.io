@@ -777,15 +777,19 @@ function handleFertilizer(card) {
   let baseSteps = 0; // Standard: kein Wachstum
 
   if (card.id === "fert_compost") {
-    // Kompost: Wachstum + evtl. Wichtel
+    // 💩 Kompost: klassischer Wachstumsdünger
     baseSteps = 1;
   } else if (card.id === "fert_super") {
-    // Superdünger: nur Erntebuff, kein eigenes Wachstum
+    // 💩 Superdünger: nur Erntebuff, kein eigenes Wachstum
     state.superFertilizerStacks += 1;
     const multi = 1 + 0.5 * state.superFertilizerStacks;
-    log(`💥 Superdünger aktiviert: Alle Ernten in dieser Runde werden um 50 % verstärkt (insgesamt ×${multi.toFixed(1)}, aufgerundet).`);
+    log(
+      `💥 Superdünger aktiviert: Alle Ernten in dieser Runde werden um 50 % verstärkt ` +
+      `(insgesamt ×${multi.toFixed(1)}, aufgerundet).`
+    );
   }
 
+  // Wachstum durch Dünger + Wichtel
   const totalSteps = baseSteps + gnomeBonus;
 
   const detailParts = [];
@@ -793,20 +797,30 @@ function handleFertilizer(card) {
   if (gnomeBonus > 0) detailParts.push(`${gnomeBonus} Wichtel`);
   const detail = detailParts.length > 0 ? detailParts.join(" + ") : "kein Wachstumseffekt";
 
-  // Wachstum auf Pflanzen anwenden (wie gehabt) ...
-  // (dein bestehender Block mit state.activePlants.forEach(...) bleibt gleich)
+  // 🌿 Wirkung auf alle aktiven Pflanzen
+  state.activePlants.forEach((plant) => {
+    if (totalSteps > 0) {
+      plant.growth += totalSteps;
+      log(
+        `💩 ${card.name} düngt ${plant.name} → Wachstum +${totalSteps} (${detail}). ` +
+        `Fortschritt: ${plant.growth}/${plant.growthTime}`
+      );
+    } else {
+      // z. B. Superdünger ohne Wichtel: kein Wachstum, nur Erntebuff
+      if (card.id === "fert_super") {
+        log(
+          `💩 ${card.name} wirkt auf ${plant.name}: kein zusätzliches Wachstum, ` +
+          `aber Erntebuff ist aktiv.`
+        );
+      }
+    }
+  });
 
+  // Infos für die Gießkanne merken
   state.lastFertilizerSteps = totalSteps;
   state.lastFertilizerDetail = detail;
-  state.lastFertilizerId = card.id;   // NEU: merken, welcher Dünger es war
-
-
+  state.lastFertilizerId = card.id;
 }
-
-
-
-
-
 
 function handleWeather(card) {
   // Falls bereits Wetter aktiv ist, wird es ersetzt
