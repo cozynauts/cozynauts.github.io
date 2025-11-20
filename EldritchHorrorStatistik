@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Eldritch Horror – Statistiken</title>
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #050510;
+      color: #f5f5ff;
+    }
+    body {
+      margin: 0;
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 260px;
+      background: rgba(10,10,25,0.98);
+      padding: 20px;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .sidebar h1 {
+      font-size: 1.4rem;
+      margin: 0 0 6px;
+      color: #e0d2ff;
+    }
+    .sidebar p {
+      font-size: 0.9rem;
+      margin: 0;
+      color: #ccc6ff;
+    }
+    .sidebar code {
+      font-size: 0.8rem;
+      background: rgba(255,255,255,0.06);
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .sidebar small {
+      font-size: 0.8rem;
+      color: #9995ff;
+    }
+
+    main {
+      flex: 1;
+      padding: 20px 24px 40px;
+      overflow-x: auto;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 6px;
+      font-size: 1.2rem;
+      color: #e0d2ff;
+    }
+    section {
+      margin-bottom: 26px;
+    }
+    .hint {
+      font-size: 0.8rem;
+      color: #aaa7ff;
+      margin-bottom: 10px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.85rem;
+      background: rgba(14,14,35,0.95);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+    }
+    thead {
+      background: linear-gradient(90deg,#2e245f,#4a2a7f);
+    }
+    th, td {
+      padding: 6px 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      text-align: right;
+      white-space: nowrap;
+    }
+    th:first-child, td:first-child {
+      text-align: left;
+    }
+    tbody tr:nth-child(even) {
+      background: rgba(255,255,255,0.02);
+    }
+    tbody tr:hover {
+      background: rgba(255,255,255,0.06);
+    }
+    .tag {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      background: rgba(255,255,255,0.06);
+      color: #d7cfff;
+    }
+    .error {
+      color: #ff9c9c;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <h1>Eldritch Horror Stats</h1>
+    <p>
+      Daten kommen aus <code>eldritch_games.csv</code> im gleichen Ordner.<br>
+      Format: <code>Date;AncientOne;Difficulty;Result;Player;Investigators</code>
+    </p>
+    <p class="hint">
+      <strong>Regeln:</strong><br>
+      – <code>Result = Niederlage</code> → Punkte = schlechtester Wert × 1,25<br>
+      – 1 Ermittler &amp; Sieg → unsterblich<br>
+      – Mehrere Ermittler: alle außer dem letzten sterben<br>
+      – Niederlage: alle Ermittler sterben
+    </p>
+    <small>Seite ist komplett statisch – perfekt für GitHub Pages.</small>
+  </aside>
+
+  <main>
+    <section id="overview">
+      <h2>Übersicht</h2>
+      <div id="overview-text" class="hint"></div>
+    </section>
+
+    <section id="players">
+      <h2>Spielerstatistik</h2>
+      <div class="hint">Spiele, Siege, Niederlagen, unsterbliche Partien &amp; Tode pro Spieler.</div>
+      <div id="players-table"></div>
+    </section>
+
+    <section id="ancients">
+      <h2>Große Alte</h2>
+      <div class="hint">Werte pro Endboss (Spiele, Siege, Niederlagen, Ø-Punkte).</div>
+      <div id="ancients-table"></div>
+    </section>
+
+    <section id="ranking">
+      <h2>Punkte-Rangliste</h2>
+      <div class="hint">Sortiert nach Gesamtpunkten (inkl. Niederlagen-Strafe).</div>
+      <div id="ranking-table"></div>
+    </section>
+
+    <section id="errors"></section>
+  </main>
+
+  <script>
+    const CSV_URL = 'eldritch_games.csv';
+
+    function detectDelimiter(line) {
+      if (line.includes(';')) return ';';
+      if (line.includes('\t')) return '\t';
+      return ',';
+    }
+
+    function parseCSV(text) {
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length);
+      if (!lines.length) return [];
+      const delim = detectDelimiter(lines[0]);
+      const header = lines[0].split(delim).map(h => h.trim());
+      return lines.slice(1).map(line => {
+        const cells = line.split(delim).map(c => c.trim());
+        const row = {};
+        header.forEach((h, idx) => row[h] = cells[idx] ?? '');
+        return row;
+      });
+    }
+
+    function formatPct(v) {
+      if (isNaN(v)) return '–';
+      return (v * 100).toFixed(2).replace('.', ',') + ' %';
+    }
+
+    function formatNum(v, digits = 2) {
+      if (v == null || isNaN(v)) return '–';
+      return v.toFixed(digits).replace('.', ',');
+    }
+
+    function buildTable(headers, rows) {
+      const table = document.createElement('table');
+      const thead = document.createElement('thead');
+      const trHead = document.createElement('tr');
+      headers.forEach(h => {
+        const th = document.createElement('th');
+        th.textContent = h;
+        trHead.appendChild(th);
+      });
+      thead.appendChild(trHead);
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      rows.forEach(row => {
+        const tr = document.createElement('tr');
+        row.forEach(cell => {
+          const td = document.createElement('td');
+          td.innerHTML = cell;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      return table;
+    }
+
+    function computeStats(records) {
+      const games = [];
+      // 1. Vorverarbeitung: Result, Niederlage markieren
+      let minPoints = null;
+      records.forEach((r, idx) => {
+        const resultRaw = (r.Result || '').toString().trim();
+        const isDefeat = /niederlage/i.test(resultRaw);
+        let points = null;
+        if (!isDefeat && resultRaw) {
+          const num = parseFloat(resultRaw.replace(',', '.'));
+          if (!isNaN(num)) {
+            points = num;
+            if (minPoints === null || num < minPoints) minPoints = num;
+          }
+        }
+        games.push({
+          id: idx,
+          date: r.Date || r.Datum || '',
+          ancient: r.AncientOne || r.Boss || '',
+          difficulty: r.Difficulty || '',
+          resultRaw,
+          isDefeat,
+          basePoints: points,
+          player: r.Player || '',
+          investigators: r.Investigators || ''
+        });
+      });
+
+      if (minPoints === null) minPoints = -10;
+      const defeatPoints = minPoints * 1.25;
+
+      const playerStats = {};
+      const ancientStats = {};
+      const investigatorStats = {};
+
+      function ensurePlayer(name) {
+        if (!playerStats[name]) {
+          playerStats[name] = {
+            name,
+            games: 0,
+            wins: 0,
+            losses: 0,
+            deaths: 0,
+            immortals: 0,
+            pointsTotal: 0
+          };
+        }
+        return playerStats[name];
+      }
+
+      function ensureAncient(name) {
+        if (!ancientStats[name]) {
+          ancientStats[name] = {
+            name,
+            games: 0,
+            wins: 0,
+            losses: 0,
+            pointsTotal: 0
+          };
+        }
+        return ancientStats[name];
+      }
+
+      function ensureInvestigator(name) {
+        if (!investigatorStats[name]) {
+          investigatorStats[name] = {
+            name,
+            games: 0,
+            wins: 0,
+            losses: 0,
+            deaths: 0,
+            immortals: 0
+          };
+        }
+        return investigatorStats[name];
+      }
+
+      games.forEach(g => {
+        const effPoints = g.basePoints != null ? g.basePoints : defeatPoints;
+        const isWin = !g.isDefeat;
+        const playerName = g.player.trim() || 'Unbekannt';
+        const P = ensurePlayer(playerName);
+        const A = ensureAncient(g.ancient.trim() || 'Unbekannt');
+
+        P.games++;
+        A.games++;
+        if (isWin) {
+          P.wins++;
+          A.wins++;
+        } else {
+          P.losses++;
+          A.losses++;
+        }
+        P.pointsTotal += effPoints;
+        A.pointsTotal += effPoints;
+
+        const invList = g.investigators.split(',').map(s => s.trim()).filter(Boolean);
+        let deathsForPlayer = 0;
+        let immortalsForPlayer = 0;
+
+        invList.forEach((invName, idx) => {
+          const I = ensureInvestigator(invName);
+          const isLast = idx === invList.length - 1;
+
+          I.games++;
+          if (isWin) I.wins++; else I.losses++;
+
+          let died = false;
+          let immortal = false;
+
+          if (g.isDefeat) {
+            died = true; // alle sterben
+          } else {
+            if (invList.length === 1 && isWin) {
+              immortal = true; // Solo-Sieg
+            } else if (invList.length > 1 && !isLast && isWin) {
+              died = true; // alle bis auf den letzten sterben
+            }
+          }
+
+          if (died) {
+            I.deaths++;
+            deathsForPlayer++;
+          }
+          if (immortal) {
+            I.immortals++;
+            immortalsForPlayer++;
+          }
+        });
+
+        P.deaths += deathsForPlayer;
+        P.immortals += immortalsForPlayer;
+      });
+
+      return {
+        games,
+        playerStats,
+        ancientStats,
+        investigatorStats,
+        defeatPoints
+      };
+    }
+
+    async function main() {
+      const errorBox = document.getElementById('errors');
+      try {
+        const resp = await fetch(CSV_URL);
+        if (!resp.ok) throw new Error('CSV nicht gefunden: ' + CSV_URL);
+        const text = await resp.text();
+        const records = parseCSV(text);
+        if (!records.length) throw new Error('CSV enthält keine Daten.');
+
+        const stats = computeStats(records);
+        render(stats);
+      } catch (e) {
+        console.error(e);
+        const div = document.createElement('div');
+        div.className = 'error';
+        div.textContent = 'Fehler beim Laden der Daten: ' + e.message +
+          ' – Liegt die Datei "eldritch_games.csv" im selben Ordner wie diese HTML?';
+        errorBox.appendChild(div);
+      }
+    }
+
+    function render(stats) {
+      const { playerStats, ancientStats, defeatPoints, games } = stats;
+      const overview = document.getElementById('overview-text');
+      overview.innerHTML =
+        `Gesamt <strong>${games.length}</strong> Einträge aus <strong>${new Set(games.map(g => g.date)).size}</strong> Spielsitzungen. ` +
+        `Aktuelle Niederlage-Strafe: <span class="tag">${formatNum(defeatPoints)}</span> Punkte.`;
+
+      // Spieler-Tabelle
+      const playersArray = Object.values(playerStats).sort((a,b) => b.games - a.games);
+      const playerRows = playersArray.map(p => {
+        const winRate = p.games ? p.wins / p.games : NaN;
+        const deathsPerGame = p.games ? p.deaths / p.games : 0;
+        const pointsPerGame = p.games ? p.pointsTotal / p.games : 0;
+        return [
+          p.name,
+          p.games,
+          p.wins,
+          p.losses,
+          p.immortals,
+          p.deaths,
+          formatNum(deathsPerGame),
+          formatPct(winRate),
+          formatNum(p.pointsTotal),
+          formatNum(pointsPerGame)
+        ];
+      });
+      const playerTable = buildTable(
+        ['Spieler', 'Spiele', 'Siege', 'Niederlagen', 'Unsterblich', 'Tode', 'Tode/Spiel', 'Siegquote', 'Punkte gesamt', 'Punkte/Spiel'],
+        playerRows
+      );
+      document.getElementById('players-table').innerHTML = '';
+      document.getElementById('players-table').appendChild(playerTable);
+
+      // Große Alte
+      const ancientsArray = Object.values(ancientStats).sort((a,b)=>a.name.localeCompare(b.name));
+      const ancientRows = ancientsArray.map(a => {
+        const winRate = a.games ? a.wins / a.games : NaN;
+        const pointsPerGame = a.games ? a.pointsTotal / a.games : 0;
+        return [
+          a.name,
+          a.games,
+          a.wins,
+          a.losses,
+          formatPct(winRate),
+          formatNum(pointsPerGame)
+        ];
+      });
+      const ancientTable = buildTable(
+        ['Großer Alter', 'Spiele', 'Siege', 'Niederlagen', 'Siegquote', 'Ø-Punkte/Spiel'],
+        ancientRows
+      );
+      document.getElementById('ancients-table').innerHTML = '';
+      document.getElementById('ancients-table').appendChild(ancientTable);
+
+      // Ranking
+      const ranking = [...playersArray].sort((a,b) => b.pointsTotal - a.pointsTotal);
+      const rankingRows = ranking.map((p, idx) => {
+        const pointsPerGame = p.games ? p.pointsTotal / p.games : 0;
+        return [
+          String(idx+1),
+          p.name,
+          p.games,
+          formatNum(p.pointsTotal),
+          formatNum(pointsPerGame),
+          `${p.wins}/${p.games}`
+        ];
+      });
+      const rankingTable = buildTable(
+        ['#', 'Spieler', 'Spiele', 'Punkte gesamt', 'Punkte/Spiel', 'Siege/Spiele'],
+        rankingRows
+      );
+      document.getElementById('ranking-table').innerHTML = '';
+      document.getElementById('ranking-table').appendChild(rankingTable);
+    }
+
+    main();
+  </script>
+</body>
+</html>
