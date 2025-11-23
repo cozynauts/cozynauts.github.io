@@ -2,228 +2,217 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <title>Set 1 – Werkzeug-Booster</title>
+  <title>Werkzeug-Booster – Prototyp</title>
   <style>
-    /* Linke Seitenleiste */
-    .sidebar {
-      width: 220px;
-      background: rgba(12, 12, 20, 0.95);
-      box-shadow: 2px 0 10px rgba(0,0,0,0.4);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px 10px;
-      border-right: 1px solid rgba(255,255,255,0.1);
-    }
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: rgba(12, 12, 20, 0.95);
+  box-shadow: 2px 0 10px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 10px;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
 
-    .sidebar .logo {
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-      color: #bfaeff;
-      text-align: center;
-    }
+.sidebar .logo {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #bfaeff;
+  text-align: center;
+}
 
-    .sidebar nav {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+.sidebar nav {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
-    .nav-btn {
-      display: block;
-      background: none;
-      border: none;
-      color: #ddd;
-      padding: 10px;
-      text-align: left;
-      width: 100%;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease;
-      text-decoration: none;
-      font: inherit;
-    }
+.nav-btn {
+  background: none;
+  border: none;
+  color: #ddd;
+  padding: 10px;
+  text-align: left;
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
 
-    .nav-btn:hover:not(.disabled) {
-      background: rgba(95,95,217,0.2);
-      color: #fff;
-    }
+.nav-btn:hover:not(.disabled) {
+  background: rgba(95,95,217,0.2);
+  color: #fff;
+}
 
-    .nav-btn.active {
-      background: rgba(95,95,217,0.4);
-      color: #fff;
-      font-weight: bold;
-    }
+.nav-btn.active {
+  background: rgba(95,95,217,0.4);
+  color: #fff;
+  font-weight: bold;
+}
 
-    .nav-btn.disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+.nav-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
-    body {
-      display: flex;
-      margin: 0;
-      height: 100vh;
-      background: radial-gradient(circle at center, #0a0a12 0%, #030308 100%);
-      color: #eee;
-      font-family: 'Audiowide', system-ui, sans-serif;
-    }
+body {
+  display: flex;
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at center, #0a0a12 0%, #030308 100%);
+  color: #eee;
+  font-family: 'Audiowide', system-ui, sans-serif;
+}
 
-    /* Der Hauptbereich rechts von der Sidebar */
-    .content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      overflow-y: auto;
-      padding: 20px;
-    }
+/* Hauptbereich */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  padding: 20px;
+}
 
-    .userbar {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      background: rgba(10, 10, 20, 0.85);
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      box-shadow: 0 0 12px rgba(0,0,0,0.6);
-      margin-bottom: 20px;
-    }
+.userbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: rgba(10, 10, 20, 0.85);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  box-shadow: 0 0 12px rgba(0,0,0,0.6);
+  margin-bottom: 20px;
+}
 
-    .userbar select {
-      background: #151522;
-      border: 1px solid #444;
-      border-radius: 999px;
-      padding: 4px 8px;
-      color: #eee;
-    }
+.userbar select {
+  background: #151522;
+  border: 1px solid #444;
+  border-radius: 999px;
+  padding: 4px 8px;
+  color: #eee;
+}
 
-    .userbar button {
-      background: #5f5fd9;
-      border: none;
-      border-radius: 999px;
-      padding: 4px 10px;
-      color: white;
-      cursor: pointer;
-      font-size: 0.8rem;
-    }
+#status-text {
+  margin-left: 6px;
+  opacity: 0.8;
+}
 
-    .userbar button:hover {
-      filter: brightness(1.1);
-    }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 35px;
+  text-align: center;
+}
 
-    #status-text {
-      margin-left: 6px;
-      opacity: 0.8;
-    }
+/* Karte */
+.card {
+  width: 170px;
+  border-radius: 14px;
+  box-shadow: 0 0 18px rgba(255,255,255,0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transform: translateY(0px);
+  cursor: pointer;
+  position: relative;
+  overflow: visible;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 35px;
-      text-align: center;
-    }
+.card img {
+  width: 100%;
+  display: block;
+  border-radius: 14px;
+  filter: grayscale(1) brightness(0.5);
+  opacity: 0.5;
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
 
-    .card {
-      width: 170px;
-      border-radius: 14px;
-      box-shadow: 0 0 18px rgba(255,255,255,0.05);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      transform: translateY(0px);
-      cursor: pointer;
-      position: relative;
-      overflow: visible;
-    }
+/* Counter-Kreis */
+.card::after {
+  content: attr(data-count);
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(15, 15, 25, 0.95);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', 'Arial', sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #f8f8ff;
+  text-shadow: 0 0 4px rgba(255,255,255,0.5);
+  box-shadow: 0 0 6px rgba(255,255,255,0.15);
+}
 
-    .card img {
-      width: 100%;
-      display: block;
-      border-radius: 14px;
-      filter: grayscale(1) brightness(0.5);
-      opacity: 0.5;
-      transition: filter 0.25s ease, opacity 0.25s ease;
-    }
+/* Kreis ausblenden bei 0 */
+.card[data-count="0"]::after,
+.card:not([data-count])::after {
+  display: none;
+}
 
-    .card::after {
-      content: attr(data-count);
-      position: absolute;
-      right: 6px;
-      bottom: 6px;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: rgba(15, 15, 25, 0.95);
-      border: 2px solid rgba(255, 255, 255, 0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Poppins', 'Arial', sans-serif;
-      font-weight: 600;
-      font-size: 0.8rem;
-      color: #f8f8ff;
-      text-shadow: 0 0 4px rgba(255,255,255,0.5);
-      box-shadow: 0 0 6px rgba(255,255,255,0.15);
-    }
+/* Gesammelte Karte */
+.card.unlocked img {
+  filter: none;
+  opacity: 1;
+}
 
-    .card[data-count="0"]::after,
-    .card:not([data-count])::after {
-      display: none;
-    }
+/* Hover nur bei freigeschaltet */
+.card.unlocked:hover {
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 0 24px rgba(255,255,255,0.15);
+}
 
-    .card.unlocked img {
-      filter: none;
-      opacity: 1;
-    }
+/* Center-Card */
+.center-text {
+  background: linear-gradient(180deg, #1e1e3a 0%, #12122a 100%);
+  border: 2px solid rgba(160,120,255,0.6);
+  border-radius: 20px;
+  color: #eaeaea;
+  width: 170px;
+  height: 250px;
+  box-shadow: 0 0 25px rgba(150,100,255,0.3), inset 0 0 20px rgba(80,60,150,0.3);
+  text-shadow: 0 0 10px rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
 
-    .card.unlocked:hover {
-      transform: translateY(-6px) scale(1.05);
-      box-shadow: 0 0 24px rgba(255,255,255,0.15);
-    }
+.center-text h2 {
+  font-size: 0.9rem;
+  line-height: 1.2;
+  margin: 0 0 8px 0;
+  color: #e9d9ff;
+  text-align: center;
+}
 
-    .center-text {
-      background: linear-gradient(180deg, #1e1e3a 0%, #12122a 100%);
-      border: 2px solid rgba(160,120,255,0.6);
-      border-radius: 20px;
-      color: #eaeaea;
-      width: 170px;
-      height: 250px;
-      box-shadow: 0 0 25px rgba(150,100,255,0.3), inset 0 0 20px rgba(80,60,150,0.3);
-      text-shadow: 0 0 10px rgba(255,255,255,0.2);
-      backdrop-filter: blur(4px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 10px;
-      box-sizing: border-box;
-    }
+.center-text p {
+  font-size: 0.8rem;
+  opacity: 0.85;
+  margin: 0;
+  text-align: center;
+  color: #b3aaff;
+}
 
-    .center-text h2 {
-      font-size: 0.9rem;
-      line-height: 1.2;
-      margin: 0 0 8px 0;
-      color: #e9d9ff;
-      text-align: center;
-    }
+.album {
+  animation: fadeIn 1s ease forwards;
+}
 
-    .center-text p {
-      font-size: 0.8rem;
-      opacity: 0.85;
-      margin: 0;
-      text-align: center;
-      color: #b3aaff;
-    }
-
-    .album {
-      animation: fadeIn 1s ease forwards;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to   { opacity: 1; transform: scale(1); }
-    }
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
   </style>
 </head>
 <body>
@@ -234,10 +223,7 @@
 
       <div class="userbar">
         <label for="username-select">Benutzer:</label>
-        <select id="username-select">
-          <!-- wird per JS aus der CSV gefüllt -->
-        </select>
-        <button id="load-btn">Laden</button>
+        <select id="username-select"></select>
         <span id="status-text"></span>
       </div>
 
@@ -246,6 +232,7 @@
       </p>
 
       <div class="grid">
+        <!-- Reihe 1 -->
         <div class="card" data-col="#1_Melkmaschine">
           <img src="SpritesSet1SOS/1_Melkmaschine.png" alt="Melkmaschine">
         </div>
@@ -258,6 +245,7 @@
           <img src="SpritesSet1SOS/3_Buerste.png" alt="Bürste">
         </div>
 
+        <!-- Reihe 2 -->
         <div class="card" data-col="#4_Kupferhacke">
           <img src="SpritesSet1SOS/4_Kupferhacke.png" alt="Kupferhacke">
         </div>
@@ -271,6 +259,7 @@
           <img src="SpritesSet1SOS/5_Silberangel.png" alt="Silberne Angel">
         </div>
 
+        <!-- Reihe 3 -->
         <div class="card" data-col="#6_Goldsichel">
           <img src="SpritesSet1SOS/6_Goldsichel.png" alt="Goldene Sichel">
         </div>
@@ -291,15 +280,9 @@
     let csvRows = [];
     let csvSep = ";";
 
-async function initAlbum() {
-  // Timestamp als Query-Parameter anhängen, damit der Browser immer neu lädt
-  const url = "cards_user_summary.csv?ts=" + Date.now();
-
-  const resp = await fetch(url, {
-    cache: "no-store" // sagt dem Browser zusätzlich: bitte nix aus dem Cache nehmen
-  });
-
-  const text = await resp.text();
+    async function initAlbum() {
+      const resp = await fetch("cards_user_summary.csv");
+      const text = await resp.text();
 
       const lines = text.trim().split(/\r?\n/);
       if (lines.length < 2) {
@@ -312,6 +295,7 @@ async function initAlbum() {
       csvHeaders = headerLine.split(csvSep).map(h => h.trim());
       csvRows = lines.slice(1).map(line => line.split(csvSep));
 
+      // Usernamen holen
       const usernames = csvRows
         .map(cols => (cols[0] || "").trim())
         .filter(name => name.length > 0);
@@ -328,12 +312,12 @@ async function initAlbum() {
       });
 
       const defaultUser = "Tzwehn";
-      const def = unique.find(
-        n => n.toLowerCase() === defaultUser.toLowerCase()
-      );
+      const def = unique.find(n => n.toLowerCase() === defaultUser.toLowerCase());
       if (def) {
         select.value = def;
       }
+
+      select.addEventListener("change", updateForCurrentSelection);
 
       updateForCurrentSelection();
     }
@@ -399,37 +383,36 @@ async function initAlbum() {
 
       const totalText = document.getElementById("total-pulled");
       if (totalText) {
-        totalText.textContent = `Insgesamt ${result.totalPulled} Karten aus diesem Set gezogen.`;
+        totalText.textContent =
+          `Insgesamt ${result.totalPulled} Karten aus diesem Set gezogen.`;
       }
     }
 
-    document.getElementById("load-btn").addEventListener("click", updateForCurrentSelection);
-    document.getElementById("username-select").addEventListener("change", updateForCurrentSelection);
-
-async function loadSidebar() {
-  try {
-    const resp = await fetch("sidebar.html");
-    const html = await resp.text();
-    document.getElementById("sidebar-container").innerHTML = html;
-
-    // Aktive Seite: set1.html
-    const current = "set1.html";
-
-    document.querySelectorAll(".nav-btn").forEach(btn => {
-      const onclick = (btn.getAttribute("onclick") || "").toLowerCase();
-      if (onclick.includes(current)) {
-        btn.classList.add("active");
-      }
-    });
-  } catch (e) {
-    console.error("Sidebar konnte nicht geladen werden:", e);
-  }
-}
-
-
-    // Start: CSV & Sidebar laden
     initAlbum().catch(console.error);
-    loadSidebar().catch(console.error);
+
+    // Sidebar laden & aktiven Button markieren
+    fetch("sidebar.html")
+      .then(resp => resp.text())
+      .then(html => {
+        document.getElementById("sidebar-container").innerHTML = html;
+
+        document.querySelectorAll(".nav-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            if (btn.classList.contains("disabled")) return;
+            document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+          });
+        });
+
+        const path = window.location.pathname.split("/").pop();
+        document.querySelectorAll(".nav-btn").forEach(btn => {
+          const onclick = btn.getAttribute("onclick") || "";
+          if (onclick.includes(path)) {
+            btn.classList.add("active");
+          }
+        });
+      })
+      .catch(err => console.error("Sidebar konnte nicht geladen werden:", err));
   </script>
 </body>
 </html>
