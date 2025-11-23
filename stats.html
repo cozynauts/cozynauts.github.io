@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <title>Statistik – Cozynauts Sammelkarten</title>
+  <title>Statistik – Prototyp</title>
   <style>
     /* Linke Seitenleiste */
     .sidebar {
@@ -39,10 +39,7 @@
       width: 100%;
       border-radius: 8px;
       cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease;
-      text-decoration: none;
-      font: inherit;
-      display: block;
+      transition: background 0.2s ease;
     }
 
     .nav-btn:hover:not(.disabled) {
@@ -87,7 +84,7 @@
 
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.95); }
-      to   { opacity: 1; transform: scale(1); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     .album h1 {
@@ -210,6 +207,7 @@
           <option value="all">Gesamte Sammlung</option>
           <option value="set1">BoosterSet 1 – SoS Werkzeuge</option>
           <option value="set2">BoosterSet 2 – DDV Begleiter</option>
+          <option value="set3">BoosterSet 3 – Community Gaming</option>
         </select>
       </div>
 
@@ -218,9 +216,9 @@
           <tr>
             <th>#</th>
             <th>Benutzer</th>
-            <th id="th-unique"  class="sortable">Einzigartige Karten</th>
-            <th id="th-total"   class="sortable">Gesamt Karten</th>
-            <th id="th-percent" class="sortable">Fortschritt</th>
+            <th id="th-unique"   class="sortable">Einzigartige Karten</th>
+            <th id="th-total"    class="sortable">Gesamt Karten</th>
+            <th id="th-percent"  class="sortable">Fortschritt</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -231,34 +229,30 @@
   </div>
 
   <script>
-    // --- Sidebar laden & "Statistik" aktiv markieren ---
-    async function loadSidebar() {
-      try {
-        const resp = await fetch("sidebar.html");
-        const html = await resp.text();
+    // Sidebar laden
+    fetch("sidebar.html")
+      .then(resp => resp.text())
+      .then(html => {
         document.getElementById("sidebar-container").innerHTML = html;
 
-        document.querySelectorAll(".nav-btn").forEach(btn => {
-          const onclick = (btn.getAttribute("onclick") || "").toLowerCase();
-          if (onclick.includes("stats.html")) {
-            btn.classList.add("active");
-          }
+        const buttons = document.querySelectorAll(".nav-btn");
+        buttons.forEach(btn => {
+          const href = btn.getAttribute("onclick");
+          if (href && href.includes("stats.html")) btn.classList.add("active");
         });
-      } catch (e) {
-        console.error("Sidebar konnte nicht geladen werden:", e);
-      }
-    }
+      })
+      .catch(err => console.error("Sidebar konnte nicht geladen werden:", err));
 
-    // --- Globale Daten für Ranking ---
+    // Globale Daten
     let header = [];
     let rows = [];
     let users = [];
     let totalCards = 0;
     let currentSortField = "percent"; // "percent" | "unique" | "total"
-    let currentSortDir   = "desc";    // "desc" | "asc"
-    let currentScope     = "all";     // "all" | "set1" | "set2"
+    let currentSortDir = "desc";      // "desc" | "asc"
+    let currentScope = "all";         // "all" | "set1" | "set2"
 
-    // Definiere, welche CSV-Spalten zu welchem Set gehören
+    // HIER definierst du, welche CSV-Spalten zu welchem Set gehören:
     const set1Headers = [
       "#1_Melkmaschine",
       "#2_Schere",
@@ -281,69 +275,66 @@
       "#8_Feuerjunges"
     ];
 
-    function filterExisting(headersArray) {
-      return headersArray.filter(h => header.includes(h));
+    const set3Headers = [
+  "#1_Wii",
+  "#2_Gamecube",
+  "#3_DS",
+  "#4_Playstation",
+  "#5_N64",
+  "#6_SNES",
+  "#7_Gameboy",
+  "#8_NES"
+];
+
+
+    async function loadStats() {
+      const resp = await fetch("cards_user_summary.csv");
+      const text = await resp.text();
+      const lines = text.trim().split(/\r?\n/);
+      if (lines.length < 2) return;
+
+      const headerLine = lines[0];
+      const sep = headerLine.includes(";") ? ";" : ",";
+      header = headerLine.split(sep).map(h => h.trim());
+      rows = lines.slice(1).map(l => l.split(sep));
+
+      // Initial: Gesamte Sammlung
+      updateScope("all");
     }
-
-async function loadStats() {
-  // Cache-Busting durch Timestamp
-  const url = "cards_user_summary.csv?ts=" + Date.now();
-
-  const resp = await fetch(url, {
-    cache: "no-store"
-  });
-
-  const text = await resp.text();
-  const lines = text.trim().split(/\r?\n/);
-
-  if (lines.length < 2) {
-    console.warn("CSV hat keine Daten.");
-    return;
-  }
-
-  const headerLine = lines[0];
-  const sep = headerLine.includes(";") ? ";" : ",";
-  header = headerLine.split(sep).map(h => h.trim());
-  rows   = lines.slice(1).map(l => l.split(sep));
-
-  updateScope("all");
-}
-
 
     function updateScope(scope) {
       currentScope = scope;
 
-      let usedHeaders = [];
-      let scopeLabel  = "";
-
-      const set1Existing = filterExisting(set1Headers);
-      const set2Existing = filterExisting(set2Headers);
+      const cardHeaders = header.slice(1); // alle Kartenspalten
+      let usedHeaders;
+      let scopeLabel;
 
       if (scope === "set1") {
-        usedHeaders = set1Existing;
-        scopeLabel  = "BoosterSet 1 – SoS Werkzeuge";
+        usedHeaders = cardHeaders.filter(h => set1Headers.includes(h));
+        scopeLabel = "BoosterSet 1 – SoS Werkzeuge";
       } else if (scope === "set2") {
-        usedHeaders = set2Existing;
-        scopeLabel  = "BoosterSet 2 – DDV Begleiter";
+        usedHeaders = cardHeaders.filter(h => set2Headers.includes(h));
+        scopeLabel = "BoosterSet 2 – DDV Begleiter";
+        } else if (scope === "set3") {
+  usedHeaders = cardHeaders.filter(h => set3Headers.includes(h));
+  scopeLabel = "BoosterSet 3 – Community Gaming";
       } else {
-        // Gesamte Sammlung = alle bekannten Karten-Header aus Set 1 & 2
-        const all = [...set1Existing, ...set2Existing];
-        usedHeaders = [...new Set(all)];
-        scopeLabel  = "Gesamte Sammlung";
+        usedHeaders = cardHeaders;
+        scopeLabel = "Gesamte Sammlung";
       }
 
       totalCards = usedHeaders.length;
       users = [];
 
       let globalUnique = 0;
-      let globalTotal  = 0;
+      let globalTotal = 0;
 
       rows.forEach(cols => {
         const username = (cols[0] || "").trim();
         if (!username) return;
 
         let unique = 0;
-        let total  = 0;
+        let total = 0;
 
         usedHeaders.forEach(h => {
           const idx = header.indexOf(h);
@@ -353,32 +344,31 @@ async function loadStats() {
           total += val;
         });
 
-        const percent = totalCards > 0 ? (unique / totalCards) * 100 : 0;
+        const percent = totalCards > 0 ? ((unique / totalCards) * 100) : 0;
         users.push({ username, unique, total, percent });
 
         globalUnique += unique;
-        globalTotal  += total;
+        globalTotal += total;
       });
 
-      const summaryEl = document.getElementById("global-summary");
-
-      if (users.length === 0 || totalCards === 0) {
-        summaryEl.textContent =
-          `Keine Daten für diesen Filter (${scopeLabel}). Prüfe, ob die Spaltennamen in der CSV zu den Set-Headern im Script passen.`;
-        document.querySelector("#stats-table tbody").innerHTML = "";
+      if (users.length === 0) {
+        document.getElementById("global-summary").textContent =
+          `Keine Daten für diesen Filter (${scopeLabel}). Checke die Set-Header im Script.`;
+        const tbody = document.querySelector("#stats-table tbody");
+        tbody.innerHTML = "";
         return;
       }
 
       const avgUnique = (globalUnique / users.length).toFixed(1);
-      const avgTotal  = (globalTotal  / users.length).toFixed(1);
+      const avgTotal = (globalTotal / users.length).toFixed(1);
 
-      summaryEl.innerHTML =
+      document.getElementById("global-summary").innerHTML =
         `📦 <b>${scopeLabel}</b><br>` +
         `Durchschnitt pro Nutzer: ${avgUnique} einzigartige Karten (${avgTotal} insgesamt) – ${users.length} Nutzer im System.`;
 
-      // Standard: nach Fortschritt sortieren
+      // Standard: nach Fortschritt desc sortieren
       currentSortField = "percent";
-      currentSortDir   = "desc";
+      currentSortDir = "desc";
       renderTable();
     }
 
@@ -393,27 +383,33 @@ async function loadStats() {
         } else if (currentSortField === "unique") {
           va = a.unique; vb = b.unique;
         } else {
-          va = a.total;  vb = b.total;
+          va = a.total; vb = b.total;
         }
 
         if (va === vb) return 0;
-        return currentSortDir === "desc" ? vb - va : va - vb;
+        if (currentSortDir === "desc") return vb - va;
+        return va - vb;
       });
 
+      // gleiche Werte => gleicher Platz
       let lastValue = null;
-      let lastRank  = 0;
-      let place     = 0;
+      let lastRank = 0;
+      let placeCounter = 0;
 
       sorted.forEach(u => {
-        place++;
+        placeCounter++;
 
         let compVal;
-        if (currentSortField === "percent")      compVal = u.percent;
-        else if (currentSortField === "unique")  compVal = u.unique;
-        else                                     compVal = u.total;
+        if (currentSortField === "percent") {
+          compVal = u.percent;
+        } else if (currentSortField === "unique") {
+          compVal = u.unique;
+        } else {
+          compVal = u.total;
+        }
 
         if (compVal !== lastValue) {
-          lastRank  = place;
+          lastRank = placeCounter;
           lastValue = compVal;
         }
 
@@ -430,9 +426,9 @@ async function loadStats() {
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      const thUnique   = document.getElementById("th-unique");
-      const thTotal    = document.getElementById("th-total");
-      const thPercent  = document.getElementById("th-percent");
+      const thUnique  = document.getElementById("th-unique");
+      const thTotal   = document.getElementById("th-total");
+      const thPercent = document.getElementById("th-percent");
       const scopeSelect = document.getElementById("scope-select");
 
       if (thUnique) {
@@ -441,7 +437,7 @@ async function loadStats() {
             currentSortDir = currentSortDir === "desc" ? "asc" : "desc";
           } else {
             currentSortField = "unique";
-            currentSortDir   = "desc";
+            currentSortDir = "desc";
           }
           renderTable();
         });
@@ -453,7 +449,7 @@ async function loadStats() {
             currentSortDir = currentSortDir === "desc" ? "asc" : "desc";
           } else {
             currentSortField = "total";
-            currentSortDir   = "desc";
+            currentSortDir = "desc";
           }
           renderTable();
         });
@@ -465,19 +461,18 @@ async function loadStats() {
             currentSortDir = currentSortDir === "desc" ? "asc" : "desc";
           } else {
             currentSortField = "percent";
-            currentSortDir   = "desc";
+            currentSortDir = "desc";
           }
           renderTable();
         });
       }
 
       if (scopeSelect) {
-        scopeSelect.addEventListener("change", e => {
+        scopeSelect.addEventListener("change", (e) => {
           updateScope(e.target.value);
         });
       }
 
-      loadSidebar().catch(console.error);
       loadStats().catch(console.error);
     });
   </script>
