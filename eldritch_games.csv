@@ -1,0 +1,141 @@
+Date;AncientOne;Difficulty;Result;Player;Investigators
+2023-11-15;Yog-Sothoth;Normal;11;Alex;Jacqueline Fine, Mark Harrigan
+2023-11-15;Yog-Sothoth;Normal;11;Daniel;Diana Stanley
+2023-11-15;Yog-Sothoth;Normal;11;Sven;Silas Marsh
+
+2023-12-05;Azathoth;Mittel;6;Alex;Jacqueline Fine
+2023-12-05;Azathoth;Mittel;6;Basti;Diana Stanley
+2023-12-05;Azathoth;Mittel;6;Daniel;Mark Harrigan
+2023-12-05;Azathoth;Mittel;6;Sven;Ashcan Pete
+2023-12-05;Azathoth;Mittel;6;Volker;Roland Banks
+
+2023-12-30;Shub-Niggurath;Mittel;9;Alex;Lily Chen, Silas Marsh, Leo Anderson
+2023-12-30;Shub-Niggurath;Mittel;9;Frowin;Charlie Kane
+2023-12-30;Shub-Niggurath;Mittel;9;Daniel;Trish Scarborough
+2023-12-30;Shub-Niggurath;Mittel;9;Volker;Roland Banks
+2023-12-30;Shub-Niggurath;Mittel;9;Nelson;Jacqueline Fine
+2023-12-30;Shub-Niggurath;Mittel;9;Sascha;Rita Young
+2023-12-30;Shub-Niggurath;Mittel;9;Sven;Ashcan Pete, Mark Harrigan
+
+2023-12-30;Cthulhu;Mittel;6;Alex;Akachi Onyele, Jim Culver
+2023-12-30;Cthulhu;Mittel;6;Daniel;Diana Stanley
+2023-12-30;Cthulhu;Mittel;6;Volker;Norwin
+2023-12-30;Cthulhu;Mittel;6;Nelson;Bob Jenkins
+2023-12-30;Cthulhu;Mittel;6;Sascha;Silas Marsh, Mark Harrigan
+2023-12-30;Cthulhu;Mittel;6;Sven;Leo Anderson, Lola Hayes
+
+2024-02-05;Shudde M'ell;Mittel;-2;Alex;Lily Chen
+2024-02-05;Shudde M'ell;Mittel;-2;Daniel;Roland Banks, Silas Marsh
+2024-02-05;Shudde M'ell;Mittel;-2;Nelson;Norwin, Jim Culver
+2024-02-05;Shudde M'ell;Mittel;-2;Sven;Leo Anderson
+
+2024-02-12;Yog-Sothoth;Mittel;6;Alex;Lola Hayes
+2024-02-12;Yog-Sothoth;Mittel;6;Daniel;Charlie Kane, Bob Jenkins
+2024-02-12;Yog-Sothoth;Mittel;6;Nelson;Diana Stanley
+2024-02-12;Yog-Sothoth;Mittel;6;Sven;Rita Young
+
+2024-02-12;Azathoth;Mittel;-9;Alex;Ashcan Pete
+2024-02-12;Azathoth;Mittel;-9;Daniel;Trish Scarborough, Akachi Onyele
+2024-02-12;Azathoth;Mittel;-9;Nelson;Lily Chen
+2024-02-12;Azathoth;Mittel;-9;Sven;Rita Young, Jacqueline Fine
+
+2024-03-04;Shudde M'ell;Mittel;2;Alex;Mark Harrigan, Ashcan Pete
+2024-03-04;Shudde M'ell;Mittel;2;Daniel;Trish Scarborough, Silas Marsh
+2024-03-04;Shudde M'ell;Mittel;2;Nelson;Jim Culver, Akachi Onyele, Diana Stanley
+2024-03-04;Shudde M'ell;Mittel;2;Sven;Lily Chen, Roland Banks, Rita Young
+
+2024-03-10;Invasion der Älteren Wesen;Mittel;8;Alex;Tommy Muldoon, Patrice Hathaway
+2024-03-10;Invasion der Älteren Wesen;Mittel;8;Daniel;Wilson Richards, Finn Edwards
+2024-03-10;Invasion der Älteren Wesen;Mittel;8;Nelson;Agnes Baker, Daisy Walker, Mark Harrigan
+2024-03-10;Invasion der Älteren Wesen;Mittel;8;Sascha;Ursula Downs, Akachi Onyele
+2024-03-10;Invasion der Älteren Wesen;Mittel;8;Sven;George Barnaby
+
+2024-04-02;Ithaqua;Mittel;Niederlage;Alex;George Barnaby, Ashcan Pete
+2024-04-02;Ithaqua;Mittel;Niederlage;Daniel;Norman Withers
+2024-04-02;Ithaqua;Mittel;Niederlage;Frowin;Roland Banks, Agnes Baker, Jacqueline Fine
+2024-04-02;Ithaqua;Mittel;Niederlage;Jojo;Tommy Muldoon, Mark Harrigan
+2024-04-02;Ithaqua;Mittel;Niederlage;Nelson;Bob Jenkins, Jim Culver
+2024-04-02;Ithaqua;Mittel;Niederlage;Sascha;Lily Chen
+2024-04-02;Ithaqua;Mittel;Niederlage;Sven;Finn Edwards
+2024-04-02;Ithaqua;Mittel;Niederlage;Tom;Patrice Hathaway, Lola Hayes
+
+2024-04-09;Shudde M'ell;Mittel;Niederlage;Daniel;Patrice Hathaway, Agnes Baker
+2024-04-09;Shudde M'ell;Mittel;Niederlage;Jojo;Ursula Downs, Norman Withers, Diana Stanley, Wilson Richards
+2024-04-09;Shudde M'ell;Mittel;Niederlage;Nelson;Lily Chen, Lola Hayes, George Barnaby
+2024-04-09;Shudde M'ell;Mittel;Niederlage;Sven;Ashcan Pete, Akachi Onyele
+2024-04-09;Shudde M'ell;Mittel;Niederlage;Volker;Finn Edwards, Lola Hayes, Daisy Walker
+
+2024-05-06;Ithaqua;Mittel;Niederlage;Alex;Tommy Muldoon, Ursula Downs
+2024-05-06;Ithaqua;Mittel;Niederlage;Daniel;Diana Stanley
+2024-05-06;Ithaqua;Mittel;Niederlage;Sascha;Daisy Walker, Mark Harrigan
+2024-05-06;Ithaqua;Mittel;Niederlage;Sven;Patrice Hathaway, Finn Edwards
+2024-05-06;Ithaqua;Mittel;Niederlage;Tom;Silas Marsh, Trish Scarborough
+
+2024-05-07;Shudde M'ell;Mittel;0;Alex;Norman Withers
+2024-05-07;Shudde M'ell;Mittel;0;Daniel;Roland Banks, Finn Edwards
+2024-05-07;Shudde M'ell;Mittel;0;Sven;George Barnaby, Jim Culver, Jacqueline Fine
+2024-05-07;Shudde M'ell;Mittel;0;Tom;Rita Young, Lola Hayes
+
+2024-05-11;Ithaqua;Mittel;4;Alex;Wilson Richards
+2024-05-11;Ithaqua;Mittel;4;Benni;Lola Hayes, Tommy Muldoon, Ashcan Pete
+2024-05-11;Ithaqua;Mittel;4;Nelson;Daisy Walker, Bob Jenkins
+2024-05-11;Ithaqua;Mittel;4;Sven;Trish Scarborough, Jacqueline Fine
+
+2024-05-27;Nephren-Ka;Mittel;3;Alex;Harvey Walters, Joe Diamond
+2024-05-27;Nephren-Ka;Mittel;3;Daniel;Hank Samson, Mandy Thompson
+2024-05-27;Nephren-Ka;Mittel;3;Nelson;Rex Murphy
+2024-05-27;Nephren-Ka;Mittel;3;Sven;Schwester Mary, Minh Thi Phan
+
+2024-06-10;Abhoth;Mittel;-1;Alex;Akachi Onyele
+2024-06-10;Abhoth;Mittel;-1;Benni;Roland Banks, Trish Scarborough
+2024-06-10;Abhoth;Mittel;-1;Nelson;Leo Anderson
+2024-06-10;Abhoth;Mittel;-1;Sven;Hank Samson
+
+2024-06-23;Shub-Niggurath;Mittel;1;Alex;Rex Murphy
+2024-06-23;Shub-Niggurath;Mittel;1;Daniel;Leo Anderson
+2024-06-23;Shub-Niggurath;Mittel;1;Nelson;Finn Edwards
+2024-06-23;Shub-Niggurath;Mittel;1;Volker;Trish Scarborough, Roland Banks
+
+2024-07-08;Abhoth;Mittel;Niederlage;Alex;Wilson Richards
+2024-07-08;Abhoth;Mittel;Niederlage;Daniel;Charlie Kane
+2024-07-08;Abhoth;Mittel;Niederlage;Nelson;Harvey Walters, Mandy Thompson
+2024-07-08;Abhoth;Mittel;Niederlage;Sascha;Lily Chen, Monterey Jack
+2024-07-08;Abhoth;Mittel;Niederlage;Sven;Daisy Walker
+2024-07-08;Abhoth;Mittel;Niederlage;Tom;Patrice Hathaway, Ursula Downs
+
+2024-07-22;Cthulhu;Mittel;12;Alex;Finn Edwards, Mandy Thompson
+2024-07-22;Cthulhu;Mittel;12;Daniel;Monterey Jack
+2024-07-22;Cthulhu;Mittel;12;Nelson;Bob Jenkins
+2024-07-22;Cthulhu;Mittel;12;Sven;Jim Culver
+
+2024-07-29;Die Vorsintflutlichen;Mittel;16;Alex;Daniela Reyes
+2024-07-29;Die Vorsintflutlichen;Mittel;16;Benni;Pater Mateo
+2024-07-29;Die Vorsintflutlichen;Mittel;16;Nelson;Agatha Crane
+2024-07-29;Die Vorsintflutflutlichen;Mittel;16;Sascha;Calvin Wright
+2024-07-29;Die Vorsintflutflutlichen;Mittel;16;Sven;Carson Sinclair
+2024-07-29;Die Vorsintflutflutlichen;Mittel;16;Tom;Preston Fairmont
+
+2024-08-05;Invasion der Älteren Wesen;Mittel;13;Daniel;Lily Chen, George Barnaby, Rex Murphy
+2024-08-05;Invasion der Älteren Wesen;Mittel;13;Frowin;Pater Mateo
+2024-08-05;Invasion der Älteren Wesen;Mittel;13;Sven;Rita Young
+
+2024-09-02;Abhoth;Mittel;4;Alex;Jacqueline Fine
+2024-09-02;Abhoth;Mittel;4;Benni;Tommy Muldoon, Leo Anderson
+2024-09-02;Abhoth;Mittel;4;Daniel;Silas Marsh
+2024-09-02;Abhoth;Mittel;4;Nelson;Agatha Crane
+2024-09-02;Abhoth;Mittel;4;Sven;Rex Murphy
+
+2024-10-12;Yog-Sothoth;Mittel;9;Anja;Norman Withers
+2024-10-12;Yog-Sothoth;Mittel;9;Alex;Roland Banks, Harvey Walters
+2024-10-12;Yog-Sothoth;Mittel;9;Maike;Monterey Jack
+2024-10-12;Yog-Sothoth;Mittel;9;Nelson;Lily Chen
+
+2024-10-14;Die Vorsintflutlichen;Mittel;4;Alex;Finn Edwards, Agatha Crane
+2024-10-14;Die Vorsintflutlichen;Mittel;4;Daniel;Agnes Baker, Harvey Walters
+2024-10-14;Die Vorsintflutlichen;Mittel;4;Nelson;Jacqueline Fine, Rex Murphy
+2024-10-14;Die Vorsintflutlichen;Mittel;4;Sven;Wilson Richards
+
+2024-10-14;Nephren-Ka;Mittel;-1;Alex;Sefina Rousseau
+2024-10-14;Nephren-Ka;Mittel;-1;Daniel;Carson Sinclair, Norwin
+2024-10-14;Nephren-Ka;Mittel;-1;Nelson;Trish Scarborough
+2024-10-14;Nephren-Ka;Mittel;-1;Sven;Monterey Jack, Roland Banks
