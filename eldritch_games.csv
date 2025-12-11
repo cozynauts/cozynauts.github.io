@@ -111,9 +111,9 @@ Date;AncientOne;Difficulty;Result;Player;Investigators
 2024-07-29;Die Vorsintflutlichen;Mittel;16;Alex;Daniela Reyes
 2024-07-29;Die Vorsintflutlichen;Mittel;16;Benni;Pater Mateo
 2024-07-29;Die Vorsintflutlichen;Mittel;16;Nelson;Agatha Crane
-2024-07-29;Die Vorsintflutflutlichen;Mittel;16;Sascha;Calvin Wright
-2024-07-29;Die Vorsintflutflutlichen;Mittel;16;Sven;Carson Sinclair
-2024-07-29;Die Vorsintflutflutlichen;Mittel;16;Tom;Preston Fairmont
+2024-07-29;Die Vorsintflutlichen;Mittel;16;Sascha;Calvin Wright
+2024-07-29;Die Vorsintflutlichen;Mittel;16;Sven;Carson Sinclair
+2024-07-29;Die Vorsintflutlichen;Mittel;16;Tom;Preston Fairmont
 
 2024-08-05;Invasion der Älteren Wesen;Mittel;13;Daniel;Lily Chen, George Barnaby, Rex Murphy
 2024-08-05;Invasion der Älteren Wesen;Mittel;13;Frowin;Pater Mateo
@@ -139,3 +139,134 @@ Date;AncientOne;Difficulty;Result;Player;Investigators
 2024-10-14;Nephren-Ka;Mittel;-1;Daniel;Carson Sinclair, Norwin
 2024-10-14;Nephren-Ka;Mittel;-1;Nelson;Trish Scarborough
 2024-10-14;Nephren-Ka;Mittel;-1;Sven;Monterey Jack, Roland Banks
+
+2024-11-04;Syzygie;Normal;Niederlage;Daniel;Zoey Samaras, Akachi Onyele
+2024-11-04;Syzygie;Normal;Niederlage;Sascha;Tony Morgan
+2024-11-04;Syzygie;Normal;Niederlage;Alex;Marie Lambeau
+2024-11-04;Syzygie;Normal;Niederlage;Nelson;"Skids" O'Toole, Sefina Rousseau, Monterey Jack, Agnes Baker
+
+2024-11-16;Abhoth;Mittel;1;Alex;Roland Banks
+2024-11-16;Abhoth;Mittel;1;Daniel;Monterey Jack
+2024-11-16;Abhoth;Mittel;1;Nelson;Agatha Crane
+2024-11-16;Abhoth;Mittel;1;Sascha;Tommy Muldoon
+2024-11-16;Abhoth;Mittel;1;Sven;Marie Lambeau
+2024-11-16;Abhoth;Mittel;1;Tom;Sefina Rousseau
+
+2024-11-16;Syzygie;Mittel;5;Alex;Roland Banks
+2024-11-16;Syzygie;Mittel;5;Daniel;Monterey Jack
+2024-11-16;Syzygie;Mittel;5;Nelson;Agatha Crane
+2024-11-16;Syzygie;Mittel;5;Sascha;Tommy Muldoon
+2024-11-16;Syzygie;Mittel;5;Sven;Marie Lambeau
+2024-11-16;Syzygie;Mittel;5;Tom;Sefina Rousseau
+
+2024-11-16;Ithaqua;Mittel;Niederlage;Alex;Roland Banks
+2024-11-16;Ithaqua;Mittel;Niederlage;Daniel;Monterey Jack
+2024-11-16;Ithaqua;Mittel;Niederlage;Nelson;Agatha Crane
+2024-11-16;Ithaqua;Mittel;Niederlage;Sascha;Tommy Muldoon
+2024-11-16;Ithaqua;Mittel;Niederlage;Sven;Marie Lambeau
+2024-11-16;Ithaqua;Mittel;Niederlage;Tom;Patrice Hathaway
+
+2024-11-16;Cthulhu;Mittel;11;Alex;Daniela Reyes
+2024-11-16;Cthulhu;Mittel;11;Daniel;Silas Marsh
+2024-11-16;Cthulhu;Mittel;11;Nelson;Jacqueline Fine
+2024-11-16;Cthulhu;Mittel;11;Sascha;Hank Samson
+2024-11-16;Cthulhu;Mittel;11;Sven;Mark Harrigan
+2024-11-16;Cthulhu;Mittel;11;Tom;Agatha Crane
+
+2024-11-17;Die Vorsintflutlichen;Mittel;-6;Alex;Daniela Reyes
+2024-11-17;Die Vorsintflutlichen;Mittel;-6;Daniel;Silas Marsh
+2024-11-17;Die Vorsintflutlichen;Mittel;-6;Nelson;Jacqueline Fine
+2024-11-17;Die Vorsintflutlichen;Mittel;-6;Sascha;Hank Samson
+2024-11-17;Die Vorsintflutlichen;Mittel;-6;Sven;Mark Harrigan
+2024-11-17;Die Vorsintflutlichen;Mittel;-6;Tom;Agatha Crane
+
+2024-11-17;Nephren-Ka;Mittel;12;Alex;Daniela Reyes
+2024-11-17;Nephren-Ka;Mittel;12;Daniel;Pater Mateo
+2024-11-17;Nephren-Ka;Mittel;12;Nelson;Jacqueline Fine
+2024-11-17;Nephren-Ka;Mittel;12;Sascha;Hank Samson
+2024-11-17;Nephren-Ka;Mittel;12;Sven;Rex Murphy
+2024-11-17;Nephren-Ka;Mittel;12;Tom;Agatha Crane
+
+2024-11-17;Shudde M'ell;Mittel;-1;Alex;Daniela Reyes
+2024-11-17;Shudde M'ell;Mittel;-1;Daniel;Minh Thi Phan
+2024-11-17;Shudde M'ell;Mittel;-1;Nelson;Jacqueline Fine
+2024-11-17;Shudde M'ell;Mittel;-1;Sascha;Hank Samson
+2024-11-17;Shudde M'ell;Mittel;-1;Sven;Rex Murphy
+2024-11-17;Shudde M'ell;Mittel;-1;Tom;Agatha Crane
+
+2024-12-09;Yog-Sothoth;Mittel;-11;Daniel;Norwin, Wilson Richards
+2024-12-09;Yog-Sothoth;Mittel;-11;Nelson;Pater Mateo
+2024-12-09;Yog-Sothoth;Mittel;-11;Sascha;Schwester Mary
+2024-12-09;Yog-Sothoth;Mittel;-11;Sven;Calvin Wright
+
+2024-12-27;Die Vorsintflutlichen;Mittel;4;Alex;Calvin Wright, Lily Chen
+2024-12-27;Die Vorsintflutlichen;Mittel;4;Daniel;Daniel Gemander, Finn Edwards
+2024-12-27;Die Vorsintflutlichen;Mittel;4;Jojo;Mark Harrigan, Pater Mateo
+2024-12-27;Die Vorsintflutlichen;Mittel;4;Nelson;Minh Thi Phan, Patrice Hathaway
+2024-12-27;Die Vorsintflutlichen;Mittel;4;Sascha;Jacqueline Fine, Lola Hayes
+2024-12-27;Die Vorsintflutlichen;Mittel;4;Sven;Charlie Kane
+2024-12-27;Die Vorsintflutlichen;Mittel;4;Tom;Preston Fairmont
+2024-12-27;Die Vorsintflutlichen;Mittel;4;Volker;Bob Jenkins
+
+2024-12-29;Yog-Sothoth;Mittel;17;Frowin;Sefina Rousseau, Zoey Samaras, "Skids" O'Toole, Tony Morgan
+2024-12-29;Yog-Sothoth;Mittel;17;Volker;Rex Murphy, Preston Fairmont
+2024-12-29;Yog-Sothoth;Mittel;17;Daniel;Ashcan Pete, Trish Scarborough
+
+2025-01-05;Azathoth;Mittel;-5;Frowin;Norman Withers
+2025-01-05;Azathoth;Mittel;-5;Volker;Jacqueline Fine, Trish Scarborough
+
+2025-01-06;Shudde M'ell;Mittel;-3;Daniel;Minh Thi Phan
+2025-01-06;Shudde M'ell;Mittel;-3;Nelson;Agatha Crane, Marie Lambeau
+2025-01-06;Shudde M'ell;Mittel;-3;Sascha;Schwester Mary
+2025-01-06;Shudde M'ell;Mittel;-3;Sven;Lily Chen
+
+2025-01-06;Azathoth;Mittel;-9;Daniel;Tony Morgan
+2025-01-06;Azathoth;Mittel;-9;Nelson;Agnes Baker
+2025-01-06;Azathoth;Mittel;-9;Sascha;Norwin
+2025-01-06;Azathoth;Mittel;-9;Sven;Zoey Samaras
+
+2025-02-17;Hypnos;Mittel;0;Alex;Luke Robinson
+2025-02-17;Hypnos;Mittel;0;Daniel;Carolyn Fern, Darrell Simmons
+2025-02-17;Hypnos;Mittel;0;Nelson;Vincent Lee
+2025-02-17;Hypnos;Mittel;0;Tom;Amanda Sharpe
+
+2025-03-29;Atlach-Nacha;Mittel;8;Alex;Kate Winthrop
+2025-03-29;Atlach-Nacha;Mittel;8;Daniel;Gloria Goldberg
+2025-03-29;Atlach-Nacha;Mittel;8;Nelson;William Yorick
+2025-03-29;Atlach-Nacha;Mittel;8;Sven;Amanda Sharpe
+
+2025-04-22;Nyarlathotep;Mittel;Niederlage;Alex;Agatha Crane
+2025-04-22;Nyarlathotep;Mittel;Niederlage;Daniel;Leo Anderson
+2025-04-22;Nyarlathotep;Mittel;Niederlage;Nelson;Gloria Goldberg
+2025-04-22;Nyarlathotep;Mittel;Niederlage;Sascha;Silas Marsh
+2025-04-22;Nyarlathotep;Mittel;Niederlage;Volker;Zoey Samaras
+
+2025-07-07;Hypnos;Mittel;Niederlage;Alex;Wendy Adams, Lily Chen
+2025-07-07;Hypnos;Mittel;Niederlage;Daniel;Charlie Kane
+2025-07-07;Hypnos;Mittel;Niederlage;Nelson;Harvey Walters
+2025-07-07;Hypnos;Mittel;Niederlage;Volker;Ashcan Pete
+
+2025-10-18;Die Vorsintflutlichen;Mittel;Niederlage;Volker;Carson Sinclair
+2025-10-18;Die Vorsintflutlichen;Mittel;Niederlage;Alex;Akachi Onyele
+2025-10-18;Die Vorsintflutlichen;Mittel;Niederlage;Daniel;Tommy Muldoon
+
+2025-10-18;Atlach-Nacha;Mittel;5;Alex;Wendy Adams, Carolyn Fern
+2025-10-18;Atlach-Nacha;Mittel;5;Daniel;Marie Lambeau, Jacqueline Fine
+2025-10-18;Atlach-Nacha;Mittel;5;Volker;Daniela Reyes, Ursula Downs
+
+2025-11-03;Shub-Niggurath;Mittel;-13;Alex;Calvin Wright
+2025-11-03;Shub-Niggurath;Mittel;-13;Daniel;Agnes Baker
+2025-11-03;Shub-Niggurath;Mittel;-13;Nelson;Mandy Thompson
+2025-11-03;Shub-Niggurath;Mittel;-13;Sascha;Finn Edwards
+2025-11-03;Shub-Niggurath;Mittel;-13;Sven;Ursula Downs
+2025-11-03;Shub-Niggurath;Mittel;-13;Tom;Tony Morgan
+
+2025-11-15;Hastur;Mittel;Niederlage;Alex;Leo Anderson
+2025-11-15;Hastur;Mittel;Niederlage;Daniel;Tommy Muldoon, Ashcan Pete, "Skids" O'Toole, Monterey Jack, Rex Murphy
+2025-11-15;Hastur;Mittel;Niederlage;Nelson;Jenny Barnes, Mark Harrigan
+
+2025-12-01;Shudde M'ell;Mittel;6;Alex;Lola Hayes
+2025-12-01;Shudde M'ell;Mittel;6;Daniel;Rita Young
+2025-12-01;Shudde M'ell;Mittel;6;Nelson;Trish Scarborough, Wendy Adams
+2025-12-01;Shudde M'ell;Mittel;6;Sascha;Hank Samson
+2025-12-01;Shudde M'ell;Mittel;6;Sven;Tommy Muldoon, Vincent Lee
