@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Eldritch Horror – Gegnerstatistiken</title>
+  <style>
+    :root {
+      --bg: #050510;
+      --panel: #141426;
+      --panel-soft: #1d1d35;
+      --accent: #bfaeff;
+      --accent-strong: #f5a623;
+      --text: #f5f5ff;
+      --muted: #a0a0c0;
+      --border-soft: rgba(255,255,255,0.08);
+    }
+
+    /* Hover-Cursor für "Meist besiegt von" */
+    td.fav-slayer {
+      cursor: help;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #16162e 0, #050510 55%, #020208 100%);
+      color: var(--text);
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background: rgba(10,10,25,0.98);
+      border-right: 1px solid var(--border-soft);
+      box-shadow: 4px 0 20px rgba(0,0,0,0.7);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sidebar-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .nav-item {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 7px 10px;
+      border-radius: 8px;
+      transition: 0.2s;
+      display: block;
+    }
+
+    .nav-item:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.09);
+    }
+
+    .nav-item.active {
+      color: var(--text);
+      background: linear-gradient(90deg, #5b4bff, #bfaeff);
+      box-shadow: 0 0 14px rgba(191,174,255,0.45);
+      font-weight: 600;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      padding: 24px 24px 32px;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: 1.6rem;
+      letter-spacing: 0.03em;
+    }
+
+    .subtitle {
+      margin-bottom: 24px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .card-wide {
+      background: radial-gradient(circle at top left, #27274a 0, var(--panel) 40%, #0b0b18 100%);
+      border-radius: 16px;
+      padding: 14px 14px 12px;
+      box-shadow:
+        0 18px 40px rgba(0,0,0,0.65),
+        0 0 0 1px rgba(255,255,255,0.03);
+      border: 1px solid var(--border-soft);
+      margin-bottom: 22px;
+      width: 100%;
+    }
+
+    /* Obere Box: max. 400px breit */
+    .card-general {
+      max-width: 400px;
+    }
+
+    /* Untere Box: max. 1100px breit */
+    .card-ancients {
+      max-width: 1200px;
+    }
+
+    .card-wide h2 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-wide h2 .emoji {
+      font-size: 1.1rem;
+    }
+
+    .card-wide small {
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      margin-top: 4px;
+    }
+
+    thead {
+      background: rgba(255,255,255,0.04);
+    }
+
+    th, td {
+      padding: 4px 6px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      font-weight: 600;
+      font-size: 0.74rem;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      user-select: none;
+    }
+
+    tbody tr:nth-child(odd) {
+      background: rgba(255,255,255,0.02);
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(0,0,0,0.08);
+    }
+
+    tbody tr:first-child {
+      background: linear-gradient(90deg, rgba(255,215,0,0.18), rgba(0,0,0,0.05));
+    }
+
+    td.rank {
+      width: 1%;
+      text-align: right;
+      padding-right: 6px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    td.name {
+      font-weight: 600;
+    }
+
+    td.num {
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    td.value-positive { color: #8be58b; }
+    td.value-neutral  { color: #ffd966; }
+    td.value-bad      { color: #ff8888; }
+
+    /* Sortierbare Header */
+    th.sortable {
+      cursor: pointer;
+      position: relative;
+      padding-right: 14px;
+    }
+
+    th.sortable::after {
+      content: "⇅";
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.65rem;
+      opacity: 0.5;
+    }
+
+    th.sortable.sorted-asc::after {
+      content: "▲";
+      opacity: 0.85;
+    }
+
+    th.sortable.sorted-desc::after {
+      content: "▼";
+      opacity: 0.85;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 800px) {
+      .layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .main {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">Eldritch Horror</div>
+      <nav class="nav">
+        <a href="EldritchHorrorStatistik.html" class="nav-item">Startseite</a>
+        <a href="player_stats.html" class="nav-item">Spielerstatistik</a>
+        <a href="character_stats.html" class="nav-item">Charakterstatistik</a>
+        <a href="ancient_stats.html" class="nav-item">Gegnerstatistik</a>
+        <a href="ranking.html" class="nav-item">Rangliste</a>
+        <a href="history.html" class="nav-item">Historie</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <h1>Gegnerstatistiken</h1>
+      <div class="subtitle">
+        Basis: <code>eldritch_games.csv</code> – jede Zeile = 1 Spieler in 1 Partie.<br>
+        Hier werden Partien pro Großen Alten zusammengefasst (ein Spiel = alle Spieler an einem Abend gegen denselben Gegner).
+      </div>
+
+      <!-- Allgemein-Block -->
+      <section class="card-wide card-general">
+        <h2><span class="emoji">📊</span> Allgemein</h2>
+        <small>Über alle Spiele gegen alle Großen Alten</small>
+        <table>
+          <thead>
+            <tr>
+              <th>Statistik</th>
+              <th>Anzahl</th>
+              <th>Quote</th>
+            </tr>
+          </thead>
+          <tbody id="ancient-general-body"></tbody>
+        </table>
+      </section>
+
+      <!-- Gegner-Tabelle -->
+      <section class="card-wide card-ancients">
+        <h2><span class="emoji">👁️</span> Übersicht der Großen Alten</h2>
+        <small>Klick auf eine Spaltenüberschrift, um zu sortieren.</small>
+        <table id="ancient-table">
+          <thead>
+            <tr>
+              <th>Platz</th>
+              <th class="sortable" data-key="ancient" data-type="string">Gegner</th>
+              <th class="sortable" data-key="games" data-type="number">Spiele</th>
+              <th class="sortable" data-key="wins" data-type="number">Siege</th>
+              <th class="sortable" data-key="losses" data-type="number">Niederlagen</th>
+              <th class="sortable" data-key="winRate" data-type="number">Siegquote</th>
+              <th class="sortable" data-key="maxWins" data-type="number">Meist besiegt von</th>
+              <th class="sortable" data-key="avgScore" data-type="number">Ø Punkte (Siege)</th>
+              <th class="sortable" data-key="bestScore" data-type="number">Bester Sieg</th>
+              <th class="sortable" data-key="worstScore" data-type="number">Schlechtester Sieg</th>
+              <th class="sortable" data-key="avgPlayers" data-type="number">Ø Spieler/Partie</th>
+            </tr>
+          </thead>
+          <tbody id="ancient-table-body"></tbody>
+        </table>
+      </section>
+
+      <div class="footer-note">
+        Auswertung pro Spiel: Alle Zeilen mit demselben <code>Date</code> und <code>AncientOne</code> werden als eine Partie gezählt.
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function formatPercent(value) {
+      if (!isFinite(value) || isNaN(value)) return "0,00%";
+      return (value * 100).toFixed(2).replace(".", ",") + "%";
+    }
+
+    function formatNumber(value, digits = 2) {
+      if (!isFinite(value) || isNaN(value)) return "0";
+      return Number(value).toFixed(digits).replace(".", ",");
+    }
+
+    let ancientData = [];
+    let currentSortKey = "games";
+    let currentSortDir = "desc";
+    const stringKeys = new Set(["ancient"]);
+
+    async function loadAndRenderAncientStats() {
+      const response = await fetch("eldritch_games.csv");
+      if (!response.ok) {
+        console.error("Konnte eldritch_games.csv nicht laden", response.status);
+        return;
+      }
+      const text = await response.text();
+      const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+      if (lines.length <= 1) return;
+
+      const header = lines[0].split(";").map(h => h.trim());
+      const rawRows = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        const parts = line.split(";");
+        if (parts.length < header.length) continue;
+
+        const row = {};
+        header.forEach((h, idx) => {
+          row[h] = (parts[idx] ?? "").trim();
+        });
+        rawRows.push(row);
+      }
+
+      // 1) Spiele pro (Datum + AncientOne) zusammenfassen
+      const gamesMap = new Map();
+
+      for (const row of rawRows) {
+        const date = row["Date"] || row["Datum"] || "";
+        const ao = row["AncientOne"] || row["Ancient"] || "";
+        if (!date || !ao) continue;
+
+        const key = date + " | " + ao;
+        if (!gamesMap.has(key)) {
+          gamesMap.set(key, {
+            date,
+            ancient: ao,
+            difficulty: row["Difficulty"] || "",
+            resultRaw: row["Result"] || "",
+            numericResult: null,
+            players: new Set()
+          });
+        }
+        const g = gamesMap.get(key);
+
+        const res = (row["Result"] || "").trim();
+        g.resultRaw = res;
+
+        // numerische Punkte nur bei Siegen
+        if (res !== "Niederlage") {
+          const num = parseFloat(res.replace(",", "."));
+          if (!isNaN(num)) {
+            g.numericResult = num;
+          }
+        }
+
+        const playerName = row["Player"] || row["Spieler"] || "Unbekannt";
+        g.players.add(playerName);
+      }
+
+      // 2) Pro Ancient aggregieren
+      const ancients = {};
+
+      gamesMap.forEach(game => {
+        const name = game.ancient;
+        if (!ancients[name]) {
+          ancients[name] = {
+            ancient: name,
+            games: 0,
+            wins: 0,
+            losses: 0,
+            scoreSum: 0,
+            scoreGames: 0,
+            bestScore: null,
+            worstScore: null,
+            playersSum: 0,
+            playerStats: {}   // NEU: pro Gegner Spieler-Stats
+          };
+        }
+        const a = ancients[name];
+
+        a.games += 1;
+        const playerCount = game.players.size || 1;
+        a.playersSum += playerCount;
+
+        // Alle Spieler haben ein "Game" gegen diesen Gegner
+        game.players.forEach(playerName => {
+          if (!a.playerStats[playerName]) {
+            a.playerStats[playerName] = { games: 0, wins: 0 };
+          }
+          a.playerStats[playerName].games += 1;
+        });
+
+        if (game.resultRaw === "Niederlage") {
+          a.losses += 1;
+        } else {
+          a.wins += 1;
+
+          // Sieg: alle beteiligten Spieler bekommen einen Win gegen diesen Gegner
+          game.players.forEach(playerName => {
+            a.playerStats[playerName].wins += 1;
+          });
+
+          if (typeof game.numericResult === "number") {
+            const pts = game.numericResult;
+            a.scoreSum += pts;
+            a.scoreGames += 1;
+
+            if (a.bestScore === null || pts < a.bestScore) {
+              a.bestScore = pts;
+            }
+            if (a.worstScore === null || pts > a.worstScore) {
+              a.worstScore = pts;
+            }
+          }
+        }
+      });
+
+      // 3) Kennzahlen + "Meist besiegt von" bestimmen
+      ancientData = Object.values(ancients).map(a => {
+        const games = a.games || 1;
+        const winRate = a.wins / games;
+        const avgScore = a.scoreGames ? a.scoreSum / a.scoreGames : NaN;
+        const avgPlayers = a.playersSum / games;
+
+        // maxWins & Top-Bezwinger-Liste
+        let maxWins = 0;
+        const topVictors = [];
+        const entries = Object.entries(a.playerStats || {}); // [name, {games,wins}]
+
+        entries.forEach(([name, stats]) => {
+          if (stats.wins > maxWins) {
+            maxWins = stats.wins;
+          }
+        });
+
+        if (maxWins > 0) {
+          entries.forEach(([name, stats]) => {
+            if (stats.wins === maxWins) {
+              topVictors.push({
+                name,
+                wins: stats.wins,
+                games: stats.games
+              });
+            }
+          });
+
+          topVictors.sort((aV, bV) => {
+            if (bV.wins !== aV.wins) return bV.wins - aV.wins;
+            if (bV.games !== aV.games) return bV.games - aV.games;
+            return aV.name.localeCompare(bV.name, "de", { sensitivity: "base" });
+          });
+        }
+
+        return {
+          ...a,
+          winRate,
+          avgScore,
+          avgPlayers,
+          maxWins,
+          topVictors,
+          playerStats: a.playerStats
+        };
+      });
+
+      renderAncientGeneral(ancientData);
+      renderAncientTable();
+      setupSorting();
+    }
+
+    function renderAncientGeneral(data) {
+      const tbody = document.getElementById("ancient-general-body");
+      tbody.innerHTML = "";
+
+      const totalAncients = data.length;
+      const totalGames = data.reduce((sum, a) => sum + a.games, 0);
+      const totalWins = data.reduce((sum, a) => sum + a.wins, 0);
+      const totalLosses = data.reduce((sum, a) => sum + a.losses, 0);
+
+      const overallWinRate = totalGames ? totalWins / totalGames : 0;
+
+      const rows = [
+        { label: "Verschiedene Gegner", value: totalAncients, quote: "" },
+        { label: "Spiele gesamt", value: totalGames, quote: "" },
+        { label: "Siege gesamt", value: totalWins, quote: totalGames ? formatPercent(overallWinRate) : "" },
+        { label: "Niederlagen gesamt", value: totalLosses, quote: totalGames ? formatPercent(totalLosses / totalGames) : "" }
+      ];
+
+      rows.forEach(r => {
+        const tr = document.createElement("tr");
+
+        const tdLabel = document.createElement("td");
+        tdLabel.textContent = r.label;
+        tr.appendChild(tdLabel);
+
+        const tdVal = document.createElement("td");
+        tdVal.className = "num";
+        tdVal.textContent = r.value;
+        tr.appendChild(tdVal);
+
+        const tdQuote = document.createElement("td");
+        tdQuote.className = "num";
+        tdQuote.textContent = r.quote;
+        tr.appendChild(tdQuote);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderAncientTable() {
+      const tbody = document.getElementById("ancient-table-body");
+      tbody.innerHTML = "";
+
+      const sorted = ancientData.slice().sort((a, b) => {
+        const key = currentSortKey;
+        let av = a[key];
+        let bv = b[key];
+
+        if (stringKeys.has(key)) {
+          av = (av || "").toString().toLowerCase();
+          bv = (bv || "").toString().toLowerCase();
+          if (av < bv) return currentSortDir === "asc" ? -1 : 1;
+          if (av > bv) return currentSortDir === "asc" ? 1 : -1;
+          return 0;
+        } else {
+          av = Number(av);
+          bv = Number(bv);
+          if (av < bv) return currentSortDir === "asc" ? -1 : 1;
+          if (av > bv) return currentSortDir === "asc" ? 1 : -1;
+          const an = a.ancient.toLowerCase();
+          const bn = b.ancient.toLowerCase();
+          if (an < bn) return -1;
+          if (an > bn) return 1;
+          return 0;
+        }
+      });
+
+      sorted.forEach((a, idx) => {
+        const tr = document.createElement("tr");
+
+        const tdRank = document.createElement("td");
+        tdRank.className = "rank";
+        tdRank.textContent = idx + 1;
+        tr.appendChild(tdRank);
+
+        const tdName = document.createElement("td");
+        tdName.className = "name";
+        tdName.textContent = a.ancient;
+        tr.appendChild(tdName);
+
+        const tdGames = document.createElement("td");
+        tdGames.className = "num";
+        tdGames.textContent = a.games;
+        tr.appendChild(tdGames);
+
+        const tdWins = document.createElement("td");
+        tdWins.className = "num";
+        tdWins.textContent = a.wins;
+        tr.appendChild(tdWins);
+
+        const tdLosses = document.createElement("td");
+        tdLosses.className = "num";
+        tdLosses.textContent = a.losses;
+        tr.appendChild(tdLosses);
+
+const tdWinRate = document.createElement("td");
+const rate = a.winRate;
+
+// <= 25%  -> rot
+// >= 75%  -> grün
+// sonst   -> gelb
+let winClass;
+if (rate <= 0.25) {
+  winClass = "value-bad";
+} else if (rate >= 0.90) {
+  winClass = "value-positive";
+} else {
+  winClass = "value-neutral";
+}
+
+tdWinRate.className = "num " + winClass;
+tdWinRate.textContent = formatPercent(rate);
+tr.appendChild(tdWinRate);
+
+
+        // Meist besiegt von (+ Tooltip)
+        const tdSlayer = document.createElement("td");
+        tdSlayer.className = "num fav-slayer";
+
+        if (a.maxWins > 0 && a.topVictors && a.topVictors.length) {
+          const names = a.topVictors.map(v => v.name).join(", ");
+          tdSlayer.textContent = `${names} (${a.maxWins})`;
+        } else {
+          tdSlayer.textContent = "-";
+        }
+
+        // Tooltip: ALLE Spieler, auch mit 0 Siegen
+        const statsEntries = Object.entries(a.playerStats || {});
+        if (statsEntries.length) {
+          const tooltipLines = statsEntries
+            .sort(([n1, s1], [n2, s2]) => {
+              if (s2.wins !== s1.wins) return s2.wins - s1.wins;      // Wins desc
+              if (s2.games !== s1.games) return s2.games - s1.games;  // Games desc
+              return n1.localeCompare(n2, "de", { sensitivity: "base" });
+            })
+            .map(([name, s]) => `${s.wins}× ${name} (${s.games})`);
+
+          tdSlayer.title = tooltipLines.join("\n");
+        }
+
+        tr.appendChild(tdSlayer);
+
+        const tdAvgScore = document.createElement("td");
+        tdAvgScore.className = "num";
+        tdAvgScore.textContent = isNaN(a.avgScore) ? "-" : formatNumber(a.avgScore, 2);
+        tr.appendChild(tdAvgScore);
+
+        const tdBest = document.createElement("td");
+        tdBest.className = "num";
+        tdBest.textContent = (a.bestScore === null) ? "-" : formatNumber(a.bestScore, 2);
+        tr.appendChild(tdBest);
+
+        const tdWorst = document.createElement("td");
+        tdWorst.className = "num";
+        tdWorst.textContent = (a.worstScore === null) ? "-" : formatNumber(a.worstScore, 2);
+        tr.appendChild(tdWorst);
+
+        const tdPlayers = document.createElement("td");
+        tdPlayers.className = "num";
+        tdPlayers.textContent = formatNumber(a.avgPlayers, 2);
+        tr.appendChild(tdPlayers);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function setupSorting() {
+      const headers = document.querySelectorAll("th.sortable");
+      headers.forEach(th => {
+        th.addEventListener("click", () => {
+          const key = th.dataset.key;
+          if (!key) return;
+
+          if (currentSortKey === key) {
+            currentSortDir = currentSortDir === "asc" ? "desc" : "asc";
+          } else {
+            currentSortKey = key;
+            currentSortDir = stringKeys.has(key) ? "asc" : "desc";
+          }
+
+          headers.forEach(h => h.classList.remove("sorted-asc", "sorted-desc"));
+          th.classList.add(currentSortDir === "asc" ? "sorted-asc" : "sorted-desc");
+
+          renderAncientTable();
+        });
+      });
+
+      headers.forEach(h => {
+        if (h.dataset.key === currentSortKey) {
+          h.classList.add("sorted-desc");
+        }
+      });
+    }
+
+    // Navi-Highlight
+    (function highlightNav() {
+      const currentPage = window.location.pathname.split("/").pop() || "ancient_stats.html";
+      document.querySelectorAll(".nav-item").forEach(link => {
+        const href = link.getAttribute("href");
+        if (href === currentPage) {
+          link.classList.add("active");
+        }
+      });
+    })();
+
+    loadAndRenderAncientStats().catch(err => console.error(err));
+  </script>
+</body>
+</html>
