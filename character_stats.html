@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Eldritch Horror – Charakterstatistiken</title>
+  <style>
+    :root {
+      --bg: #050510;
+      --panel: #141426;
+      --panel-soft: #1d1d35;
+      --accent: #bfaeff;
+      --accent-strong: #f5a623;
+      --text: #f5f5ff;
+      --muted: #a0a0c0;
+      --border-soft: rgba(255,255,255,0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #16162e 0, #050510 55%, #020208 100%);
+      color: var(--text);
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    td.fav-player {
+  cursor: help;          /* sieht nach „hier steckt Info drin“ aus */
+}
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background: rgba(10,10,25,0.98);
+      border-right: 1px solid var(--border-soft);
+      box-shadow: 4px 0 20px rgba(0,0,0,0.7);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sidebar-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .nav-item {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 7px 10px;
+      border-radius: 8px;
+      transition: 0.2s;
+      display: block;
+    }
+
+    .nav-item:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.09);
+    }
+
+    .nav-item.active {
+      color: var(--text);
+      background: linear-gradient(90deg, #5b4bff, #bfaeff);
+      box-shadow: 0 0 14px rgba(191,174,255,0.45);
+      font-weight: 600;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      padding: 24px 24px 32px;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: 1.6rem;
+      letter-spacing: 0.03em;
+    }
+
+    .subtitle {
+      margin-bottom: 24px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    
+.card-wide {
+  background: radial-gradient(circle at top left, #27274a 0, var(--panel) 40%, #0b0b18 100%);
+  border-radius: 16px;
+  padding: 14px 14px 12px;
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.65),
+    0 0 0 1px rgba(255,255,255,0.03);
+  border: 1px solid var(--border-soft);
+  margin-bottom: 22px;
+  /* WICHTIG: nicht mehr zentrieren, einfach links stehen lassen */
+  width: 100%;
+}
+
+/* obere Box: max. 400px breit */
+.card-general {
+  max-width: 400px;
+}
+
+/* untere Box: max. 1100px breit */
+.card-investigators {
+  max-width: 1100px;
+}
+
+/* Tabellen passen sich dem jeweiligen Kasten an */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  margin-top: 4px;
+}
+
+#investigator-table {
+  width: 100%;
+}
+
+
+    thead {
+      background: rgba(255,255,255,0.04);
+    }
+
+    th, td {
+      padding: 4px 6px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      font-weight: 600;
+      font-size: 0.74rem;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      user-select: none;
+    }
+
+    tbody tr:nth-child(odd) {
+      background: rgba(255,255,255,0.02);
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(0,0,0,0.08);
+    }
+
+    tbody tr:first-child {
+      background: linear-gradient(90deg, rgba(255,215,0,0.18), rgba(0,0,0,0.05));
+    }
+
+    td.rank {
+      width: 1%;
+      text-align: right;
+      padding-right: 6px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    td.name {
+      font-weight: 600;
+    }
+
+    td.num {
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    td.value-positive { color: #8be58b; }
+    td.value-neutral  { color: #f5f5ff; }
+    td.value-bad      { color: #ff8888; }
+
+    /* Sortierbare Header */
+    th.sortable {
+      cursor: pointer;
+      position: relative;
+      padding-right: 14px;
+    }
+
+    th.sortable::after {
+      content: "⇅";
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.65rem;
+      opacity: 0.5;
+    }
+
+    th.sortable.sorted-asc::after {
+      content: "▲";
+      opacity: 0.85;
+    }
+
+    th.sortable.sorted-desc::after {
+      content: "▼";
+      opacity: 0.85;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 800px) {
+      .layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .main {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">Eldritch Horror</div>
+      <nav class="nav">
+        <a href="EldritchHorrorStatistik.html" class="nav-item">Startseite</a>
+        <a href="player_stats.html" class="nav-item">Spielerstatistik</a>
+        <a href="character_stats.html" class="nav-item">Charakterstatistik</a>
+        <a href="ancient_stats.html" class="nav-item">Gegnerstatistik</a>
+        <a href="ranking.html" class="nav-item">Rangliste</a>
+        <a href="history.html" class="nav-item">Historie</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <h1>Charakterstatistiken</h1>
+      <div class="subtitle">
+        Regeln: Solo-Sieg ⇒ unsterblich. Sieg mit mehreren Ermittlern ⇒ alle bis auf den letzten sterben. Niederlage ⇒ alle sterben.
+      </div>
+
+<!-- Allgemein-Block über der großen Tabelle -->
+<section class="card-wide card-general">
+  <h2><span class="emoji">📊</span> Allgemein</h2>
+  <small>Über alle Einsätze aller Ermittler</small>
+        <table>
+          <thead>
+            <tr>
+              <th>Statistik</th>
+              <th>Anzahl</th>
+              <th>Quote</th>
+            </tr>
+          </thead>
+          <tbody id="table-general-body"></tbody>
+        </table>
+      </section>
+
+<!-- Sortierbare Tabelle für alle Charaktere -->
+<section class="card-wide card-investigators">
+  <h2><span class="emoji">🧭</span> Ermittlerübersicht</h2>
+  <small>Klick auf eine Spaltenüberschrift, um zu sortieren.</small>
+  <table id="investigator-table">
+          <thead>
+            <tr>
+              <th>Platz</th>
+              <th class="sortable" data-key="name" data-type="string">Charakter</th>
+              <th class="sortable" data-key="games" data-type="number">Einsätze</th>
+              <th class="sortable" data-key="immortalRate" data-type="number">Unsterblichkeitsquote</th>
+              <th class="sortable" data-key="winRate" data-type="number">Siegesquote</th>
+              <th class="sortable" data-key="winDeathRate" data-type="number">Tod aber Sieg</th>
+              <th class="sortable" data-key="deathRate" data-type="number">allg. Todesquote</th>
+              <th class="sortable" data-key="lossRate" data-type="number">Niederlagenquote</th>
+              <th class="sortable" data-key="avgScore" data-type="number">Ø Punkte (Siege)</th>
+              <th class="sortable" data-key="favoritePlayer" data-type="string">Meist gespielt von</th>
+            </tr>
+          </thead>
+          <tbody id="investigator-table-body"></tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function formatPercent(value) {
+      if (!isFinite(value) || isNaN(value)) return "0,00%";
+      return (value * 100).toFixed(2).replace(".", ",") + "%";
+    }
+
+    function formatNumber(value, digits = 2) {
+      if (!isFinite(value) || isNaN(value)) return "0";
+      return Number(value).toFixed(digits).replace(".", ",");
+    }
+
+    let investigatorData = [];
+    let currentSortKey = "games";
+    let currentSortDir = "desc";
+
+    const stringKeys = new Set(["name", "favoritePlayer"]);
+
+    async function loadAndRenderCharacterStats() {
+      const response = await fetch("eldritch_games.csv");
+      if (!response.ok) {
+        console.error("Konnte eldritch_games.csv nicht laden", response.status);
+        return;
+      }
+      const text = await response.text();
+      const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+      if (lines.length <= 1) return;
+
+      const header = lines[0].split(";").map(h => h.trim());
+      const rows = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        const parts = line.split(";");
+        if (parts.length < header.length) continue;
+        const row = {};
+        header.forEach((h, idx) => {
+          row[h] = (parts[idx] ?? "").trim();
+        });
+        rows.push(row);
+      }
+
+      const gameKeys = new Set();
+      const investigators = {};
+
+      for (const row of rows) {
+        const date = row["Date"] || row["Datum"] || "";
+        const ao = row["AncientOne"] || row["Ancient"] || "";
+        const key = date + " | " + ao;
+        if (key.trim()) {
+          gameKeys.add(key);
+        }
+
+        const resultRaw = (row["Result"] || "").trim();
+        
+        const invRaw = (row["Investigators"] || "").trim();
+        const playerName = row["Player"] || row["Spieler"] || "Unbekannt";
+        if (!invRaw) continue;
+
+        const list = invRaw.split(",").map(s => s.trim()).filter(Boolean);
+        const n = list.length;
+        if (n === 0) continue;
+
+        const isLoss = (resultRaw === "Niederlage");
+
+        // numerische Punkte (nur Siege) ermitteln
+        let numericScore = parseFloat(resultRaw.replace(",", "."));
+        const hasScore = !isNaN(numericScore);
+
+        list.forEach((name, idx) => {
+          if (!investigators[name]) {
+            investigators[name] = {
+              name,
+              games: 0,
+              wins: 0,
+              immortalWins: 0,
+              deaths: 0,
+              winDeaths: 0,
+              losses: 0,
+              survived: 0,
+              points: [],
+              sumScore: 0,
+              scoreGames: 0,
+              playerCounts: {}
+            };
+          }
+          const s = investigators[name];
+          s.games += 1;
+
+          // wer spielt den Char?
+          s.playerCounts[playerName] = (s.playerCounts[playerName] || 0) + 1;
+
+          if (isLoss) {
+            s.losses += 1;
+            s.deaths += 1; // alle sterben
+          } else {
+            s.wins += 1;
+            const isSolo = (n === 1);
+            const isLast = (idx === n - 1);
+
+            if (isSolo) {
+              s.immortalWins += 1;
+              s.survived += 1;
+            } else {
+              if (isLast) {
+                s.survived += 1;
+              } else {
+                s.deaths += 1;
+                s.winDeaths += 1;
+              }
+            }
+
+            if (hasScore) {
+              s.sumScore += numericScore;
+              s.scoreGames += 1;
+            }
+          }
+        });
+      }
+
+      // Investigator-Kennzahlen berechnen
+      investigatorData = Object.values(investigators).map(s => {
+        const games = s.games || 1;
+        const winRate = s.wins / games;
+        const immortalRate = s.immortalWins / games;
+        const deathRate = s.deaths / games;
+        const lossRate = s.losses / games;
+        const winDeathRate = s.winDeaths / games;
+        const avgScore = s.scoreGames ? s.sumScore / s.scoreGames : 0;
+
+        let favoritePlayer = "";
+        let maxCount = 0;
+        for (const [p, c] of Object.entries(s.playerCounts)) {
+          if (c > maxCount) {
+            maxCount = c;
+            favoritePlayer = p;
+          }
+        }
+
+        return {
+          ...s,
+          winRate,
+          immortalRate,
+          deathRate,
+          lossRate,
+          winDeathRate,
+          avgScore,
+          favoritePlayer
+        };
+      });
+
+      renderGeneralBlock(gameKeys, investigatorData);
+      renderInvestigatorTable();
+      setupSorting();
+    }
+
+    function renderGeneralBlock(gameKeys, data) {
+      let totalGames = gameKeys.size;
+      let totalEinsaetze = 0;
+      let totalSurvived = 0;
+      let totalDeaths = 0;
+      let totalImmortal = 0;
+      let totalLossEntries = 0;
+
+      data.forEach(s => {
+        totalEinsaetze += s.games;
+        totalSurvived += s.survived;
+        totalDeaths += s.deaths;
+        totalImmortal += s.immortalWins;
+        totalLossEntries += s.losses;
+      });
+
+      const tbody = document.getElementById("table-general-body");
+      tbody.innerHTML = "";
+
+      const rows = [
+        { label: "Spiele",      value: totalGames,       quote: "" },
+        { label: "Einsätze",    value: totalEinsaetze,   quote: totalGames ? formatNumber(totalEinsaetze / totalGames, 2) + " pro Spiel" : "" },
+        { label: "Überlebt",    value: totalSurvived,    quote: totalEinsaetze ? formatPercent(totalSurvived / totalEinsaetze) : "" },
+        { label: "Gestorben",   value: totalDeaths,      quote: totalEinsaetze ? formatPercent(totalDeaths / totalEinsaetze) : "" },
+        { label: "Unsterblich", value: totalImmortal,    quote: totalEinsaetze ? formatPercent(totalImmortal / totalEinsaetze) : "" },
+        { label: "Niederlage",  value: totalLossEntries, quote: totalEinsaetze ? formatPercent(totalLossEntries / totalEinsaetze) : "" }
+      ];
+
+      rows.forEach(r => {
+        const tr = document.createElement("tr");
+
+        const tdLabel = document.createElement("td");
+        tdLabel.textContent = r.label;
+        tr.appendChild(tdLabel);
+
+        const tdVal = document.createElement("td");
+        tdVal.className = "num";
+        tdVal.textContent = r.value;
+        tr.appendChild(tdVal);
+
+        const tdQuote = document.createElement("td");
+        tdQuote.className = "num";
+        tdQuote.textContent = r.quote;
+        tr.appendChild(tdQuote);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderInvestigatorTable() {
+      const tbody = document.getElementById("investigator-table-body");
+      tbody.innerHTML = "";
+
+      const sorted = investigatorData.slice().sort((a, b) => {
+        const key = currentSortKey;
+        let av = a[key];
+        let bv = b[key];
+
+        if (stringKeys.has(key)) {
+          av = (av || "").toString().toLowerCase();
+          bv = (bv || "").toString().toLowerCase();
+          if (av < bv) return currentSortDir === "asc" ? -1 : 1;
+          if (av > bv) return currentSortDir === "asc" ? 1 : -1;
+          return 0;
+        } else {
+          av = Number(av);
+          bv = Number(bv);
+          if (av < bv) return currentSortDir === "asc" ? -1 : 1;
+          if (av > bv) return currentSortDir === "asc" ? 1 : -1;
+          const an = a.name.toLowerCase();
+          const bn = b.name.toLowerCase();
+          if (an < bn) return -1;
+          if (an > bn) return 1;
+          return 0;
+        }
+      });
+
+      sorted.forEach((s, idx) => {
+        const tr = document.createElement("tr");
+
+        const tdRank = document.createElement("td");
+        tdRank.className = "rank";
+        tdRank.textContent = idx + 1;
+        tr.appendChild(tdRank);
+
+        const tdName = document.createElement("td");
+        tdName.className = "name";
+        tdName.textContent = s.name;
+        tr.appendChild(tdName);
+
+        const tdGames = document.createElement("td");
+        tdGames.className = "num";
+        tdGames.textContent = s.games;
+        tr.appendChild(tdGames);
+
+        const tdImmortal = document.createElement("td");
+        tdImmortal.className = "num " + (s.immortalRate > 0 ? "value-positive" : "value-neutral");
+        tdImmortal.textContent = formatPercent(s.immortalRate);
+        tr.appendChild(tdImmortal);
+
+        const tdWinRate = document.createElement("td");
+        tdWinRate.className = "num " + (s.winRate >= 0.5 ? "value-positive" : "value-neutral");
+        tdWinRate.textContent = formatPercent(s.winRate);
+        tr.appendChild(tdWinRate);
+
+        const tdWinDeath = document.createElement("td");
+        tdWinDeath.className = "num " + (s.winDeathRate > 0 ? "value-bad" : "value-neutral");
+        tdWinDeath.textContent = formatPercent(s.winDeathRate);
+        tr.appendChild(tdWinDeath);
+
+        const tdDeathRate = document.createElement("td");
+        tdDeathRate.className = "num " + (s.deathRate > 0.5 ? "value-bad" : "value-neutral");
+        tdDeathRate.textContent = formatPercent(s.deathRate);
+        tr.appendChild(tdDeathRate);
+
+        const tdLossRate = document.createElement("td");
+        tdLossRate.className = "num " + (s.lossRate > 0 ? "value-bad" : "value-neutral");
+        tdLossRate.textContent = formatPercent(s.lossRate);
+        tr.appendChild(tdLossRate);
+
+        const tdAvgScore = document.createElement("td");
+        tdAvgScore.className = "num";
+        tdAvgScore.textContent = s.scoreGames ? formatNumber(s.avgScore, 2) : "-";
+        tr.appendChild(tdAvgScore);
+
+const tdFav = document.createElement("td");
+tdFav.className = "fav-player";
+
+if (s.favoritePlayer) {
+  tdFav.textContent = s.favoritePlayer;
+
+  if (s.playerCounts) {
+    const entries = Object.entries(s.playerCounts)
+      .sort((a, b) => {
+        // erst nach Häufigkeit (desc), dann alphabetisch
+        if (b[1] !== a[1]) return b[1] - a[1];
+        return a[0].localeCompare(b[0], "de", { sensitivity: "base" });
+      });
+
+    const tooltipLines = entries.map(([playerName, count]) => `${count}× ${playerName}`);
+    tdFav.title = tooltipLines.join("\n");
+  }
+} else {
+  tdFav.textContent = "-";
+}
+tr.appendChild(tdFav);
+
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function setupSorting() {
+      const headers = document.querySelectorAll("th.sortable");
+      headers.forEach(th => {
+        th.addEventListener("click", () => {
+          const key = th.dataset.key;
+          if (!key) return;
+
+          if (currentSortKey === key) {
+            currentSortDir = currentSortDir === "asc" ? "desc" : "asc";
+          } else {
+            currentSortKey = key;
+            currentSortDir = stringKeys.has(key) ? "asc" : "desc";
+          }
+
+          headers.forEach(h => h.classList.remove("sorted-asc", "sorted-desc"));
+          th.classList.add(currentSortDir === "asc" ? "sorted-asc" : "sorted-desc");
+
+          renderInvestigatorTable();
+        });
+      });
+
+      headers.forEach(h => {
+        if (h.dataset.key === currentSortKey) {
+          h.classList.add("sorted-desc");
+        }
+      });
+    }
+
+    (function highlightNav() {
+      const currentPage = window.location.pathname.split("/").pop() || "character_stats.html";
+      document.querySelectorAll(".nav-item").forEach(link => {
+        const href = link.getAttribute("href");
+        if (href === currentPage) {
+          link.classList.add("active");
+        }
+      });
+    })();
+
+    loadAndRenderCharacterStats().catch(err => console.error(err));
+  </script>
+</body>
+</html>
