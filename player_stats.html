@@ -100,7 +100,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 430px);   /* ★ exakt 2 Karten nebeneinander */
+  grid-template-columns: repeat(3, 430px);   /* ★ exakt 2 Karten nebeneinander */
   gap: 20px;
   justify-content: left;                   /* Grid wird links angebunden */
 }
@@ -260,76 +260,113 @@
     <main class="main">
       <h1>Aktuelle Statistiken</h1>
       <div class="subtitle">
-        Basis: <code>eldritch_games.csv</code> – jede Zeile = 1 Spieler in 1 Partie.<br>
         Sieg + nur ein Ermittler = <strong>Unsterblich</strong>. Sieg mit mehreren Ermittlern = alle bis auf den letzten sind gestorben. Niederlage = alle Ermittler gestorben.
       </div>
 
-      <div class="grid">
-        <div class="card" id="card-games">
-          <h2><span class="emoji">🎲</span> Spiele</h2>
-          <small>Top&nbsp;10 nach gespielten Partien</small>
-          <table>
-            <thead>
-              <tr>
-                <th style="width:1%">Platz</th>
-                <th>Name</th>
-                <th style="text-align:right">Anzahl</th>
-              </tr>
-            </thead>
-            <tbody id="table-games-body"></tbody>
-          </table>
-        </div>
+<div class="grid">
+  <!-- Zeile 1 -->
+  <div class="card" id="card-games">
+    <h2><span class="emoji">🎲</span> Spiele</h2>
+    <small>Top&nbsp;10 nach gespielten Partien</small>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:1%">Platz</th>
+          <th>Name</th>
+          <th style="text-align:right">Anzahl</th>
+        </tr>
+      </thead>
+      <tbody id="table-games-body"></tbody>
+    </table>
+  </div>
 
-        <div class="card" id="card-winrate">
-          <h2><span class="emoji">🏆</span> Siegesquoten</h2>
-          <small>Top&nbsp;10 nach Siegquote (min. 2 Spiele)</small>
-          <table>
-            <thead>
-              <tr>
-                <th style="width:1%">Platz</th>
-                <th>Name</th>
-                <th style="text-align:right">Quote</th>
-              </tr>
-            </thead>
-            <tbody id="table-winrate-body"></tbody>
-          </table>
-        </div>
+  <div class="card" id="card-winrate">
+    <h2><span class="emoji">🏆</span> Siegesquoten</h2>
+    <small>Top&nbsp;10 nach Siegquote (min. 2 Spiele)</small>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:1%">Platz</th>
+          <th>Name</th>
+          <th style="text-align:right">Quote</th>
+        </tr>
+      </thead>
+      <tbody id="table-winrate-body"></tbody>
+    </table>
+  </div>
 
-        <div class="card" id="card-immortal">
-          <h2><span class="emoji">✨</span> Unsterblichkeitsquote</h2>
-          <small>Top&nbsp;10 nach Anteil Siege mit nur einem Ermittler</small>
-          <table>
-            <thead>
-              <tr>
-                <th style="width:1%">Platz</th>
-                <th>Name</th>
-                <th style="text-align:right">Quote</th>
-              </tr>
-            </thead>
-            <tbody id="table-immortal-body"></tbody>
-          </table>
-        </div>
+    <div class="card" id="card-score-wins">
+    <h2><span class="emoji">🏅</span> Durchschnittliche Punkte (nur Siege)</h2>
+    <small>
+      Nur gewonnene Partien. Niederlagen werden für diese Auswertung ignoriert.
+    </small>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:1%">Platz</th>
+          <th>Name</th>
+          <th style="text-align:right">Ø Punkte/Sieg</th>
+        </tr>
+      </thead>
+      <tbody id="table-score-wins-body"></tbody>
+    </table>
+  </div>
 
-        <div class="card" id="card-deaths">
-          <h2><span class="emoji">💀</span> Tode pro Spiel</h2>
-          <small>Top&nbsp;10 nach durchschnittlichen Toden pro Partie</small>
-          <table>
-            <thead>
-              <tr>
-                <th style="width:1%">Platz</th>
-                <th>Name</th>
-                <th style="text-align:right">Tode/Spiel</th>
-              </tr>
-            </thead>
-            <tbody id="table-deaths-body"></tbody>
-          </table>
-        </div>
-      </div>
 
-      <div class="footer-note">
-        CSV-Regel: <code>Investigators</code> trennt Ermittler mit Komma. Die Seite erwartet das Format<br>
-        <code>Date;AncientOne;Difficulty;Result;Player;Investigators</code> – genau wie deine aktuelle Datei.
-      </div>
+
+  <!-- Zeile 2 -->
+  <div class="card" id="card-immortal">
+    <h2><span class="emoji">✨</span> Unsterblichkeitsquote</h2>
+    <small>Top&nbsp;10 nach Anteil Siege mit nur einem Ermittler</small>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:1%">Platz</th>
+          <th>Name</th>
+          <th style="text-align:right">Quote</th>
+        </tr>
+      </thead>
+      <tbody id="table-immortal-body"></tbody>
+    </table>
+  </div>
+
+  <div class="card" id="card-deaths">
+    <h2><span class="emoji">💀</span> Tode pro Spiel</h2>
+    <small>Top&nbsp;10 nach durchschnittlichen Toden pro Partie</small>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:1%">Platz</th>
+          <th>Name</th>
+          <th style="text-align:right">Tode/Spiel</th>
+        </tr>
+      </thead>
+      <tbody id="table-deaths-body"></tbody>
+    </table>
+  </div>
+
+  <div class="card" id="card-score">
+    <h2><span class="emoji">📉</span> Durchschnittliche Punkte</h2>
+    <small>
+      Alle Spiele. Niederlagen zählen als 1,25 × schlechtester Sieg.
+    </small>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:1%">Platz</th>
+          <th>Name</th>
+          <th style="text-align:right">Ø Punkte/Spiel</th>
+        </tr>
+      </thead>
+      <tbody id="table-score-body"></tbody>
+    </table>
+  </div>
+</div>
+
+
+
+
+
     </main>
   </div>
 
@@ -372,6 +409,66 @@
         rows.push(row);
       }
 
+      // 1) Schlechtesten Sieg im ganzen Datensatz finden (höchster Punktewert bei Siegen)
+let maxWinScore = null;
+
+for (const row of rows) {
+  const resultRaw = (row["Result"] || "").trim();
+  if (resultRaw === "Niederlage") continue; // echte Niederlagen ignorieren
+
+  const score = parseFloat(resultRaw.replace(",", ".")); // z.B. "11", "6", "-2"
+  if (!isNaN(score)) {
+    if (maxWinScore === null || score > maxWinScore) {
+      maxWinScore = score;
+    }
+  }
+}
+
+// falls es theoretisch keinen einzigen Sieg gäbe, einfach 0 als Fallback
+const lossPenalty = maxWinScore !== null ? maxWinScore * 1.25 : 0;
+
+// 2) Punkte pro Spiel (inkl. Niederlagen mit Strafwert) + Punkte nur aus Siegen
+const scoreByPlayer = {};      // alle Spiele (Siege + Niederlagen mit Strafwert)
+const scoreWinsOnly = {};      // nur Siege
+
+for (const row of rows) {
+  const playerName = row["Player"] || row["Spieler"] || "Unbekannt";
+
+  if (!scoreByPlayer[playerName]) {
+    scoreByPlayer[playerName] = { games: 0, sum: 0 };
+  }
+  if (!scoreWinsOnly[playerName]) {
+    scoreWinsOnly[playerName] = { games: 0, sum: 0 };
+  }
+
+  const infoAll = scoreByPlayer[playerName];
+  const infoWins = scoreWinsOnly[playerName];
+
+  const resultRaw = (row["Result"] || "").trim();
+  let pointsForGame;
+
+  if (resultRaw === "Niederlage") {
+    // Niederlage → Strafwert nur in "alle Spiele"
+    pointsForGame = lossPenalty;
+    infoAll.games += 1;
+    infoAll.sum += pointsForGame;
+  } else {
+    // Sieg → echte Punkte
+    const score = parseFloat(resultRaw.replace(",", "."));
+    const cleanScore = !isNaN(score) ? score : lossPenalty;
+
+    // alle Spiele
+    infoAll.games += 1;
+    infoAll.sum += cleanScore;
+
+    // nur Siege
+    infoWins.games += 1;
+    infoWins.sum += cleanScore;
+  }
+}
+
+
+
       const players = {};
 
       for (const row of rows) {
@@ -401,12 +498,29 @@
         }
       }
 
-      const playerArray = Object.entries(players).map(([name, s]) => {
-        const winRate = s.games ? s.wins / s.games : 0;
-        const immortalRate = s.games ? s.immortals / s.games : 0;
-        const deathsPerGame = s.games ? s.deaths / s.games : 0;
-        return { name, ...s, winRate, immortalRate, deathsPerGame };
-      });
+const playerArray = Object.entries(players).map(([name, s]) => {
+  const winRate = s.games ? s.wins / s.games : 0;
+  const immortalRate = s.games ? s.immortals / s.games : 0;
+  const deathsPerGame = s.games ? s.deaths / s.games : 0;
+
+  const scoreInfoAll = scoreByPlayer[name] || { games: 0, sum: 0 };
+  const avgScore = scoreInfoAll.games ? scoreInfoAll.sum / scoreInfoAll.games : NaN;
+
+  const scoreInfoWins = scoreWinsOnly[name] || { games: 0, sum: 0 };
+  const avgWinScore = scoreInfoWins.games ? scoreInfoWins.sum / scoreInfoWins.games : NaN;
+
+  return {
+    name,
+    ...s,
+    winRate,
+    immortalRate,
+    deathsPerGame,
+    avgScore,
+    avgWinScore
+  };
+});
+
+
 
       renderTable(
         "table-games-body",
@@ -445,7 +559,7 @@
         "table-deaths-body",
         playerArray
           .filter(p => p.games >= 2)
-          .sort((a, b) => b.deathsPerGame - a.deathsPerGame || b.games - a.games),
+          .sort((a, b) => a.deathsPerGame - b.deathsPerGame || b.games - a.games),
         item => ({
           value: formatNumber(item.deathsPerGame),
           cssClass:
@@ -456,6 +570,37 @@
               : "value-positive"
         })
       );
+      renderTable(
+  "table-score-body",
+  playerArray
+    .filter(p => p.games >= 2 && !isNaN(p.avgScore))
+    .sort((a, b) => a.avgScore - b.avgScore || b.games - a.games), // wenig Punkte = gut
+  item => ({
+    value: formatNumber(item.avgScore),
+    cssClass:
+      item.avgScore <= 0
+        ? "value-positive"   // richtig starker Wert
+        : item.avgScore <= maxWinScore
+        ? "value-neutral"
+        : "value-bad"
+  })
+);
+renderTable(
+  "table-score-wins-body",
+  playerArray
+    .filter(p => p.wins >= 2 && !isNaN(p.avgWinScore))    // nur Spieler mit mind. 2 Siegen
+    .sort((a, b) => a.avgWinScore - b.avgWinScore || b.wins - a.wins),
+  item => ({
+    value: formatNumber(item.avgWinScore),
+    cssClass:
+      item.avgWinScore <= 0
+        ? "value-positive"
+        : item.avgWinScore <= maxWinScore
+        ? "value-neutral"
+        : "value-bad"
+  })
+);
+
     }
 
     function renderTable(tbodyId, data, valueMapper) {
