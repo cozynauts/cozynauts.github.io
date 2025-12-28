@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Eldritch Horror – Historie</title>
+  <style>
+    :root{
+      --bg:#050510;
+      --panel:#141426;
+      --panel-soft:#1d1d35;
+      --accent:#bfaeff;
+      --accent-strong:#f5a623;
+      --text:#f5f5ff;
+      --muted:#a0a0c0;
+      --border-soft:rgba(255,255,255,0.08);
+
+      --rowA: rgba(255,255,255,0.02);
+      --rowB: rgba(0,0,0,0.10);
+
+      /* Gruppen-Hintergründe (abwechselnd pro Partie-Block) */
+      --group0: rgba(255,255,255,0.03);
+      --group1: rgba(120,110,255,0.10);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background: radial-gradient(circle at top, #16162e 0, #050510 55%, #020208 100%);
+      color:var(--text);
+    }
+
+    .layout{display:flex;min-height:100vh}
+
+    .sidebar{
+      width:220px;
+      background: rgba(10,10,25,0.98);
+      border-right:1px solid var(--border-soft);
+      box-shadow:4px 0 20px rgba(0,0,0,0.7);
+      padding:20px 16px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .sidebar-title{
+      font-size:1.05rem;
+      font-weight:600;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+
+    .nav{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+    .nav-item{
+      color:var(--muted);
+      text-decoration:none;
+      font-size:0.9rem;
+      padding:7px 10px;
+      border-radius:8px;
+      transition:0.2s;
+      display:block;
+    }
+    .nav-item:hover{color:var(--text);background:rgba(255,255,255,0.09)}
+    .nav-item.active{
+      color:var(--text);
+      background:linear-gradient(90deg,#5b4bff,#bfaeff);
+      box-shadow:0 0 14px rgba(191,174,255,0.45);
+      font-weight:600;
+    }
+
+    .main{flex:1;padding:24px 24px 32px}
+    h1{margin:0 0 10px;font-size:1.6rem;letter-spacing:0.03em}
+    .subtitle{margin-bottom:18px;color:var(--muted);font-size:0.9rem}
+
+    .panel{
+      background: radial-gradient(circle at top left, #27274a 0, var(--panel) 40%, #0b0b18 100%);
+      border:1px solid var(--border-soft);
+      border-radius:16px;
+      padding:14px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.03);
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns: 1.3fr repeat(4, 1fr) 0.9fr 0.9fr auto;
+      gap:10px;
+      align-items:end;
+      margin-bottom:12px;
+    }
+
+    .control{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width:0;
+    }
+    .control label{
+      font-size:0.75rem;
+      color:var(--muted);
+      user-select:none;
+    }
+    input[type="text"], select, input[type="date"]{
+      width:100%;
+      padding:9px 10px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.25);
+      color: var(--text);
+      outline:none;
+    }
+    select option{background:#0b0b18;color:var(--text)}
+
+    .btn{
+      padding:9px 12px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(90deg, rgba(91,75,255,0.35), rgba(191,174,255,0.22));
+      color:var(--text);
+      cursor:pointer;
+      transition:0.2s;
+      font-weight:600;
+      white-space:nowrap;
+    }
+    .btn:hover{transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,0.35)}
+    .btn.secondary{
+      background: rgba(255,255,255,0.06);
+      font-weight:600;
+    }
+
+    .meta{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:0.8rem;
+      flex-wrap:wrap;
+    }
+
+    .toggle{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      user-select:none;
+      color:var(--muted);
+    }
+    .toggle input{transform: translateY(1px);}
+
+    .table-wrap{
+      margin-top:12px;
+      overflow:auto;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.14);
+    }
+
+    table{width:100%;border-collapse:separate;border-spacing:0;min-width: 980px;}
+    thead th{
+      position:sticky;
+      top:0;
+      z-index:2;
+      background: linear-gradient(180deg, rgba(29,29,53,0.95), rgba(20,20,38,0.92));
+      border-bottom:1px solid rgba(255,255,255,0.10);
+      padding:10px 10px;
+      text-align:left;
+      font-size:0.78rem;
+      color:var(--muted);
+      white-space:nowrap;
+      cursor:pointer;
+    }
+    thead th .sort{
+      opacity:0.55;
+      margin-left:6px;
+      font-size:0.75rem;
+    }
+
+    tbody td{
+      padding:10px 10px;
+      font-size:0.84rem;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      white-space:nowrap;
+      vertical-align:middle;
+    }
+
+    /* Fallback-Zebra (wenn Gruppenhighlight AUS) */
+    tbody tr:nth-child(odd){background: var(--rowA);}
+    tbody tr:nth-child(even){background: var(--rowB);}
+
+    /* Gruppenhighlight (wenn AN) */
+    tbody tr.group-even{background: var(--group0) !important;}
+    tbody tr.group-odd{background: var(--group1) !important;}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.20);
+      font-weight:700;
+      font-size:0.82rem;
+    }
+    .pill.win{
+      border-color: rgba(139,229,139,0.28);
+      box-shadow: 0 0 0 1px rgba(139,229,139,0.10) inset;
+    }
+    .pill.loss{
+      border-color: rgba(255,136,136,0.28);
+      box-shadow: 0 0 0 1px rgba(255,136,136,0.10) inset;
+    }
+    .pill .icon{opacity:0.95}
+    .pill .score{
+      font-variant-numeric: tabular-nums;
+      opacity:0.95;
+    }
+
+    .td-player{font-weight:700}
+    .td-invest{white-space:nowrap; max-width: 520px; overflow:hidden; text-overflow:ellipsis;}
+    .muted{color:var(--muted)}
+
+    @media (max-width: 1100px){
+      .controls{grid-template-columns: 1fr 1fr 1fr 1fr; }
+      .controls .span2{grid-column: span 2;}
+      .controls .span4{grid-column: 1 / -1;}
+    }
+
+    @media (max-width: 800px){
+      .layout{flex-direction:column}
+      .sidebar{width:100%;flex-direction:row;align-items:center;justify-content:space-between}
+      .nav{flex-direction:row;flex-wrap:wrap}
+      .main{padding:16px}
+      table{min-width: 900px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">Eldritch Horror</div>
+      <nav class="nav">
+        <a href="EldritchHorrorStatistik.html" class="nav-item">Startseite</a>
+        <a href="player_stats.html" class="nav-item">Spielerstatistik</a>
+        <a href="character_stats.html" class="nav-item">Charakterstatistik</a>
+        <a href="ancient_stats.html" class="nav-item">Gegnerstatistik</a>
+        <a href="ranking.html" class="nav-item">Rangliste</a>
+        <a href="history.html" class="nav-item">Historie</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <h1>Historie</h1>
+      <div class="subtitle">
+        Alle Partien aus <span class="muted">eldritch_games.csv</span> – filterbar & sortierbar.
+      </div>
+
+      <div class="panel">
+        <div class="controls">
+          <div class="control span2">
+            <label>Suche (Gegner / Spieler / Ermittler)</label>
+            <input id="q" type="text" placeholder="z.B. Azathoth, Daniel, Zoey..." />
+          </div>
+
+          <div class="control">
+            <label>Gegner</label>
+            <select id="fAncient"><option value="">Alle</option></select>
+          </div>
+
+          <div class="control">
+            <label>Stufe</label>
+            <select id="fDiff"><option value="">Alle</option></select>
+          </div>
+
+          <div class="control">
+            <label>Ergebnis</label>
+            <select id="fResult">
+              <option value="">Alle</option>
+              <option value="WIN">Nur Siege</option>
+              <option value="LOSS">Nur Niederlagen</option>
+            </select>
+          </div>
+
+          <div class="control">
+            <label>Spieler</label>
+            <select id="fPlayer"><option value="">Alle</option></select>
+          </div>
+
+          <div class="control">
+            <label>Von</label>
+            <input id="fromDate" type="date" />
+          </div>
+
+          <div class="control">
+            <label>Bis</label>
+            <input id="toDate" type="date" />
+          </div>
+
+          <div class="control">
+            <button id="btnReset" class="btn secondary">Reset</button>
+          </div>
+        </div>
+
+        <div class="meta">
+          <div class="toggle">
+            <input id="groupToggle" type="checkbox" checked />
+            <label for="groupToggle">Zeilen pro Partie gleich einfärben</label>
+          </div>
+          <div id="countInfo">–</div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-key="Date">Datum <span class="sort" id="sDate">↕</span></th>
+                <th data-key="AncientOne">Gegner <span class="sort" id="sAncient">↕</span></th>
+                <th data-key="Difficulty">Stufe <span class="sort" id="sDiff">↕</span></th>
+                <th data-key="Result">Ergebnis <span class="sort" id="sResult">↕</span></th>
+                <th data-key="Player">Spieler <span class="sort" id="sPlayer">↕</span></th>
+                <th data-key="Investigators">Ermittler <span class="sort" id="sInv">↕</span></th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // --- Helpers ---
+    function norm(s){ return (s ?? "").toString().trim(); }
+    function lower(s){ return norm(s).toLowerCase(); }
+
+    function isLoss(resultRaw){
+      return lower(resultRaw) === "niederlage";
+    }
+    function isWin(resultRaw){
+      return !isLoss(resultRaw); // alles, was NICHT "Niederlage" ist, behandeln wir als Sieg/Score
+    }
+    function parseISODate(s){
+      // erwartet YYYY-MM-DD
+      const v = norm(s);
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(v)) return null;
+      return new Date(v + "T00:00:00");
+    }
+
+    function formatDateDE(dateStr) {
+  // Erwartet "YYYY-MM-DD"
+  if (!dateStr) return "";
+  const d = new Date(dateStr + "T00:00:00"); // wichtig: kein Timezone-Verrutschen
+  if (isNaN(d)) return dateStr;
+  return new Intl.DateTimeFormat("de-DE").format(d); // z.B. 15.11.2023
+}
+
+
+    function escapeHtml(str){
+      return norm(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // Sort state
+    let sortKey = "Date";
+    let sortDir = "desc"; // desc = neu zuerst
+    let allRows = [];
+
+    function updateSortIndicators(){
+      const map = {
+        Date: "sDate",
+        AncientOne: "sAncient",
+        Difficulty: "sDiff",
+        Result: "sResult",
+        Player: "sPlayer",
+        Investigators: "sInv"
+      };
+      Object.values(map).forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.textContent = "↕";
+      });
+      const activeId = map[sortKey];
+      if(activeId){
+        document.getElementById(activeId).textContent = (sortDir === "asc" ? "↑" : "↓");
+      }
+    }
+
+    function buildSelectOptions(selectEl, values){
+      const current = selectEl.value;
+      const opts = ["", ...Array.from(new Set(values)).sort((a,b)=>a.localeCompare(b,"de"))];
+      selectEl.innerHTML = "";
+      opts.forEach(v=>{
+        const o = document.createElement("option");
+        o.value = v;
+        o.textContent = v === "" ? "Alle" : v;
+        selectEl.appendChild(o);
+      });
+      // restore if possible
+      if(opts.includes(current)) selectEl.value = current;
+    }
+
+    function getGroupKey(r){
+      // Partie-Block: gleiche Date + AncientOne + Difficulty + Result
+      // (so bleiben die Azathoth 5 Zeilen zusammen)
+      return `${norm(r.Date)}|${norm(r.AncientOne)}|${norm(r.Difficulty)}|${norm(r.Result)}`;
+    }
+
+    function passesFilters(r){
+      const q = lower(document.getElementById("q").value);
+      const a = document.getElementById("fAncient").value;
+      const d = document.getElementById("fDiff").value;
+      const p = document.getElementById("fPlayer").value;
+      const res = document.getElementById("fResult").value;
+      const from = parseISODate(document.getElementById("fromDate").value);
+      const to = parseISODate(document.getElementById("toDate").value);
+
+      if(a && norm(r.AncientOne) !== a) return false;
+      if(d && norm(r.Difficulty) !== d) return false;
+      if(p && norm(r.Player) !== p) return false;
+
+      if(res === "WIN" && !isWin(r.Result)) return false;
+      if(res === "LOSS" && !isLoss(r.Result)) return false;
+
+      const dt = parseISODate(r.Date);
+      if(from && dt && dt < from) return false;
+      if(to && dt && dt > to) return false;
+
+      if(q){
+        const hay = [
+          r.Date, r.AncientOne, r.Difficulty, r.Result, r.Player, r.Investigators
+        ].map(lower).join(" | ");
+        if(!hay.includes(q)) return false;
+      }
+
+      return true;
+    }
+
+    function compare(a,b){
+      const av = norm(a[sortKey]);
+      const bv = norm(b[sortKey]);
+
+      // Date: ISO kann man als String vergleichen, aber wir machen's sauber
+      if(sortKey === "Date"){
+        const ad = parseISODate(av)?.getTime() ?? 0;
+        const bd = parseISODate(bv)?.getTime() ?? 0;
+        return sortDir === "asc" ? ad - bd : bd - ad;
+      }
+
+      // Result: Niederlage ans Ende (bei asc), bei desc nach oben? Wir definieren:
+      // sort by: Sieg > Niederlage (desc), Niederlage > Sieg (asc), dann nach Score
+      if(sortKey === "Result"){
+        const aLoss = isLoss(av);
+        const bLoss = isLoss(bv);
+        if(aLoss !== bLoss){
+          return sortDir === "asc"
+            ? (aLoss ? -1 : 1)
+            : (aLoss ? 1 : -1);
+        }
+        // Wenn beides Siege: numerisch sortieren
+        const as = parseFloat(av.replace(",", "."));
+        const bs = parseFloat(bv.replace(",", "."));
+        if(!isNaN(as) && !isNaN(bs) && as !== bs){
+          return sortDir === "asc" ? as - bs : bs - as;
+        }
+        return sortDir === "asc"
+          ? av.localeCompare(bv,"de")
+          : bv.localeCompare(av,"de");
+      }
+
+      return sortDir === "asc"
+        ? av.localeCompare(bv,"de")
+        : bv.localeCompare(av,"de");
+    }
+
+    function render(){
+      const tbody = document.getElementById("tbody");
+      tbody.innerHTML = "";
+
+      const groupOn = document.getElementById("groupToggle").checked;
+
+      // 1) filtern
+      const filtered = allRows.filter(passesFilters);
+
+      // 2) sortieren
+      filtered.sort(compare);
+
+      // 3) Gruppenfärbung: wir brauchen stabile Gruppen nach der aktuellen Sortierung.
+      // Sinnvoll ist: Gruppierung nach zusammengehörigem Spiel. Wenn du nach Player sortierst,
+      // würden Gruppen "zerschnitten". Daher: Gruppenfärbung nur sinnvoll, wenn SortKey in
+      // (Date/AncientOne/Difficulty/Result) – ansonsten lassen wir trotzdem gruppenweise nach
+      // current order laufen (das ist ok), aber Party-Blöcke können auseinanderlaufen.
+      let lastKey = null;
+      let groupIdx = -1;
+
+      filtered.forEach(r=>{
+        const tr = document.createElement("tr");
+
+        const gKey = getGroupKey(r);
+        if(gKey !== lastKey){
+          groupIdx += 1;
+          lastKey = gKey;
+        }
+        if(groupOn){
+          tr.classList.add(groupIdx % 2 === 0 ? "group-even" : "group-odd");
+        }
+
+        // Ergebnis Pill
+        const resultRaw = norm(r.Result);
+        let pillHtml = "";
+        if(isLoss(resultRaw)){
+          pillHtml = `<span class="pill loss"><span class="icon">💀</span><span>Niederlage</span></span>`;
+        }else{
+          // Sieg + Score
+          const score = escapeHtml(resultRaw);
+          pillHtml = `<span class="pill win"><span class="icon">🏆</span><span>Sieg</span><span class="score">· ${score}</span></span>`;
+        }
+
+        // Ermittler: NUR Namen, keine Punkte (wichtig!)
+        const inv = escapeHtml(norm(r.Investigators));
+
+tr.innerHTML = `
+  <td>${formatDateDE(norm(r.Date))}</td>
+  <td>${escapeHtml(norm(r.AncientOne))}</td>
+  <td>${escapeHtml(norm(r.Difficulty))}</td>
+  <td>${pillHtml}</td>
+  <td class="td-player">${escapeHtml(norm(r.Player))}</td>
+  <td class="td-invest" title="${inv}">${inv}</td>
+`;
+
+
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById("countInfo").textContent =
+        `${filtered.length} Einträge · ${new Set(filtered.map(getGroupKey)).size} Partien`;
+    }
+
+    async function loadCSV(){
+      const res = await fetch("eldritch_games.csv");
+      if(!res.ok){
+        console.error("Konnte eldritch_games.csv nicht laden", res.status);
+        return;
+      }
+      const text = await res.text();
+      const lines = text.split(/\r?\n/).filter(l=>l.trim().length>0);
+      if(lines.length <= 1) return;
+
+      const header = lines[0].split(";").map(h=>h.trim());
+      const idx = {};
+      header.forEach((h,i)=>idx[h]=i);
+
+      const needed = ["Date","AncientOne","Difficulty","Result","Player","Investigators"];
+      for(const k of needed){
+        if(!(k in idx)){
+          console.warn("CSV Header fehlt:", k, "gefunden:", header);
+        }
+      }
+
+      allRows = [];
+      for(let i=1;i<lines.length;i++){
+        const parts = lines[i].split(";");
+        if(parts.length < header.length) continue;
+        const row = {};
+        header.forEach((h,j)=> row[h] = norm(parts[j] ?? ""));
+        // Normalisieren auf die Spalten, die wir nutzen
+        allRows.push({
+          Date: row["Date"] ?? "",
+          AncientOne: row["AncientOne"] ?? "",
+          Difficulty: row["Difficulty"] ?? "",
+          Result: row["Result"] ?? "",
+          Player: row["Player"] ?? "",
+          Investigators: row["Investigators"] ?? ""
+        });
+      }
+
+      // Filter-Dropdowns befüllen
+      buildSelectOptions(document.getElementById("fAncient"), allRows.map(r=>r.AncientOne));
+      buildSelectOptions(document.getElementById("fDiff"), allRows.map(r=>r.Difficulty));
+      buildSelectOptions(document.getElementById("fPlayer"), allRows.map(r=>r.Player));
+
+      updateSortIndicators();
+      render();
+    }
+
+    function wireUI(){
+      // Controls
+      ["q","fAncient","fDiff","fResult","fPlayer","fromDate","toDate","groupToggle"].forEach(id=>{
+        document.getElementById(id).addEventListener("input", render);
+        document.getElementById(id).addEventListener("change", render);
+      });
+
+      document.getElementById("btnReset").addEventListener("click", ()=>{
+        document.getElementById("q").value = "";
+        document.getElementById("fAncient").value = "";
+        document.getElementById("fDiff").value = "";
+        document.getElementById("fResult").value = "";
+        document.getElementById("fPlayer").value = "";
+        document.getElementById("fromDate").value = "";
+        document.getElementById("toDate").value = "";
+        document.getElementById("groupToggle").checked = true;
+        sortKey = "Date";
+        sortDir = "desc";
+        updateSortIndicators();
+        render();
+      });
+
+      // Sorting by header click
+      document.querySelectorAll("thead th[data-key]").forEach(th=>{
+        th.addEventListener("click", ()=>{
+          const key = th.getAttribute("data-key");
+          if(key === sortKey){
+            sortDir = (sortDir === "asc" ? "desc" : "asc");
+          }else{
+            sortKey = key;
+            // Standardrichtungen: Date desc, Rest asc
+            sortDir = (key === "Date" ? "desc" : "asc");
+          }
+          updateSortIndicators();
+          render();
+        });
+      });
+
+      // Active nav highlight
+      const currentPage = window.location.pathname.split("/").pop() || "EldritchHorrorStatistik.html";
+      document.querySelectorAll(".nav-item").forEach(link=>{
+        const href = link.getAttribute("href");
+        if(href === currentPage) link.classList.add("active");
+      });
+    }
+
+    wireUI();
+    loadCSV().catch(console.error);
+  </script>
+</body>
+</html>
