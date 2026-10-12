@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+
+<style>
+    html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+    }
+
+    .cosmo {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: auto;
+        pointer-events: none;
+        will-change: transform;
+    }
+</style>
+</head>
+
+<body>
+
+<script>
+
+// =====================================
+// COSMO SPAWNER EINSTELLUNGEN
+// =====================================
+
+const config = {
+
+    // Maximale Anzahl gleichzeitig
+    maxCosmos: 6,
+
+    // Größen in Pixeln
+    minSize: 30,
+    maxSize: 300,
+
+    // Flugdauer in Millisekunden
+    minDuration: 5000,
+    maxDuration: 15000,
+
+    // Zufälliger Abstand zwischen Spawns
+    minSpawnDelay: 500,
+    maxSpawnDelay: 4000,
+
+    // Maximale Drehung
+    maxRotation: 720,
+
+    // Stärke der Flugkurven
+    curveStrength: 200
+
+};
+
+// =====================================
+// COSMO VARIANTEN
+// =====================================
+
+const cosmoVarianten = [
+    "Fliegen.png",
+    "FliegenRechts.png",
+    "Hi.png",
+    "Hinten.png",
+    "Stolz.png"
+];
+
+// =====================================
+// SYSTEM
+// =====================================
+
+let activeCosmos = 0;
+
+function random(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function randomEdge() {
+    return Math.floor(random(0, 4));
+}
+
+function getPosition(edge, size) {
+
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const margin = size * 1.5;
+
+    switch (edge) {
+
+        case 0: // Links
+            return {
+                x: -margin,
+                y: random(0, h)
+            };
+
+        case 1: // Rechts
+            return {
+                x: w + margin,
+                y: random(0, h)
+            };
+
+        case 2: // Oben
+            return {
+                x: random(0, w),
+                y: -margin
+            };
+
+        default: // Unten
+            return {
+                x: random(0, w),
+                y: h + margin
+            };
+    }
+}
+
+// =====================================
+// COSMO ERSTELLEN
+// =====================================
+
+function spawnCosmo() {
+
+    if (activeCosmos >= config.maxCosmos) {
+        return;
+    }
+
+    activeCosmos++;
+
+    const cosmo = document.createElement("img");
+
+    
+    const zufallsIndex = Math.floor(
+        Math.random() * cosmoVarianten.length
+    );
+
+    cosmo.src = cosmoVarianten[zufallsIndex];
+
+    cosmo.className = "cosmo";
+
+    const size = random(
+        config.minSize,
+        config.maxSize
+    );
+
+    cosmo.style.width = size + "px";
+
+    document.body.appendChild(cosmo);
+
+    const duration = random(
+        config.minDuration,
+        config.maxDuration
+    );
+
+    const startEdge = randomEdge();
+
+    let endEdge;
+
+    do {
+        endEdge = randomEdge();
+    } while (endEdge === startEdge);
+
+    const start = getPosition(startEdge, size);
+    const end = getPosition(endEdge, size);
+
+    const startRotation = random(-180, 180);
+
+    const rotation = random(
+        -config.maxRotation,
+        config.maxRotation
+    );
+
+    const curveX = random(
+        -config.curveStrength,
+        config.curveStrength
+    );
+
+    const curveY = random(
+        -config.curveStrength,
+        config.curveStrength
+    );
+
+    
+
+
+
+    const animation = cosmo.animate([
+
+        {
+            transform:
+                `translate(${start.x}px, ${start.y}px)
+                 rotate(${startRotation}deg)`
+        },
+
+        {
+            offset: 0.5,
+            transform:
+                `translate(${(start.x + end.x) / 2 + curveX}px,
+                ${(start.y + end.y) / 2 + curveY}px)
+                 rotate(${startRotation + rotation / 2}deg)`
+        },
+
+        {
+            transform:
+                `translate(${end.x}px, ${end.y}px)
+                 rotate(${startRotation + rotation}deg)`
+        }
+
+    ], {
+
+        duration: duration,
+        easing: "ease-in-out",
+        fill: "forwards"
+
+    });
+
+    animation.onfinish = () => {
+
+        animation.cancel();
+        cosmo.remove();
+
+        activeCosmos--;
+
+    };
+}
+
+// =====================================
+// ZUFÄLLIGER SPAWNER
+// =====================================
+
+function spawnLoop() {
+
+    spawnCosmo();
+
+    const delay = random(
+        config.minSpawnDelay,
+        config.maxSpawnDelay
+    );
+
+    setTimeout(spawnLoop, delay);
+}
+
+// Start
+setTimeout(spawnLoop, 1000);
+
+</script>
+
+</body>
+</html>
